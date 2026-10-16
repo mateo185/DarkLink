@@ -1,0 +1,718 @@
+/* ============================================
+   PS1 INTRO — Pantalla de Intro 3D Estilo PS1
+   ============================================ */
+
+/* Contenedor principal de la escena 3D */
+#screen-ps1-intro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100000;
+    background: #000;
+    overflow: hidden;
+}
+
+#screen-ps1-intro.hidden {
+    display: none !important;
+}
+
+/* Canvas de Three.js — Aberración Cromática Real via filtro SVG (RGB Channel Split) */
+#ps1-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    filter: url(#ps1-chromatic-aberration) contrast(108%) saturate(115%) brightness(101%);
+    cursor: none;
+}
+
+/* Scanlines sutiles — apenas perceptibles, aportan textura sin molestar */
+#ps1-scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.08) 0px,
+        rgba(0, 0, 0, 0.08) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    mix-blend-mode: multiply;
+    opacity: 0.45;
+}
+
+/* Viñeta suave — oscurece ligeramente las esquinas sin cubrir la pantalla */
+#ps1-vignette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+    box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.35), inset 0 0 200px rgba(0, 0, 0, 0.15);
+    background: radial-gradient(
+        ellipse at center,
+        transparent 0%,
+        transparent 65%,
+        rgba(0, 0, 0, 0.20) 85%,
+        rgba(0, 0, 0, 0.50) 100%
+    );
+}
+
+/* Static/noise overlay estilo televisión analógica */
+#ps1-static {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 6;
+    opacity: 0.028;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    animation: ps1-static-flicker 0.1s infinite;
+}
+
+@keyframes ps1-static-flicker {
+    0% { opacity: 0.03; }
+    25% { opacity: 0.055; }
+    50% { opacity: 0.022; }
+    75% { opacity: 0.048; }
+    100% { opacity: 0.03; }
+}
+
+/* HUD de instrucciones */
+#ps1-hud {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+    pointer-events: none;
+    font-family: 'VT323', monospace;
+    font-size: 1.4rem;
+    color: rgba(0, 255, 0, 0.6);
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+    letter-spacing: 2px;
+    animation: ps1-hud-pulse 2s ease-in-out infinite;
+    user-select: none;
+}
+
+@keyframes ps1-hud-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* Hub de Notificaciones Superiores 3D (Anti-Superposición) */
+#ps1-top-notification-hub {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    z-index: 10005;
+    pointer-events: none;
+    width: 90%;
+    max-width: 760px;
+}
+
+/* Banner de Alerta de Amenaza en Pantalla (Golpes en Puerta / Peligro) */
+#ps1-alert-banner {
+    display: block;
+    position: relative;
+    pointer-events: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ffffff;
+    background: rgba(180, 0, 0, 0.94);
+    border: 3px solid #ff2222;
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.95), inset 0 0 15px rgba(255, 60, 60, 0.6);
+    padding: 12px 28px;
+    border-radius: 6px;
+    text-align: center;
+    letter-spacing: 2px;
+    animation: alert-banner-pulse 0.7s infinite alternate;
+    user-select: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    backdrop-filter: blur(4px);
+    max-width: 100%;
+}
+
+#ps1-alert-banner.success {
+    background: rgba(0, 110, 30, 0.94);
+    border-color: #00ff66;
+    box-shadow: 0 0 35px rgba(0, 255, 100, 0.95), inset 0 0 15px rgba(0, 255, 100, 0.6);
+    color: #ffffff;
+    animation: none;
+}
+
+#ps1-alert-banner.hidden {
+    display: none !important;
+}
+
+@keyframes alert-banner-pulse {
+    0% { transform: scale(0.98); box-shadow: 0 0 15px rgba(255, 0, 0, 0.6); }
+    100% { transform: scale(1.02); box-shadow: 0 0 45px rgba(255, 0, 0, 1.0); }
+}
+
+/* Toast de Notificación de Acciones (Boombox, Puerta, Pestillo, etc) */
+#ps1-notif-toast {
+    display: block;
+    position: relative;
+    pointer-events: none;
+    font-family: 'VT323', monospace;
+    font-size: 1.8rem;
+    color: #00ffcc;
+    background: rgba(0, 15, 25, 0.92);
+    border: 2px solid #00ffcc;
+    box-shadow: 0 0 25px rgba(0, 255, 204, 0.5), inset 0 0 10px rgba(0, 255, 204, 0.2);
+    padding: 6px 24px;
+    border-radius: 4px;
+    letter-spacing: 2px;
+    user-select: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    backdrop-filter: blur(4px);
+    text-align: center;
+    max-width: 100%;
+}
+
+#ps1-notif-toast.hidden {
+    display: none !important;
+}
+
+/* Banner de Alerta Crítica dentro del Monitor de la PC (Desktop) */
+.pc-threat-banner {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    background: rgba(40, 0, 0, 0.95);
+    border: 2px solid #ff2233;
+    box-shadow: 0 0 25px rgba(255, 0, 50, 0.85), inset 0 0 15px rgba(255, 0, 50, 0.35);
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-family: 'Share Tech Mono', monospace;
+    color: #ffffff;
+    max-width: 90%;
+    animation: pc-alert-glow 0.8s infinite alternate;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(6px);
+}
+
+.pc-threat-banner.success {
+    background: rgba(0, 45, 15, 0.95);
+    border-color: #00ff66;
+    box-shadow: 0 0 25px rgba(0, 255, 100, 0.85), inset 0 0 15px rgba(0, 255, 100, 0.35);
+    animation: none;
+}
+
+.pc-threat-banner.hidden {
+    display: none !important;
+}
+
+.pc-threat-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 1.15rem;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.pc-threat-icon {
+    font-size: 1.6rem;
+    animation: blink 0.5s infinite;
+}
+
+.pc-quick-lock-btn {
+    background: #ff1122;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: bold;
+    font-size: 0.95rem;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.pc-quick-lock-btn:hover {
+    background: #ff3344;
+    transform: scale(1.05);
+}
+
+.pc-threat-banner.success .pc-quick-lock-btn {
+    display: none;
+}
+
+@keyframes pc-alert-glow {
+    0% { transform: translateX(-50%) scale(0.99); box-shadow: 0 0 15px rgba(255, 0, 40, 0.6); }
+    100% { transform: translateX(-50%) scale(1.01); box-shadow: 0 0 35px rgba(255, 0, 40, 0.95); }
+}
+
+/* Mensaje "Click para empezar" cuando estás cerca de la PC */
+#ps1-interact-prompt {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    pointer-events: none;
+    font-family: 'VT323', monospace;
+    font-size: 2rem;
+    color: #0f0;
+    text-shadow: 0 0 15px rgba(0, 255, 0, 0.8), 0 0 30px rgba(0, 255, 0, 0.3);
+    letter-spacing: 3px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    user-select: none;
+}
+
+#ps1-interact-prompt.visible {
+    display: block;
+    opacity: 1;
+    animation: ps1-prompt-glitch 0.15s infinite;
+}
+
+@keyframes ps1-prompt-glitch {
+    0% { transform: translate(-50%, -50%); }
+    20% { transform: translate(-51%, -49%); }
+    40% { transform: translate(-49%, -51%); }
+    60% { transform: translate(-50.5%, -50%); }
+    80% { transform: translate(-50%, -50.5%); }
+    100% { transform: translate(-50%, -50%); }
+}
+
+/* Crosshair mínimo */
+#ps1-crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: rgba(0, 255, 0, 0.5);
+    transform: translate(-50%, -50%);
+    z-index: 9;
+    pointer-events: none;
+    box-shadow: 0 0 6px rgba(0, 255, 0, 0.3);
+}
+
+/* Transición de salida */
+#ps1-transition-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
+    pointer-events: none;
+    background: #000;
+    opacity: 0;
+    transition: opacity 1.5s ease-in;
+}
+
+#ps1-transition-overlay.active {
+    opacity: 1;
+}
+
+/* Glitch intenso durante transición */
+#ps1-transition-overlay.glitching {
+    animation: ps1-exit-glitch 0.5s ease-out;
+}
+
+@keyframes ps1-exit-glitch {
+    0% { 
+        background: #000;
+        filter: none;
+    }
+    10% { 
+        background: #0f0;
+        filter: invert(1);
+    }
+    20% {
+        background: #000;
+        filter: none;
+    }
+    30% {
+        background: #ff0000;
+        filter: hue-rotate(90deg);
+    }
+    40% {
+        background: #000;
+    }
+    50% {
+        background: #0f0;
+        filter: saturate(5);
+    }
+    60% {
+        background: #000;
+        filter: none;
+    }
+    100% {
+        background: #000;
+        filter: none;
+    }
+}
+
+/* Texto de "click para bloquear mouse" al inicio */
+#ps1-lock-prompt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 30;
+    font-family: 'VT323', monospace;
+    font-size: 1.8rem;
+    color: #0f0;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+    text-align: center;
+    letter-spacing: 2px;
+    cursor: pointer;
+    padding: 30px;
+    user-select: none;
+    animation: ps1-hud-pulse 1.5s ease-in-out infinite;
+}
+
+#ps1-lock-prompt .sub {
+    display: block;
+    font-size: 1rem;
+    color: rgba(0, 255, 0, 0.4);
+    margin-top: 10px;
+}
+
+/* Limpieza del modo monitor sin marcos 2D superpuestos */
+body.ps1-monitor-active #screen-ps1-intro {
+    opacity: 0;
+    pointer-events: none !important;
+    transition: opacity 0.8s ease-out;
+}
+
+/* Modal Consola Retro 90s */
+#modal-ps1-console {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 520px;
+    background: #11141a;
+    border: 3px solid #778899;
+    box-shadow: 0 0 30px rgba(0, 255, 170, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.8);
+    z-index: 100;
+    font-family: 'VT323', monospace;
+    color: #00ffaa;
+    display: flex;
+    flex-direction: column;
+}
+
+#modal-ps1-console.hidden {
+    display: none !important;
+}
+
+.ps1-console-header {
+    background: #1e2530;
+    border-bottom: 2px solid #556677;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+.ps1-console-body {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #090c10;
+}
+
+#canvas-ps1-arcade {
+    background: #000;
+    border: 2px solid #00aa66;
+    image-rendering: pixelated;
+    box-shadow: inset 0 0 10px rgba(0, 255, 100, 0.3);
+}
+
+.ps1-console-controls {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+/* ============================================
+   ANIMACIÓN DE PÁRPADOS AL DORMIR / DESPERTAR
+   ============================================ */
+#ps1-eyelids {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.eyelid {
+    position: absolute;
+    left: -5vw;
+    width: 110vw;
+    height: 54vh;
+    background: #020202;
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 60px 30px rgba(0, 0, 0, 0.95);
+}
+
+.eyelid-top {
+    top: 0;
+    transform: translateY(-102%);
+    border-bottom-left-radius: 50% 60px;
+    border-bottom-right-radius: 50% 60px;
+}
+
+.eyelid-bottom {
+    bottom: 0;
+    transform: translateY(102%);
+    border-top-left-radius: 50% 60px;
+    border-top-right-radius: 50% 60px;
+}
+
+/* Estado: Cerrando ojos (al acostarse) */
+#ps1-eyelids.closing .eyelid-top {
+    transform: translateY(-2%);
+    transition: transform 1.3s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+#ps1-eyelids.closing .eyelid-bottom {
+    transform: translateY(2%);
+    transition: transform 1.3s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+/* Estado: Completamente cerrados (durmiendo) */
+#ps1-eyelids.closed .eyelid-top {
+    transform: translateY(0%);
+    transition: none;
+}
+#ps1-eyelids.closed .eyelid-bottom {
+    transform: translateY(0%);
+    transition: none;
+}
+
+/* Estado: Pestañeo sutil al despertar */
+#ps1-eyelids.flutter .eyelid-top {
+    transform: translateY(-40%);
+    transition: transform 0.4s ease-out;
+}
+#ps1-eyelids.flutter .eyelid-bottom {
+    transform: translateY(40%);
+    transition: transform 0.4s ease-out;
+}
+
+/* Estado: Abriendo ojos completamente (al despertar) */
+#ps1-eyelids.opening .eyelid-top {
+    transform: translateY(-102%);
+    transition: transform 1.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+#ps1-eyelids.opening .eyelid-bottom {
+    transform: translateY(102%);
+    transition: transform 1.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ── CINEMÁTICA 3D INICIAL — EXPEDIENTE 98 ────────────────── */
+.ps1-cinematic-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100010;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.ps1-cinematic-bars {
+    width: 100%;
+    height: 70px;
+    background: #000;
+    z-index: 2;
+}
+
+.ps1-cinematic-bars.top {
+    border-bottom: 2px solid rgba(0, 229, 255, 0.3);
+}
+
+.ps1-cinematic-bars.bottom {
+    border-top: 2px solid rgba(0, 229, 255, 0.3);
+}
+
+.ps1-cinematic-vignette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.85);
+    pointer-events: none;
+}
+
+.ps1-cinematic-content {
+    position: absolute;
+    bottom: 95px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+    max-width: 880px;
+    background: radial-gradient(ellipse at top, rgba(10, 24, 36, 0.94) 0%, rgba(3, 8, 14, 0.96) 100%);
+    border: 1px solid #00e5ff;
+    padding: 16px 28px;
+    border-radius: 4px;
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.35), inset 0 0 15px rgba(0, 229, 255, 0.1);
+    text-align: center;
+    backdrop-filter: blur(6px);
+    z-index: 10;
+    animation: cinematicContentFade 0.4s ease-out;
+}
+
+@keyframes cinematicContentFade {
+    from { opacity: 0; transform: translate(-50%, 15px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.ps1-cinematic-tag {
+    color: #ffcc00;
+    font-family: 'VT323', monospace;
+    font-size: 1.25rem;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.6);
+}
+
+.ps1-cinematic-subtitle {
+    color: #ffffff;
+    font-family: 'VT323', monospace;
+    font-size: 1.55rem;
+    line-height: 1.4;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.ps1-cinematic-skip {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    color: rgba(255, 255, 255, 0.75);
+    font-family: 'VT323', monospace;
+    font-size: 1.15rem;
+    letter-spacing: 1.5px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(0, 229, 255, 0.4);
+    padding: 6px 14px;
+    border-radius: 3px;
+    z-index: 10;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+    animation: cinematicSkipPulse 2s infinite;
+}
+
+@keyframes cinematicSkipPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; color: #00e5ff; border-color: #00e5ff; box-shadow: 0 0 12px rgba(0, 229, 255, 0.5); }
+}
+
+/* ---- LENS WATER SPLASH EFFECT (Cinemática / Charco de Agua) ---- */
+#ps1-lens-water-splash {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100015;
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
+    background: radial-gradient(circle at 35% 65%, rgba(200, 240, 255, 0.18) 0%, transparent 60%);
+    backdrop-filter: blur(1.5px);
+}
+
+#ps1-lens-water-splash.active {
+    opacity: 1;
+}
+
+.lens-drop {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at 35% 25%, rgba(255, 255, 255, 0.95) 0%, rgba(180, 225, 255, 0.5) 45%, rgba(40, 90, 130, 0.35) 80%, rgba(255, 255, 255, 0.6) 100%);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.8), inset 0 -1px 2px rgba(0, 50, 90, 0.5);
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+    animation: lensDropSlideDown var(--duration, 3.2s) cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.lens-streak {
+    position: absolute;
+    width: 3px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.75) 0%, rgba(180, 230, 255, 0.35) 60%, transparent 100%);
+    border-radius: 2px;
+    filter: blur(0.5px);
+    animation: lensStreakFade var(--duration, 3.2s) ease-out forwards;
+}
+
+@keyframes lensDropSlideDown {
+    0% {
+        transform: scale(0.3) translateY(0);
+        opacity: 0;
+    }
+    10% {
+        transform: scale(1.15) translateY(2px);
+        opacity: 0.95;
+    }
+    25% {
+        transform: scale(1.0) translateY(8px);
+        opacity: 0.90;
+    }
+    70% {
+        transform: scale(0.95) translateY(32px);
+        opacity: 0.65;
+    }
+    100% {
+        transform: scale(0.6) translateY(55px);
+        opacity: 0;
+    }
+}
+
+@keyframes lensStreakFade {
+    0% { opacity: 0; transform: scaleY(0.2); }
+    15% { opacity: 0.85; transform: scaleY(1.0); }
+    75% { opacity: 0.5; }
+    100% { opacity: 0; transform: scaleY(1.4); }
+}
+
+
+
+

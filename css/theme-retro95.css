@@ -1,0 +1,780 @@
+/* === A.N.N THEME (FREE MODE - WINDOWS 95 RETRO THEME) === */
+.ann-theme {
+    background: #000000 !important; /* Keep sides black to avoid stretching look */
+    font-family: 'Tahoma', 'Arial', sans-serif !important;
+}
+
+/* Deshabilitar curvatura y scanlines CRT estiradas en el modo Windows 95 para una imagen pixel-perfect ultra nítida */
+.ann-theme .crt-vignette,
+.ann-theme .crt-overlay {
+    display: none !important;
+}
+
+.ann-theme * {
+    font-family: 'Tahoma', 'Arial', sans-serif !important;
+    text-shadow: none !important;
+}
+
+/* Desktop Background Override */
+.ann-theme .desktop {
+    background-color: #008080 !important;
+    border: none !important;
+}
+
+/* Desktop Icons Override */
+.ann-theme .icon {
+    color: #ffffff !important;
+}
+.ann-theme .icon-label {
+    font-size: 0.9rem !important;
+    text-shadow: 1px 1px 1px #000000 !important;
+    color: #ffffff !important;
+}
+.ann-theme .icon:hover {
+    background-color: rgba(0, 0, 128, 0.25) !important;
+    border: 1px dotted #ffffff !important;
+    border-radius: 0px !important;
+}
+
+/* Emojis restoration */
+.ann-theme .icon-img {
+    filter: none !important;
+    text-shadow: none !important;
+}
+
+/* Right Sidebar (Wallet & Quest Log) — W95 style */
+.ann-theme #right-sidebar #quest-log,
+.ann-theme #right-sidebar #wallet-ui {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    box-shadow: 1px 1px 0 #000000 !important;
+    color: #000000 !important;
+    font-family: 'Tahoma', Arial, sans-serif !important;
+}
+.ann-theme #right-sidebar #quest-log h3 {
+    background: linear-gradient(90deg, #000080, #1084d0) !important;
+    color: #ffffff !important;
+    margin: -15px -15px 10px -15px !important;
+    padding: 4px 8px !important;
+    font-size: 0.85rem !important;
+    border-bottom: none !important;
+}
+.ann-theme #right-sidebar #quest-log #quest-text {
+    color: #000000 !important;
+}
+.ann-theme #right-sidebar #wallet-ui p {
+    color: #000000 !important;
+}
+.ann-theme #right-sidebar #wallet-ui #wallet-balance {
+    color: #000080 !important;
+    font-weight: bold !important;
+}
+
+/* Dialogue Box in Win95 (Standard dialogue popup styled like a classic window) */
+.ann-theme .dialogue-box {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    color: #000000 !important;
+    border-radius: 0px !important;
+    padding: 15px !important;
+    padding-top: 30px !important; /* Extra padding for absolute title bar */
+    box-shadow: 1px 1px 0px 0px #000000, 2px 2px 10px rgba(0,0,0,0.5) !important;
+    box-sizing: border-box !important;
+}
+.ann-theme .dialogue-box > div:first-child {
+    position: absolute !important;
+    top: 2px !important;
+    left: 2px !important;
+    right: 2px !important;
+    height: 18px !important;
+    background: linear-gradient(90deg, #000080, #1084d0) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0px 6px !important;
+    margin: 0 !important;
+    border-bottom: none !important;
+}
+.ann-theme .dialogue-name {
+    color: #ffffff !important;
+    font-weight: bold !important;
+    font-size: 0.8rem !important;
+    background: transparent !important;
+    width: auto !important;
+    margin-bottom: 0 !important;
+    display: inline-block !important;
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+}
+.ann-theme #btn-skip-dialogue {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    padding: 0px 6px !important;
+    font-size: 0.75rem !important;
+    font-weight: bold !important;
+    box-shadow: none !important;
+    border-radius: 0px !important;
+    height: 14px !important;
+    line-height: 10px !important;
+    margin: 0 !important;
+}
+.ann-theme .dialogue-text {
+    font-size: 0.95rem !important;
+    color: #000000 !important;
+    margin-top: 5px !important;
+}
+.ann-theme .dialogue-continue {
+    color: #555555 !important;
+    font-size: 0.75rem !important;
+    margin-top: 10px !important;
+}
+
+/* Windows 95 Windows */
+.ann-theme .browser-window {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    box-shadow: 1px 1px 0px 0px #000000 !important;
+    border-radius: 0px !important;
+}
+
+.ann-theme .browser-header {
+    background: linear-gradient(90deg, #000080, #1084d0) !important;
+    color: #ffffff !important;
+    font-family: 'Tahoma', 'Arial', sans-serif !important;
+    font-size: 0.9rem !important;
+    font-weight: bold !important;
+    padding: 3px 8px !important;
+    border-bottom: none !important;
+    border-radius: 0px !important;
+}
+
+.ann-theme .close-btn, .ann-theme .min-btn {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    width: 16px !important;
+    height: 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 9px !important;
+    font-weight: bold !important;
+    box-shadow: none !important;
+    border-radius: 0px !important;
+    padding: 0 !important;
+    margin: 0 1px !important;
+    box-sizing: border-box !important;
+    vertical-align: middle !important;
+    cursor: pointer !important;
+}
+.ann-theme .min-btn {
+    padding-bottom: 5px !important; /* Raises the underscore so it's not squished at the bottom */
+}
+.ann-theme .close-btn:hover, .ann-theme .min-btn:hover {
+    background: #dfdfdf !important;
+    color: #000000 !important;
+}
+.ann-theme .close-btn:active, .ann-theme .min-btn:active {
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+}
+
+.ann-theme .browser-address {
+    background: #c0c0c0 !important;
+    border-bottom: 2px solid #808080 !important;
+    padding: 6px 10px !important;
+}
+.ann-theme .browser-address input {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    font-size: 0.85rem !important;
+    padding: 3px 5px !important;
+    border-radius: 0px !important;
+}
+
+.ann-theme .browser-content {
+    background: #ffffff !important;
+    color: #333333 !important;
+}
+
+/* Override Fake Links in ANN Theme */
+.ann-theme .fake-link {
+    color: #0000ee !important;
+    text-shadow: none !important;
+    font-family: 'Tahoma', 'Arial', sans-serif !important;
+    font-size: 0.95rem !important;
+    text-decoration: none !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+.ann-theme .fake-link:hover {
+    text-decoration: underline !important;
+    color: #551a8b !important;
+}
+
+/* Notepad / Wiki Content Area (Recessed Edit box) */
+.ann-theme #wiki-content, .ann-theme #notepad-content {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    font-family: 'Courier New', monospace !important;
+    border-radius: 0px !important;
+}
+
+/* Terminal within Win95 (Classic white-on-black command line app inside gray window) */
+.ann-theme #window-terminal .browser-content {
+    background: #000000 !important;
+    color: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    font-family: 'Courier New', monospace !important;
+    border-radius: 0px !important;
+}
+.ann-theme #window-terminal .browser-content * {
+    font-family: 'Courier New', monospace !important;
+    color: #c0c0c0 !important;
+}
+.ann-theme #terminal-input {
+    color: #ffffff !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Taskbar Override */
+.ann-theme .taskbar {
+    background-color: #c0c0c0 !important;
+    border-top: 2px solid #ffffff !important;
+    box-shadow: 0 -1px 0px 0px #808080 !important;
+    color: #000000 !important;
+}
+
+.ann-theme .start-btn {
+    background-color: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    color: #000000 !important;
+    font-weight: bold !important;
+    font-size: 0.9rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    border-radius: 0px !important;
+}
+.ann-theme .start-btn::before {
+    content: "📁 Start" !important;
+    font-size: 0.9rem !important;
+}
+.ann-theme .start-btn:active {
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+}
+
+.ann-theme .time {
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    padding: 2px 10px !important;
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    font-size: 0.85rem !important;
+}
+
+/* Start Menu Override with vertical "Phantom OS" blue sidebar */
+.ann-theme #start-menu {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    box-shadow: 2px 2px 0px 0px #000000 !important;
+    padding-left: 32px !important; /* Space for sidebar */
+    position: absolute !important;
+    border-radius: 0px !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.ann-theme #start-menu::before {
+    content: "Phantom OS" !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 25px !important;
+    background: linear-gradient(to bottom, #000080, #1084d0) !important;
+    color: #ffffff !important;
+    font-weight: bold !important;
+    font-family: 'Arial Black', sans-serif !important;
+    font-size: 0.85rem !important;
+    writing-mode: vertical-rl !important;
+    transform: rotate(180deg) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    padding-top: 10px !important;
+    box-sizing: border-box !important;
+}
+
+.ann-theme #start-menu * {
+    color: #000000 !important;
+    font-family: 'Tahoma', 'Arial', sans-serif !important;
+}
+
+.ann-theme #start-menu .start-item {
+    border-bottom: none !important;
+    padding: 8px 12px !important;
+}
+
+.ann-theme #start-menu .start-item:hover {
+    background: #000080 !important;
+    color: #ffffff !important;
+}
+.ann-theme #start-menu .start-item:hover * {
+    color: #ffffff !important;
+}
+
+/* Recycle Bin / Trash in Win95 */
+.ann-theme #window-trash .browser-content {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+}
+.ann-theme #trash-file-list {
+    background: #ffffff !important;
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    margin: 5px;
+}
+.ann-theme #trash-file-view {
+    background: #ffffff !important;
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 5px;
+}
+.ann-theme #trash-preview-header, .ann-theme #trash-preview-footer {
+    background: #c0c0c0 !important;
+    border: none !important;
+}
+.ann-theme #trash-file-title {
+    color: #000000 !important;
+}
+
+/* Buttons inside Windows */
+.ann-theme .terminal-btn, .ann-theme .node-btn {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    padding: 6px 16px !important;
+    box-shadow: none !important;
+    border-radius: 0px !important;
+}
+.ann-theme .terminal-btn:hover, .ann-theme .node-btn:hover {
+    background: #d4d0c8 !important;
+    color: #000000 !important;
+}
+.ann-theme .terminal-btn:active, .ann-theme .node-btn:active {
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+}
+
+/* Survival Wallet and HUD */
+.ann-theme #right-sidebar * {
+    color: #000000 !important;
+}
+.ann-theme #quest-log {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    box-shadow: 1px 1px 0px 0px #000000 !important;
+}
+.ann-theme #wallet-ui {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    box-shadow: 1px 1px 0px 0px #000000 !important;
+}
+
+/* Applet overrides for ANN-THEME (FREE MODE) */
+/* NetManager overrides */
+.ann-theme #window-netmanager .browser-content {
+    background: #c0c0c0 !important;
+}
+.ann-theme #window-netmanager .browser-content * {
+    color: #000000 !important;
+    font-family: 'Tahoma', 'Arial', sans-serif !important;
+}
+.ann-theme #window-netmanager h2, .ann-theme #window-netmanager p {
+    color: #000000 !important;
+}
+.ann-theme #net-result {
+    color: #008000 !important;
+    text-shadow: none !important;
+}
+
+/* Antivirus overrides */
+.ann-theme #window-antivirus .browser-content {
+    background: #c0c0c0 !important;
+}
+.ann-theme #window-antivirus .browser-content > div {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+}
+.ann-theme #window-antivirus span:not(#antivirus-status):not(#btn-antivirus-shield):not(#antivirus-shield-label):not(.antivirus-warning), 
+.ann-theme #window-antivirus div:not(#antivirus-logs):not(#antivirus-upgrades-list) {
+    color: #000000 !important;
+}
+.ann-theme #antivirus-shield-label.shield-active {
+    color: #008000 !important; /* Dark Green */
+    font-weight: bold !important;
+}
+.ann-theme #antivirus-shield-label.shield-inactive {
+    color: #800000 !important; /* Dark Red */
+    font-weight: bold !important;
+}
+.ann-theme .antivirus-warning {
+    color: #800000 !important; /* Dark Red */
+    font-weight: bold !important;
+}
+.ann-theme #antivirus-status.shield-active {
+    color: #008000 !important; /* Dark Green */
+    font-weight: bold !important;
+}
+.ann-theme #antivirus-status.shield-inactive {
+    color: #800000 !important; /* Dark Red */
+    font-weight: bold !important;
+}
+.ann-theme #antivirus-upgrades, .ann-theme #antivirus-logs {
+    background: #ffffff !important;
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    color: #000000 !important;
+}
+.ann-theme #antivirus-scan-bar {
+    background: #000080 !important;
+}
+.ann-theme #window-antivirus .terminal-btn:not(#btn-antivirus-shield) {
+    border-color: #808080 !important;
+    color: #000000 !important;
+}
+.ann-theme #btn-antivirus-shield.shield-active {
+    color: #008000 !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    background: #dfdfdf !important;
+    font-weight: bold !important;
+}
+.ann-theme #btn-antivirus-shield.shield-inactive {
+    color: #800000 !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    background: #c0c0c0 !important;
+    font-weight: bold !important;
+}
+
+/* DarkChat overrides */
+.ann-theme #window-chat .browser-content {
+    background: #c0c0c0 !important;
+}
+.ann-theme #chat-history {
+    background: #ffffff !important;
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    color: #000000 !important;
+    padding: 5px !important;
+}
+.ann-theme #chat-history p {
+    color: #000000 !important;
+}
+.ann-theme #chat-input {
+    background: #ffffff !important;
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Start Menu Fixes */
+.ann-theme #start-menu-header {
+    display: none !important;
+}
+.ann-theme #start-menu-shutdown {
+    border-top: 2px solid #808080 !important;
+    color: #000000 !important;
+}
+
+/* Browser Padding Fix */
+.ann-theme #window-browser .browser-content {
+    padding: 0 !important;
+    background: #05070a !important;
+}
+.ann-theme #page-wiki,
+.ann-theme #page-market,
+.ann-theme #page-tracker,
+.ann-theme #page-pastedumps {
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Custom Alert Retro Win95 Style */
+.ann-theme #custom-alert {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.5) !important;
+    font-family: 'Tahoma', 'Arial', sans-serif !important;
+    padding: 15px !important;
+}
+.ann-theme #custom-alert-title {
+    background: #000080 !important;
+    color: #ffffff !important;
+    padding: 4px 8px !important;
+    margin: -15px -15px 15px -15px !important;
+    text-align: left !important;
+    font-size: 0.95rem !important;
+    font-weight: bold !important;
+    border-bottom: none !important;
+}
+.ann-theme #custom-alert-msg {
+    color: #000000 !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 15px !important;
+}
+.ann-theme #custom-alert button {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    font-family: 'Tahoma', 'Arial', sans-serif !important;
+    padding: 4px 20px !important;
+    cursor: pointer !important;
+}
+.ann-theme #custom-alert button:active {
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+}
+
+/* Recycle Bin status bar */
+.ann-theme #trash-status-bar {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    border-top: 2px solid #808080 !important;
+}
+
+/* General overrides for new windows in Win95 theme */
+.ann-theme #window-wallpaper-gen .browser-window,
+.ann-theme #window-miner .browser-window,
+.ann-theme #window-nodemap .browser-window {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    border: 2px solid !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
+    border-right-color: #808080 !important;
+    border-bottom-color: #808080 !important;
+    border-radius: 0px !important;
+    box-shadow: 1px 1px 0px 0px #000000 !important;
+}
+
+.ann-theme #window-wallpaper-gen .browser-header,
+.ann-theme #window-miner .browser-header,
+.ann-theme #window-nodemap .browser-header {
+    background: linear-gradient(90deg, #000080, #1084d0) !important;
+    color: #ffffff !important;
+    border-bottom: none !important;
+    border-radius: 0px !important;
+}
+
+.ann-theme #window-wallpaper-gen .browser-content,
+.ann-theme #window-miner .browser-content,
+.ann-theme #window-nodemap .browser-content {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    font-family: 'Tahoma', 'Arial', sans-serif !important;
+}
+
+/* W95 inputs, selects, and textareas */
+.ann-theme #window-wallpaper-gen select,
+.ann-theme #window-wallpaper-gen input[type="text"],
+.ann-theme #window-miner select,
+.ann-theme #window-miner input[type="radio"],
+.ann-theme #window-nodemap select {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    border-radius: 0px !important;
+    padding: 3px 5px !important;
+    font-family: 'Tahoma', 'Arial', sans-serif !important;
+    outline: none !important;
+}
+
+.ann-theme #window-wallpaper-gen label,
+.ann-theme #window-miner label,
+.ann-theme #window-nodemap label,
+.ann-theme #window-wallpaper-gen span,
+.ann-theme #window-miner span:not(#miner-hashrate):not(#miner-status),
+.ann-theme #window-nodemap span:not(#nodemap-status-text):not(#nodemap-connections-count) {
+    color: #000000 !important;
+}
+
+/* Section dividers inside wallpaper-gen */
+.ann-theme #window-wallpaper-gen > div > div > div {
+    border-color: #808080 !important;
+}
+
+/* Wallpaper generator preview canvas W95 border */
+.ann-theme #window-wallpaper-gen #wallpaper-canvas {
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+}
+
+/* Miner console (Cmd prompt style but recessed W95 border) */
+.ann-theme #window-miner #miner-console {
+    background: #000000 !important;
+    color: #00ff66 !important;
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    border-radius: 0px !important;
+    font-family: 'Courier New', monospace !important;
+}
+
+/* Miner progress bar in W95 (deep blue block, no neon glow) */
+.ann-theme #window-miner #miner-progress-bar {
+    background: #000080 !important;
+    box-shadow: none !important;
+}
+
+/* Status header panels in miner & nodemap (recessed gray container) */
+.ann-theme #window-miner .browser-content > div:first-child,
+.ann-theme #window-nodemap .browser-content > div:first-child {
+    background: #c0c0c0 !important;
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    border-radius: 0px !important;
+    color: #000000 !important;
+}
+
+/* Network Node Map canvas recessed border */
+.ann-theme #window-nodemap #nodemap-canvas {
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+}
+
+/* Network Node Map console log */
+.ann-theme #window-nodemap #nodemap-log {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid !important;
+    border-top-color: #808080 !important;
+    border-left-color: #808080 !important;
+    border-right-color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+    border-radius: 0px !important;
+    font-family: 'Courier New', monospace !important;
+}
+
+
+
+

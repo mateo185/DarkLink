@@ -1,0 +1,47 @@
+/* OS Window Styles */
+.os-window {
+    position: absolute;
+    top: 10%;
+    left: 7.5%;
+    width: 85%;
+    height: 75%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20; /* Dynamically adjusted by bringToFront */
+    /* El cursor indica que la ventana es arrastrable desde la barra de título */
+    box-sizing: border-box;
+}
+
+.os-window.hidden { 
+    display: none !important; 
+}
+
+/* Purge Window Positioning */
+#window-purge {
+    width: 60% !important;
+    height: 45% !important;
+    top: 27.5% !important;
+    left: 8% !important;
+}
+
+/* Notepad Widget Specific styles */
+#window-notepad {
+    z-index: 30;
+}
+
+#notepad-content {
+    width: 100%;
+    height: calc(100% - 40px);
+    background: #000;
+    color: #0f0;
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+}
+#notepad-content[readonly] {
+    cursor: default;
+}

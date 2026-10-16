@@ -1,0 +1,621 @@
+
+TABLERO DE TAREAS - DARKLINK OS
+Proyecto de Desarrollo de Videojuegos Web
+
+
+EQUIPO DE DESARROLLO:
+Luca Bonamaison Marconi
+Mateo Gandini
+
+Última actualización: Agosto 2026 (Fase 39)
+
+✅ COMPLETADO
+
+[LUCA] Estructura base del proyecto (HTML/CSS/JS)
+Creación del index.html, estructura del DOM, pantallas y secciones principales.
+
+[LUCA] Motor de diálogos con typewriter y cola de mensajes
+Sistema que muestra texto carácter por carácter con soporte de skip (ESC/click).
+
+[MATEO] Secuencia de arranque (Boot) con arte ASCII
+Simulación de boot de BIOS con líneas animadas y carga progresiva.
+
+[LUCA] Modo Historia / Supervivencia
+Motor de amenazas con pisadas y respiración (Web Audio API).
+Mecánica de apagar pantalla para esconderse del atacante.
+Sistema de misiones con temporizador global.
+Pantalla de Game Over con razón personalizada.
+
+[MATEO] Minijuegos de purga de virus (10 tipos)
+Snake, CodeBreaker, PacketHunter, MemoryFlood, PortScanner, FirewallDefender, DataStream, RegistryCleaner, BinarySort, RAM_Eater.
+Barra de progreso y callback de victoria/derrota.
+
+[LUCA] Navegador NightLink / Torch
+Buscador con base de datos de +30 sitios Deep Web simulados.
+Sistema de latencia simulada (enrutamiento de nodos).
+Filtro de páginas de historia en modo libre (error 404 retro).
+
+[MATEO] Base de datos de la Deep Web (deepweb_db.js)
+Generación procedural de mercados, foros, blogs y servicios.
+Contenido inmersivo con lore de ciberseguridad.
+
+[LUCA] DarkChat — Chat oscuro con NPCs
+Misiones procedurales: NPCs piden enlaces que hay que buscar en Torch.
+Sistema de recompensas en BTC al completar pedidos.
+
+[MATEO] Sistema de economía y billetera BTC
+Wallet funcional con ganancias por hackeos y misiones.
+Compras reales en SilkSale (VPN, Overclock, Kit PGP, Exploit Pack).
+Las mejoras afectan directamente el gameplay.
+
+[LUCA] Terminal con comandos avanzados
+help, ls, cat, rm, scan, hack, exploit, decrypt, neofetch, wallet, tutorial.
+Arte ASCII con sysinfo y banner de DARKLINK.
+
+[MATEO] Cámara web e inmersión de terror
+Acceso real a la webcam del jugador con MediaDevices API.
+Captura sigilosa de fotos e inyección en foros (mecánica de doxxeo).
+Filtros de terror (glitch, tonos rojos) sobre el feed de video.
+
+[LUCA] Cyber-Asistente WinHello
+Asistente holográfico animado con cara reactiva (ojos, boca, estado infectado).
+Tutorial interactivo de 6 pasos para el Sandbox.
+Respuestas contextuales inteligentes basadas en estado real del juego.
+Detección de amenazas en tiempo real con modo visual "glitched".
+
+[MATEO] Tema visual Windows 95 para Modo Libre
+Bordes biselados 3D, tipografía Tahoma, fondo verde azulado.
+Ventanas grises clásicas, Menú Inicio retro, barra de tareas.
+Separación completa de temas: CRT retro (historia) vs W95 (libre).
+
+[LUCA] Sistema de arrastre de ventanas (drag & drop)
+Arrastre preciso con getBoundingClientRect() y límites de contenedor.
+Prevención de solapamiento de íconos con detección geométrica.
+Cursor grab/grabbing como feedback visual.
+
+[MATEO] Antivirus con escaneo animado
+Escaneo completo con barra de progreso y logs.
+Escudo en tiempo real con estados activo/inactivo.
+Upgrades comprables (Overclock reduce tiempo de escaneo).
+
+[LUCA] Modularización del código
+Separación de script.js (4500+ líneas) en 12 módulos JS.
+Separación de styles.css en 8 hojas CSS por subsistema.
+Compatibilidad offline (file://) sin servidor web.
+
+[MATEO] Audio y música
+Música de menú con efecto glitch sincronizado.
+Síntesis de sonidos de amenaza con Web Audio API.
+Ventilador de PC de fondo, clicks, typewriter.
+
+[LUCA] Menú contextual y Bloc de Notas
+Click derecho con opciones contextuales.
+Bloc de Notas interactivo con registro del sistema.
+
+[LUCA + MATEO] Corrección de bugs (Fases 8-14)
+Fix superposición de pantalla negra con ventanas (stacking context).
+Fix botón de apagar pantalla no clickeable.
+Fix música del menú persistente en modo libre.
+Fix WinHello spam de mensajes y cooldown.
+Fix arrastre bloquea botones minimizar/cerrar.
+Fix cámara web visible después de completar minijuego.
+Reposicionamiento adaptativo del botón de apagar.
+
+[LUCA] Rediseño Deep Web y IA conversacional (Fase 15)
+6 nuevas categorías de páginas de la Deep Web con HTML/estética propia.
+7 banners gráficos generados por IA para decorar páginas.
+Motor de IA reescrito: slang hacker hispano, memoria contextual, +80 patrones.
+Sincronización de timestamps del navegador con el reloj in-game.
+
+[LUCA] Fix límites de arrastre de íconos (Fase 16)
+Los íconos del escritorio ya no pueden arrastrarse fuera del desktop container.
+Clamping con Math.max/min idéntico al sistema de ventanas.
+
+[LUCA] Fix menú contextual y 20 fondos de escritorio (Fase 17)
+El menú click derecho ya no aparece dentro de ventanas abiertas.
+20 fondos curados en 5 categorías temáticas (hacker, cyberpunk, synthwave, cosmos, rojo).
+
+[LUCA] DarkPaint — Aplicación de dibujo (Fase 18)
+Canvas HTML5 con 7 herramientas: lápiz, goma, relleno, línea, rect, elipse, cuentagotas.
+Paleta de 30 colores, selector de tamaño (1-50px), colores primario y secundario.
+Guardar como PNG, botón de limpiar, ventana arrastrable con tab en taskbar.
+Ícono 🎨 visible en modo libre junto a Wiki.txt, DarkChat y Antivirus.
+
+[LUCA + MATEO] Corrección de bugs y mejoras en Modo Libre (Fase 21)
+Impedir que los íconos de escritorio se arrastren encima del asistente WinHello o su globo de texto.
+Solución al bug que borraba el mensaje del chat room IRC al re-renderizar la página.
+Expansión masiva de la IA de respuestas del Chat Room con +12 categorías y vocabulario en español.
+
+[LUCA] Fix: Reloj y Recorte de Partículas (Fase 22)
+Solución al reloj in-game estancado en 03:14 AM en Sandbox (Free Roam) iniciando el bucle del tiempo.
+Solución al clipping/recorte del canvas de partículas y forcefield de WinHello reubicando el mask circular a un ::before.
+
+[LUCA] Rediseño: Rostro Creepy y Voz Aguda (Fase 23)
+- Re-estilización del widget WinHello a una cara amarilla espeluznante con expresiones (sonrisa delgada, boca abierta y dientes afilados).
+- Ajuste acústico para hacer la voz sintetizada y los pitidos de fallback notablemente agudos y perturbadores.
+
+[LUCA] Rediseño: Entorno Sin Seguridad, Mouse Tracking y Sustos Glitch (Fase 24)
+- Remoción de todas las partículas, campos de fuerza y anillos holográficos de WinHello.
+- Reposicionamiento del botón de apagar pantalla a bottom: 160px para alinearlo arriba de WinHello y no obstruirlo.
+- Re-orientación a la izquierda del globo de texto de WinHello con flecha de conexión apuntando a la derecha.
+- Programación del seguimiento del cursor de mouse (mouse tracking) en tiempo real en la cara de WinHello.
+- Integración de diálogos paranoicos y susurros aleatorios de terror en el bucle inactivo (idle loop).
+- Creación de susto glitch jumpscare de 1.2s al clickear el asistente con un 12% de probabilidad (vibración, cara en pánico con dientes de sierra, chillido glitch y texto perturbador).
+
+[LUCA] Climax Interactivo del System Purge (Fase 25)
+- 4 retos interactivos durante la purga final (20%, 40%, 60%, 80%): Token alfanumérico, Inundación de Puertos (clicker), Calibración de CPU (matemáticas), Protocolo de Fuerza (comando textual).
+- Barra de progreso se bloquea hasta resolver cada reto. Feedback visual y sonoro por reto.
+- Exclusividad de ventana: se ocultan todas las ventanas, se desactiva taskbar/iconos/WinHello durante la purga.
+
+[LUCA] App de Cámara para Modo Libre (Fase 25)
+- Nuevo módulo `camera.js`: captura de fotos (JPEG) y grabación de video (WebM) usando MediaDevices + MediaRecorder.
+- Galería con tarjetas de preview, descarga y eliminación. Overlay de preview a pantalla completa.
+- Ícono 📷 en el escritorio, ventana arrastrable/minimizable, integrada con barra de tareas.
+
+[LUCA] Fondo de Pantalla desde DarkPaint (Fase 25)
+- Botón "Usar de Fondo" en DarkPaint que exporta el canvas como DataURL PNG y lo aplica como fondo del escritorio.
+- Alerta de éxito al establecer el fondo personalizado.
+
+[LUCA] Suite de Nuevas Aplicaciones en Modo Libre (Fase 26)
+- Creador de Fondos Pro: Generador de tapices con canvas y previsualización interactiva automática. Soporta selectores de color de fondo, patrón (rejilla, scanlines, matrix), texto superpuesto con personalización de color y tamaño de fuente.
+- Administrador de Tareas: Monitoreo y finalización de procesos de forma reactiva sincronizado con MutationObserver, actualizando el listado en tiempo real según la visibilidad de ventanas como Snake, Paint, Antivirus y Bloc de Notas.
+- Minador BTC: Aplicación de minado variable con logs en consola de shares a pool y barra de progreso real que avanza según intensidad, otorgando Bitcoins en la wallet al llegar al 100%.
+- Super Dark Lighter (Juego 2D): Arcade en navegador web bajo dominio "http://darklightergame88x.ann/", con límites de pantalla fijos por radio del jugador, pantalla de Game Over CRT/glitch animada y bursts de partículas de luz/satoshis.
+- Ajuste de Botones Minimizar y Cerrar: Rediseño 3D exacto de 16x14px con alineación flexbox en theme-retro95.css para corregir botones aplastados.
+
+
+🔄 EN PROGRESO
+
+[LUCA] Balanceo de dificultad del modo historia
+Ajustar tiempos de amenaza y frecuencia de virus.
+Calibrar el temporizador global según la cantidad de misiones.
+
+[MATEO] Testing general y QA
+Pruebas en diferentes resoluciones y navegadores.
+Verificar que todos los comandos de terminal funcionen.
+Validar flujo completo: menú → boot → historia → victoria → modo libre.
+
+
+📋 PENDIENTE (BACKLOG)
+
+[MATEO] Sistema de guardado de partida
+Implementar guardado en localStorage del progreso del jugador.
+Guardar: BTC, mejoras compradas, misiones completadas, nodos hackeados.
+
+[LUCA] Más nodos hackeables con dificultad progresiva
+Crear red de nodos con niveles de seguridad escalonados.
+Agregar nuevos tipos de desafíos al hackear nodos avanzados.
+
+[MATEO] Más minijuegos de ciberseguridad
+Inyección SQL simulada.
+Descifrado de claves por fuerza bruta.
+Phishing interactivo (diseñar un email falso convincente).
+
+[LUCA] Modo multijugador asíncrono
+Un jugador como atacante, otro como defensor.
+Sistema de turnos o tiempo real con WebSockets.
+
+[MATEO] Mejoras visuales adicionales
+Más animaciones de transición entre pantallas.
+Efectos de partículas en la terminal.
+Scanlines dinámicos ajustables en configuración.
+
+[LUCA] Documentación técnica del código
+JSDoc en todas las funciones principales.
+README.md con instrucciones de instalación y uso.
+Diagrama de arquitectura del proyecto.
+
+
+[LUCA] Fase 27 — Mapa de Red ANN (NetworkNodeMap)
+Reemplazo del Administrador de Tareas por el Mapa de Nodos interactivo.
+Canvas animado a 60fps con nodos flotantes, física de paredes y paquetes de datos
+viajando sobre las conexiones entre nodos de la red (clearnet, dark web, Tor relays).
+Escaneo de red con círculo radar expansivo y pitidos de descubrimiento via Web Audio API.
+Telemetría al clic: IP, latencia y descripción técnica en consola inferior.
+
+[LUCA] Fase 27 — Tematización W95, Layout Vertical, Inyección de Alta Resolución y Correciones de UI
+Sobrescrituras CSS en theme-retro95.css para Creador de Fondos Pro, Minador BTC
+y Mapa de Red: fondo gris #c0c0c0, bordes biselados 3D blanco/gris, cabeceras
+gradiente navy, inputs con efecto recessed, consola con tipografía monoespaciada.
+Disposición de iconos de arriba hacia abajo (columnas verticales) emulando Windows 95
+con flex-wrap vertical y dimensiones adaptadas para evitar colisiones con el sidebar.
+Optimización de calidad de Fondos Pro: generación matemática sobre un canvas offscreen
+a resolución nativa de pantalla (1080p+) antes de inyectar el fondo en el escritorio.
+Alineación estética de barra de control de la cámara para impedir superposición de textos en W95.
+Corrección de distorsión de relación de aspecto en el minigame con object-fit: contain y reescalado de fuentes tipográficas para mejorar la legibilidad.
+
+[LUCA] Fase 28 — Mejoras de Interactividad del Cyber-Asistente WinHello
+Integración con Terminal en tiempo real: evento `terminal-command-executed` en terminal.js
+y listener contextual en winhello.js que genera respuestas según el comando CLI ingresado.
+Lip-Sync Dinámico: sincronización labial orgánica con intervalo de 80ms que varía
+la altura y escala horizontal de la boca durante el habla TTS en lugar de animación CSS rígida.
+Minijuego de Adivinanzas Criptográficas: base de 10 preguntas sobre puertos, protocolos
+y sistemas numéricos. Recompensa de ₿ 0.01-0.03 BTC al responder correctamente.
+Acceso al chat en estado callado: apertura forzada de burbuja al presionar chat-toggle.
+
+[LUCA] Fase 29 — Innovaciones en Modo Libre: NetSniffer, Hacking de Nodos, OPSEC
+App NetSniffer v1.0: analizador de paquetes de red en tiempo real estilo Wireshark neón.
+Interceptación de credenciales en texto plano de paquetes HTTP/DNS para ganar BTC.
+Minijuego de Hacking Simon-Says binario integrado en el Mapa de Red ANN.
+Al comprometer un nodo con la secuencia correcta, se ganan ₿ 0.03-0.05 BTC.
+Sistema OPSEC de amenazas físicas: pasos en la habitación + cuenta regresiva
+para apagar la pantalla. Penalización de ₿ 0.02 BTC si el jugador no reacciona a tiempo.
+[LUCA + MATEO] Fase 30 — Entornos 3D PS1 y SO Viva en Pantalla de PC (Modo Libre)
+Experiencia 3D en primera persona estilo PlayStation 1 con 4 entornos aleatorios (Habitación Tétrica, Sala de Servidores, Sótano Abandonado y Búnker Militar).
+Render en baja resolución (320x240) con filtrado nearest-neighbor, scanlines CRT y viñeta.
+Pantalla Viva de DarkOS en tiempo real: el monitor CRT dentro del espacio 3D renderiza dinámicamente el escritorio teal de Windows 95, íconos, barra de tareas, reloj en vivo y WinHello via CanvasTexture.
+Sistema de movimiento WASD vectorizado trigonométricamente según la dirección de la cámara (yaw).
+Resolución de colisiones AABB que impide atravesar el escritorio, la silla, las cajas y las paredes.
+Post-procesado de audio procedural con Web Audio API: hums de servidor/drone, pasos y micro-eventos de horror (crujidos, goteos, ojos en la sombra, balizas rojas).
+[LUCA + MATEO] Fase 31 — Correcciones en Modo Libre (Habitación 3D), Audio y Preservación de Estado en PC
+Detención total de audio del menú (menu.mp3) y glitches visuales (menu-glitch-active) mediante chequeos en promesas asíncronas y timeupdate.
+Reorientación de la cama individual y cabecera pegadas a la pared trasera (HALF_D = 2.9) y derecha (HALF_W = 3.0) mirando a la ventana.
+Ubicación de la mesita de noche pegada a la pared trasera al lado de la cama en el piso.
+Giro de 180° del reloj digital LED para que la hora (03:14 AM) sea visible de frente desde el cuarto.
+Normalización del lerp de cámara (startCamYaw en [-PI, PI]) para eliminar rotaciones locas de 360° al sentarse en la PC.
+Ajuste de targetCamPos (Z = -1.15) para detener el zoom limpiamente frente al cristal del monitor CRT sin atravesarlo.
+Silenciamiento de voz TTS (stopWinHelloVoice), audio de PC (mutePCAudio), tipeo y medios al presionar "Levantarse de la silla".
+Encendido y apagado interactivo de lámpara de noche (toggleRoomLamp en click / tecla F / E) con iluminación ambiental tenue, cálida y guirnaldas nocturnas.
+Preservación de ventanas, navegador y terminal al levantarse/sentarse sin re-despliegue de cartel Sandbox ni re-saludo de WinHello.
+Transición fluida al Modo Libre desde la pantalla final de victoria (_ENTRAR_MODO_LIBRE via enterFreeRoamFromVictory).
+Raycasting direccional de miradas y cero parpadeo inicial de carteles (display:none por defecto y reseteo en init).
+Alineación limpia de paredes y zócalos de madera 3D continuos (buildBaseboards) en las 4 paredes del cuarto.
+Eliminación del botón "🪑 LEVANTARSE DE LA PC" en el Modo Normal (Historia) manteniendo su uso exclusivo en el Modo Libre.
+
+[LUCA + MATEO] Fase 32 — Mega Expansión 90s: Dormitorio 3D Ultra Interactivo, Espejo Dinámico y Cinemática de Sueño
+1. Boombox Retro 90s: modelo 3D con carretes giratorios y LEDs; sintonizador con 4 emisoras procedurales completas (Synthwave/Lofi, Techno 90s, Estática AM, Canal Misterioso) con Web Audio API. Tecla R para sintonizar y E/click para encender.
+2. Ventana interactiva y clima dinámico: apertura de hojas con E/click, cortinas ondeando con el viento, lluvia con partículas 3D, relámpagos procedurales y truenos con retardo acústico. Abrir la ventana reduce el tiempo de reacción OPSEC de 4s a 3s.
+3. Puerta y pasillo oscuro: apertura con E y pestillo funcional con L. Pasillo con iluminación de tubo parpadeante y silueta de intruso acechando en eventos de amenaza.
+4. Teléfono 90s analógico: base con cable espiral y tubo interactivo. Tono de marcado continuo, repique procedural y llamadas creepy de amenazas durante hackeos.
+5. TV CRT 14" con Videocasetera VHS: pantalla frontal orientada al centro del cuarto mirando al jugador. Sonido "TUNK" de relé y flyback de 15.6 kHz. 4 canales dinámicos pixel-art en canvas 2D (nieve, noticiero 1998 con ticker en movimiento, pantalla azul "VIDEO 1", transmisión pirata con ojos acechantes). Cambio de canal con R.
+6. Consola PS1 y Minijuego Arcade Space Invaders 1995: modelo 3D de consola PlayStation 1 gris con joystick y LED de standby; minijuego 2D completo con naves alienígenas, disparos láser y recompensa de +0.100 BTC al ganar.
+7. Gato Low-Poly 90s: mascota 3D en la cama con animación de respiración y cola oscilante. Interacción para acariciar (mimos) con maullidos/ronroneos procedurales y recompensa con tip de supervivencia tras 10 caricias. Se esconde asustado bajo la cama en momentos de peligro.
+8. Espejo Dinámico con Reflejo Real del Jugador (1998): canvas 2D en tiempo real que calcula distancia y posición relativa del jugador. Muestra el personaje noventero (buzo oversized, pelo grunge, ojos parpadeantes que siguen al jugador) escalando proporcionalmente con la distancia. En momentos de intrusión, aparece una sombra siniestra con ojos rojos acechando detrás del reflejo.
+9. Cinemática de Sueño y Salto Temporal (4 Horas): al acostarse en la cama, la cámara enfoca el techo suavemente, se cierran los ojos (pantalla oscura) y el reloj del juego avanza 4 horas (03:14 AM ➔ 07:14 AM). El cielo exterior y las luces transicionan de noche oscura a resplandor matutino y luz solar. Audio procedural que pasa de respiración a canto de pájaros matutinos y alarma suave.
+10. Correcciones y Depuración: eliminación del modelo de la guitarra ("pala"), corrección de saltos bruscos de cámara y cooldown protector de 1.2s para evitar despertar accidentalmente.
+
+
+[LUCA + MATEO] Fase 33 — Correcciones 3D, Exterior Vivo 360° y Continuidad Panorámica del Vecindario (Agosto 2026)
+1. TV CRT 14": Corrección del clipping de contenido de canales (noticias, nieve, transmisión pirata) que traspasaba los bordes físicos del televisor. Los planos de cada canal ahora usan un plano recortado alineado al marco frontal de la TV.
+2. Clima Dinámico con Ciclos Naturales: La lluvia ya no es permanente. Se implementó un sistema de estados meteorológicos (clear/rain) con transiciones suaves de opacidad. El cielo permanece despejado la mayoría del tiempo (~65%) con lluvias ocasionales de 45-75 segundos.
+3. Cinemática de Sueño — Animación de Cierre/Apertura de Ojos: Al acostarse, se reproduce una animación de párpados cerrándose gradualmente (franjas negras superior e inferior que convergen al centro). Al despertar, los párpados se abren suavemente revelando la habitación iluminada con luz matutina.
+4. Espejo Dinámico Mejorado: Eliminación del texto "Apretar E". Reflejo pixel-art mejorado del personaje con cabeza, torso, brazos y piernas completas en estilo 90s grunge. El espejo ahora muestra el entorno detrás del jugador (pared, puerta, cama, ventana) reflejado en perspectiva.
+5. Exterior 3D Vivo y Detallado: Reemplazo completo del exterior simple por un vecindario suburbano nocturno de los 90s con 17 casas residenciales variadas (colonial azul, split-level beige, terracota, verde salvia, amarillo pastel) con garajes, porches iluminados y coches retro aparcados.
+6. Vegetación y Arbolado: Árboles caducifolios y pinos distribuidos a lo largo de toda la avenida (x = -150 a +150) con animación de balanceo por el viento.
+7. Postes de Luz y Tendido Eléctrico: 14 postes de luz noventeros con farolas cálidas cada 22 metros y cables combados interconectados cubriendo toda la calle.
+8. Tráfico Fluido y Peatones: Coches circulando por la calzada y ciclista en la acera a lo largo de 320 metros de recorrido continuo.
+9. Mobiliario Urbano: Buzones, bancas de parque, hidrantes, basureros metálicos, letreros de calle y cercas de madera distribuidos a lo largo de la avenida.
+10. Fauna Nocturna: Aves en formación con aleteo animado y luciérnagas con movimiento orgánico flotante.
+11. Luna Astronómica Corregida: Reubicación de la luna a z = -51.0 (detrás de las montañas en z = -46.5 y -41.5) para que los picos montañosos la eclipsen naturalmente en el horizonte.
+12. Montañas sin Intersección: Los conos montañosos se aplanaron en el eje Z (scale 0.04) manteniendo alturas imponentes (38-48 unidades) pero ocupando menos de 1 metro de grosor, eliminando la penetración visual hacia las casas.
+13. Continuidad Panorámica Total (360 metros): Calzada, aceras, césped, casas, postes, vegetación y montañas extendidos a lo largo de 360 metros sin vacíos laterales al mirar hacia los costados por la ventana.
+14. Campo de Estrellas Expandido: Partículas de estrellas distribuidas en un rango de 340 metros a profundidad z = -53.0.
+15. Corrección de Cielo Azul de Día al Inicio: El color inicial del cielo era azul brillante (0x5b9ee1) aunque el juego comienza a las 03:14 AM. Corregido a color nocturno (0x141e30) tanto en la variable como en scene.background.
+16. Telón Oscuro Anti-Filtración: Se añadió un plano oscuro continuo (0x0a1220) a z = -48.0 detrás de las montañas para bloquear la filtración de cielo brillante entre los picos montañosos.
+17. Torre de Telecomunicaciones Visible: La torre estaba oculta entre las capas montañosas (z = -43.5). Se reubicó a z = -38.0 (delante de las montañas) para que sea visible con su estructura metálica y baliza roja.
+18. Montañas Intermedias sin Superposición con Casas: Se redujeron los radios de los conos de la capa intermedia (de r = 22-26 a r = 15-18) y se movieron a z = -42.0 para que no invadan las casas del vecindario.
+19. Actividad Urbana Día/Noche Realista: De noche los coches circulan 60% más lento y tardan 3.5x más en reaparecer. El ciclista/peatón tiene esperas de 45-85 segundos de noche vs 12-22 de día. Las aves solo vuelan de día. De día el vecindario se siente vivo y activo.
+20. Corrección Definitiva de Traspaso de Montañas y Árboles: Se eliminó el `rotation.y` aleatorio en los conos montañosos (el cual rotaba el eje squasheado proyectando los picos hacia adelante y atravesando las casas). Con `scale.set(1.0, 1.0, 0.05)` y `rotation.y = 0`, las montañas quedan permanentemente planas en Z a más de 20 metros detrás de las viviendas. Se alinearon además todos los árboles y pinos en los callejones exactos entre casas.
+
+[LUCA + MATEO] FASE 34: Mecánica de la Entidad Oscura, Golpes en la Puerta y Hitboxes
+1. Sistema de Golpes en la Puerta: Invocación aleatoria de golpes violentos contra la puerta de madera (síntesis procedural Web Audio) con silueta en 3D golpeando furiosa en el pasillo.
+2. Mecánica de Bloqueo con 'L': El jugador puede trabar el pestillo con la tecla 'L' (tanto frente a la puerta como durante la amenaza). Si se traba a tiempo, se reproducen pasos de huida alejándose por el pasillo.
+3. Jumpscare Screamer y Game Over: Si no se traba a tiempo la puerta, salta un screamer a pantalla completa con rostro demoníaco deforme, sacudidas violentas y chillido ensordecedor, seguido de reinicio de partida.
+4. Aislamiento Acústico en Modo Libre: Eliminación de respiraciones externas o pisadas de monitor en el Modo Libre. Todo el audio de minijuegos se escucha estrictamente dentro de la PC.
+5. Hitbox Sólida de Puerta y Escritorio: Hitbox física para la hoja de la puerta abierta hacia adentro del dormitorio y delimitación completa del escritorio de PC para impedir que el jugador los atraviese.
+6. Confinamiento Estricto de Habitación: Límite frontal z <= FRONT_WALL_Z - r que impide que el jugador salga del cuarto hacia el pasillo.
+
+[LUCA + MATEO] FASE 35: Perfeccionamiento de Amenazas en Modo Libre, Anti-Camping de Pestillo, Expansión Multimedia y Persona Encapuchada (Agosto 2026)
+1. Corrección de Bloqueo de Puerta con 'L': Solución al conflicto de keylisteners; 'L' bloquea y desbloquea el pestillo de inmediato en cualquier posición y ángulo, tanto mirando a la puerta como deambulando.
+2. Amenazas de Respiración/Pisadas en PC en Modo Libre: Restauradas exclusivamente dentro de la PC o durante minijuegos activos de hackeo, con botón de "APAGAR PANTALLA" y recompensas de sigilo (+₿ 0.025 BTC). Se suspenden de inmediato al levantarse de la silla.
+3. Castigo por Cerrojo Prolongado (Anti-Camping): Picaporte tiembla con fuerza a los 18s de bloqueo continuo; a los 28s la entidad derriba la puerta hacia el suelo en 3D con estruendo demoledor, screamer ensordecedor y Game Over.
+4. Expansión Masiva de Boombox 90s: 8 estaciones completas sintetizadas proceduralmente (Lofi Synth, Euro Techno, Static Voices, Dark Cyberwave 1998, Vapor Jazz Night, Radio Espectro 66.6, Retro Chiptune, Numbers Station).
+5. Encendido Espontáneo de la Radio: Evento perturbador aleatorio en Modo Libre donde la radio se enciende sola sintonizando frecuencias oscuras.
+6. Expansión Masiva de TV CRT 14": 8 canales en canvas pixel-art (Nieve ANT, Noticias 1998, Video 1, Señal Pirata, Dibujos Animados Pixel & Link 1998, Teletienda de Madrugada 56k, Cámara CCTV Pasillo, Transmisión de Emergencia EBS).
+7. Persona Encapuchada en la Vereda de Enfrente: Modelo 3D de NPC humanoide con sudadera oversize que aparece aleatoriamente en la acera de enfrente, arroja una piedrita a la ventana con sonido cristalino realista y observa fijamente antes de marcharse.
+
+[LUCA + MATEO] FASE 36: Corrección de Intersecciones 3D, Reglas de Pestillo ('L'), Geometría Hermética de Puerta/Pared y Rediseño de Teléfono 90s (Agosto 2026)
+1. Separación Cama — Mesita de Noche: Reubicación de la mesa de noche (`x = 1.48, z = 2.58`) y redimensionamiento a `0.50 x 0.48 x 0.44 m`, eliminando por completo la penetración en la cama y manteniendo 17 cm de separación limpia.
+2. Geometría Hermética de Pared y Puerta: División del zócalo frontal inferior en dos piezas limpias a los laterales del vano de la puerta, adición de umbral de madera al ras del piso, jambas interiores sólidas y paredes de retorno del pasillo en `FRONT_WALL_Z` para evitar agujeros o z-fighting al abrir la puerta.
+3. Regla Estricta del Pestillo 'L': El pestillo solo puede trabarse cuando la puerta está cerrada (`!state.doorOpen`). Si la puerta está abierta, presionar 'L' muestra la advertencia `[ NO PUEDES PONER EL PESTILLO CON LA PUERTA ABIERTA — CIÉRRALA PRIMERO ]` con clic retro.
+4. Rediseño del Teléfono Vintage 90s: Ubicado en el sector delantero derecho de la mesita de noche (`x = +0.11, z = -0.07`), con cuerpo beige, teclado con 12 botones numéricos en matriz 3x4, auricular con mango y bocinas, cuna y cable espiralado, perfectamente visible y accesible.
+5. Sincronización de HUD e Hitboxes: Actualización de hitboxes físicas en `resolveCollisions` y prompts dinámicos de HUD al mirar hacia la puerta (`[ PUERTA TRABADA 🔒 | CLICK / E: ABRIR | L: DESTRABAR PESTILLO ]`).
+
+[LUCA + MATEO] FASE 37: Desvinculación de Teléfono en Amenazas, Game Over Total en Modo Libre, Audio Ambiental / Lluvia Procedural y Separación Radio-Lámpara (Agosto 2026)
+1. Desvinculación de Sonido de Teléfono en Modo Normal: Eliminada la llamada a `startPhoneRinging()` en `triggerThreat()`; la respiración pesada ya no dispara sonidos de llamada telefónica.
+2. Pantalla de Game Over y Reinicio en Modo Libre: Tras el screamer en Modo Libre, `gameOver()` oculta de inmediato la escena 3D de PS1 (`#screen-ps1-intro`), libera el pointer lock (`exitPointerLock()`), detiene audios de la habitación y despliega la pantalla de Game Over (`#screen-gameover`, `z-index: 2000000`) con botón `_REINICIAR_SISTEMA`.
+3. Motor de Audio Atmosférico y Lluvia Procedural (Web Audio API): Doble capa de ruido blanco/grave filtrado en tiempo real en `room_interactions.js` que simula impacto de gotas y chaparrón con modulación suave de volumen según opacidad del clima, intensificándose al abrir la ventana.
+4. Separación Radio Boombox — Lámpara: Redimensionamiento y reposicionamiento en la mesa de noche con 8 cm de separación en Z y 5 cm en Y, eliminando cualquier intersección entre la radio y la tulipa de la lámpara.
+5. Corrección de Bloqueo Permanente del Pestillo ('L'): Eliminación de listener duplicado en `survival.js` que disparaba doble toggle instantáneo, adición de debounce de 220 ms en `room_interactions.js` y bloqueo de `e.repeat`, permitiendo trabar y destrabar la puerta libremente en cualquier momento.
+
+[LUCA + MATEO] FASE 38: Banner de Alerta Visual de Amenaza, Canal Toast HUD Independiente y Paisaje Sonoro Envolvente (Agosto 2026)
+1. Banner Visual de Alerta en Pantalla: Contenedor `#ps1-alert-banner` superior animado en rojo neón que advierte de inmediato al jugador cuando golpean la puerta: `"⚠ ¡ALGUIEN GOLPEA LA PUERTA CON FUERZA! — APRIETA 'L' PARA TRABAR EL PESTILLO 🔒"`, cambiando a verde con confirmación de éxito.
+2. Canal HUD Independiente para Notificaciones: Elemento `#ps1-notif-toast` que evita que el bucle de renderizado (`animate()`) borre las notificaciones de acciones en el siguiente frame.
+3. Presencia Acústica Envolvente y Tono de Habitación 90s: Incorporación de oscilador de presencia de cuarto (~85-160 Hz) y mayor potencia de volumen en viento nocturno y lluvia procedural, con desbloqueo inmediato de audio en el primer clic.
+
+[LUCA + MATEO] FASE 39: Activación Temprana de Audio Ambiental, Corte Instantáneo de Respiración en PC y Mensajes Horarios Dinámicos (Agosto 2026)
+1. Inicio de Audio Ambiental Inmediato: Desbloqueo y arranque de osciladores ambientales en `startPS1Intro()` y al pulsar `_MODO_SANDBOX_` (F2); la habitación se escucha viva y cálida desde el primer segundo.
+2. Corte Inmediato de Respiración al Levantarse de la PC: Enmudecimiento instantáneo (`0 ms`) y desconexión total de los nodos de respiración y pasos en `audio.js` y `ps1_intro.js` al dejar la silla.
+3. Notificaciones Contextuales de Ventana según Hora: Distinción horaria dinámica entre mañana (06:00-11:59), tarde (12:00-18:59) y noche (19:00-05:59) al abrir la ventana.
+4. Saludo Horario Dinámico al Despertar de la Cama: Cálculo de la hora resultante tras 4h de sueño (`🌅 AMANECER`, `☀️ MAÑANA`, `🌇 TARDE` o `🌙 NOCHE`), reproduciendo aves matutinas solo si es de día y alarma tenue si es de noche.
+
+
+[LUCA + MATEO] FASE 40: Corrección Crítica de Inicialización de DarkOS, WinHello y Torch en Modo Libre (Agosto 2026)
+1. Bandera de Inicialización `state.freeRoamInitialized`: Solución a la interpretación errónea de primera sesión como re-entrada.
+2. Despliegue Garantizado de DarkChat / WinHello / Torch: Diálogo de bienvenida, inducción tutorial y listeners de búsqueda/navegación de Torch funcionando desde la primera sentada.
+3. Preservación de Estado de Ventanas: Al pararse y volverse a sentar en la PC, las ventanas abiertas y el estado del escritorio se mantienen intactos.
+
+[LUCA + MATEO] FASE 41: Hub de Textos 3D Anti-Superposición, Alerta de Puerta en PC y Silenciamiento Total en Game Over (Agosto 2026)
+1. Hub Superior 3D Anti-Superposición (`#ps1-top-notification-hub`): Estructura flexbox centrada con espaciado vertical de 12px que apila `#ps1-alert-banner` y `#ps1-notif-toast` sin colisiones ni sobreposiciones.
+2. Alerta Crítica en Pantalla de PC (`#pc-threat-banner`): Banner táctico de seguridad desplegado dentro del escritorio cuando golpean la puerta en Modo Libre, con botón `[ 🔒 TRABAR PESTILLO (L) ]` y reacción de WinHello.
+3. Listener Global de Tecla 'L' en Escritorio: Traba y destraba el pestillo directamente desde la PC sin necesidad de levantarse primero.
+4. Silenciamiento Absoluto de Audio en Game Over / Reiniciar Sistema: `stopTrafficAudio()`, `stopAllAmbientAudio()`, `shutdownOpsecHazard()` y `mutePCAudio()` llamados en `gameOver()`, deteniendo bucle `requestAnimationFrame` y cortando por completo autos, bocinas, lluvia y tono ambiental.
+
+[LUCA + MATEO] FASE 42: Tope de Mimos al Gato, Lluvia Intermitente con Truenos Potentes, Entidad de Puerta Rara y Amenazas en PC Solo Durante Infección (Agosto 2026)
+1. Tope Estricto de 10 Mimos al Gato: Al 10mo mimo el gato ronronea, otorga +₿ 0.05 BTC y se duerme plácidamente sin permitir spam ni desbordes.
+2. Lluvia Intermitente y Sonido de Truenos: Períodos despejados extendidos (120-240s), menor probabilidad de lluvia (20%) y síntesis Web Audio de truenos enriquecida con graves y sub-bass retumbante.
+3. Entidad de Puerta Esporádica: Frecuencia de chequeo reducida a 40s con probabilidad 10% (~cada 6 a 8 min) para preservar el factor sorpresa.
+4. Restricción de Amenazas en PC a Infecciones Activas: Respiración, pisadas y botón de apagar pantalla solo ocurren durante minijuegos activos de hackeo; corte total e instantáneo de audio de pasos y respiración al levantarse de la silla.
+5. Restauración de Montañas Originales: Revertido el diseño visual de las montañas exteriores a su geometría clásica retro original.
+
+[LUCA + MATEO] FASE 44: Cinemática Inicial Épica con Música Procedural Synth, Vista de Calle con Lluvia Torrencial y Rayos, y Exclusividad de Expediente 98 al Modo Libre (Agosto 2026)
+1. Cinemática Inicial 3D Épica en Modo Libre: Secuencia de 19.5s con 4 actos coreografiados: cámara baja en la calle exterior con asfalto mojado, lluvia densa y autos, ascenso suave hacia la ventana del dormitorio, cruce del cristal al interior retro de los 90s, y zoom al monitor CRT.
+2. Banda Sonora Synth Procedural (Web Audio API): Motor de música sin archivos de audio externos con sub-bass analógico (32.7 Hz), progresión de acordes menores en capas, arpegio retro y efectos de impacto/truenos sincronizados.
+3. Partículas de Lluvia y Relámpagos Exteriores: Expansión a 350 partículas de lluvia de alta densidad con mayor velocidad y destellos de relámpagos programados con estruendos de trueno.
+4. Ocultamiento de Expediente 98 en Modo Normal: Ícono `#icon-expediente` configurado oculto por defecto y mostrado exclusivamente en Modo Libre / Sandbox.
+
+
+[LUCA + MATEO] FASE 55: Reposicionamiento y Arrastre del Widget de Capítulo de Historia (Agosto 2026)
+1. Reubicación Limpia: Widget movido a la izquierda del panel lateral (right: 310px; top: 15px), eliminando la superposición con el registro de tareas y la billetera.
+2. Arrastre Libre (Drag & Drop): El jugador puede mover la tarjeta del capítulo a cualquier lugar de la pantalla haciendo clic y arrastrando la cabecera.
+3. Botón de Ocultar: Botón [×] añadido para cerrar el widget temporalmente y mantener el escritorio libre.
+
+[LUCA + MATEO] FASE 56: Exclusividad de Levantarse en Modo Libre y Sistema Integral Bilingüe Español/Inglés (Agosto 2026)
+1. Aislamiento Estricto de Levantarse de la PC: Corrección del override CSS en `.stand-up-btn` eliminando `display: inline-flex !important`, habilitando `.visible` para que `#btn-stand-up` y `#start-menu-standup` permanezcan 100% ocultos en Modo Normal (Historia) y activos exclusivamente en Modo Libre.
+2. Modal Emergente de Bienvenida para Selección de Idioma: Ventana inicial cyberpunk (`#modal-language-select`) para elegir entre Español y English, con selector dinámico en menú principal y menú inicio.
+3. Motor Completo de Internacionalización (`js/i18n.js`): Traducción del 100% de textos, diálogos, nombres de interlocutores, prompts 3D de la habitación (PC, cama, lámpara, radio, puerta, ventana, TV, gato), cinemática de 5 actos, tareas activas, terminal, navegador NightLink, tareas, antivirus, minijuegos y voz TTS de WinHello.
+
+[LUCA + MATEO] FASE 57: Corrección de la Cinemática 3D en Modo Libre y Subtítulos Bilingües Dinámicos (Agosto 2026)
+1. Solución al ReferenceError de Traducciones en Cinemática: Se corrigió la llamada a `tFn` en `updateIntroCinematic(dt)` y se definió de forma global y segura en `js/ps1_intro.js`, evitando bloqueos en el bucle de renderizado de Three.js.
+2. Renderizado Fluido de la Escena 3D: La cinemática de introducción al Modo Libre ahora inicia inmediatamente mostrando el entorno 3D exterior iluminado por relámpagos, lluvia torrencial y el recorrido de cámara sin pantalla negra.
+3. Localización Dinámica de Subtítulos y Skip: Título del expediente, subtítulos de los 5 actos y prompt de saltar cinemática (`[ ESPACIO / ESC: SALTAR CINEMÁTICA ]` / `[ SPACE / ESC: SKIP CINEMATIC ]`) sincronizados en vivo con el idioma activo.
+
+[LUCA + MATEO] FASE 58: Traducción Integral y Exhaustiva del 100% del Juego (Agosto 2026)
+1. Minijuegos de Purga (10 Virus): Localización completa de títulos, consignas, pistas dinámicas de aproximación ("HIGHER"/"LOWER" y "MAYOR"/"MENOR"), botones de recalibración y banner de éxito.
+2. Supervivencia y Amenazas: Traducción de todas las alertas de intrusión, bucle de amenazas, audio captions (respiración, pasos, picaporte, multas BTC, sigilo), pantalla de monitor apagado, razones de Game Over y pantalla de victoria.
+3. Aplicaciones de Escritorio: Traducción de Papelera, Wiki offline, escaneo electromagnético de NetManager, minijuego de intrusión a nodos y consola/alertas del minador BTC.
+4. Modo Historia (Expediente 98): Modales de misiones, códigos, pistas forenses, toasts de objetivos y diálogos de victoria final.
+5. Inmersión 3D: Prompt de dormir, piedra en la ventana, overlay de la consola PlayStation Arcade e interfaz de usuario general.
+
+[LUCA + MATEO] FASE 59: Inglés como Idioma Primario Predeterminado y Saneamiento i18n (Agosto 2026)
+1. Inglés como Idioma Primario: `currentLanguage = 'en'` por defecto en `i18n.js` y `<html lang="en">` en `index.html`.
+2. Reorganización del Selector de Idioma: `🌐 EN / ENGLISH` configurado como el primer botón del modal de bienvenida.
+3. Sincronización 100% Simétrica de Diccionarios: Se eliminaron desfasajes de claves y superposiciones, corrigiendo la traducción de botones del menú principal (`[ F1 ] _START_SYSTEM`, `[ F2 ] _SANDBOX_MODE_`), pantalla de nombre, pasos de instalación de herramientas de Deep Web y opciones del sistema.
+
+[LUCA + MATEO] FASE 60: Cinemática Épica de Calle, Audio de Lluvia Anti-Saturación y Tráfico Anti-Colisión (Septiembre 2026)
+1. Audio de Lluvia y Clima Anti-Saturación: Implementación de Ruido Rosa 1/f y compresión de rango dinámico en Web Audio API para eliminar distorsión en tormentas.
+2. Cinemática Épica de Calle: Auto deportivo retro con conos volumétricos de luz 3D, estela roja de velocidad, sacudida de cámara (Camera Shake), relámpago sincronizado al impacto del charco y 55 partículas 3D de agua con gotas en el lente.
+3. Tráfico Inteligente Anti-Colisión: Sistema de detección de distancia en el mismo carril con modulación de velocidad para evitar sobrepasos y choques entre coches.
+4. Despeje de Vegetación: Reubicación de árboles caducifolios y coníferas estrictamente a los jardines abiertos entre casas y patios traseros, eliminando cualquier traspaso de techos o paredes.
+
+[LUCA + MATEO] FASE 64: Garajes con Interior 3D y Estacionamiento Profundo (Septiembre 2026)
+1. Cavidad Interior 3D en Garajes: Modelado de paredes perimetrales, tabique interior, techo y suelo de hormigón para cada garaje residencial.
+2. Iluminación Cálida Cenital: Luz interior de techo en cada garaje que resalta la cavidad y el vehículo resguardado.
+3. Estacionamiento Interior: Vehículos estacionados profundamente dentro del garaje, asomando su parrilla frontal y faros hacia la calle a través del marco abierto.
+
+[LUCA + MATEO] FASE 65: Eventos Estacionales, Gorro Navideño, Transiciones Cinemáticas y Pesadillas (Septiembre 2026)
+1. Corrección del Gorro Navideño: Reubicación exacta sobre el monitor CRT con borde blanco esponjoso y pompón visible sin quedar enterrado.
+2. Hitbox Sólida del Árbol de Navidad: Obstáculo de colisión física para el árbol del dormitorio en temporada navideña.
+3. Expansión Navideña y de Halloween: Regalos bajo el árbol (interactuables), chocolate caliente humeante, medias, muñeco de nieve exterior, tazón de dulces de Halloween, calavera gótica, telarañas y murciélagos animados.
+4. Transición Cinemática de Capítulos: Presentación cinematográfica de capítulos con scanlines CRT, audio stinger sub-bass, títulos estilizados y directivas claras.
+5. Sistema de Pesadillas y Parálisis del Sueño: Ocurrencia probabilística al dormir en Modo Libre con Entidad Oscura a los pies de la cama, latidos cardíacos, abalanzamiento aterrador y despertar de golpe sin muerte.
+6. Traducción Bilingüe Integral: 100% de los nuevos textos traducidos a Español e Inglés en i18n.js.
+
+[LUCA + MATEO] FASE 66: Parálisis del Sueño Hiper-Realista, Profundidad Solar y Murciélagos Exteriores (Septiembre 2026)
+1. Rotación de Cabeza/Cámara en Parálisis: El jugador puede mover el cuello con el ratón para mirar alrededor de la habitación oscura y fijar la vista en la criatura.
+2. Modelo 3D Grotesco y Realista de la Entidad: Columna encorvada, costillas expuestas, mandíbula desencajada en grito silencioso, ojos carmesí brillantes y 5 garras afiladas en cada mano.
+3. Suspenso Progresivo y Jumpscare: Espasmo repentino de cabeza, aproximación lenta hacia el colchón (z = 0.20 -> 1.15) con latidos acelerados, y jumpscare aterrador con chillido y abalanzamiento a la cara antes del despertar con jadeo.
+4. Corrección de Profundidad Solar: El Sol y la Luna se sitúan en z = -72.0 detrás de las montañas (z = -56.0 y -48.0), poniéndose y saliendo de forma natural detrás de los picos.
+5. Murciélagos Exteriores de Halloween: Espacio aéreo exterior sobre la calle (z = -18.0) con alabeo y aleteo armónico, eliminando cualquier traspaso por el dormitorio.
+
+[LUCA + MATEO] FASE 67: Vecindario Cálido y Soleado, Murciélagos Nocturnos y Telarañas 3D (Septiembre 2026)
+1. Fachadas Soleadas y Luz Hemisférica: Reubicación de luz solar de frente a las casas y agregado de HemisphereLight cálida eliminando sombras grises tristes.
+2. Paleta Cálida de Casas: Colores acogedores noventeros (vainilla, azul cielo, menta, terracota y molduras blancas).
+3. Murciélagos Nocturnos de Halloween: Visibles exclusivamente de noche con velocidad lenta y planeos pausados realistas.
+4. Telarañas 3D y Arañas Articuladas: Telarañas geométricas radiales con hilos de seda plateada y araña 3D con 8 patas articuladas individuales.
+
+[LUCA + MATEO] FASE 68: Audio Terrorífico de Pesadillas, Nuevas Pesadillas Interactivas y Rotación (Septiembre 2026)
+1. Chillido Demoníaco Multi-Capa: Síntesis FM vocal gutural, grito agudo disonante, rasgado de garganta y sub-bass slam sísmico estremecedor.
+2. Pesadilla del Vacío y la PC Solitaria: Caminata interactiva con WASD en el vacío, giro instantáneo de 180° al tocar la PC, jumpscare en la cara de la entidad y despertar.
+3. Pesadillas del Pasillo y del Espejo Roto: Pasillo angosto con puerta trabada y persecución veloz; reflejo desfigurado en el espejo con ruptura de cristal.
+4. Rotación Aleatoria de 4 Pesadillas: Selección probabilística variada al dormir en Modo Libre con soporte bilingüe 100% en Español e Inglés.
+
+[LUCA + MATEO] FASE 69: Fix de Cristal de Ventana y Cielo 360°, Entidades Terroríficas Procedurales (The Mortuary Assistant) y Paridad i18n (Septiembre 2026)
+1. Fix Definitivo de Cristal de Ventana y Cielo: Configuración de depthWrite: false y renderOrder = 10 en las hojas de vidrio de la ventana para evitar el recorte rectangular del Z-Buffer sobre el cielo exterior; domo esférico 360° y far plane de cámara a 400m.
+2. 4 Variantes Terroríficas Procedurales (The Mortuary Assistant):
+   - tall_specter: Silueta de 2.45m con mandíbula descolgada y brazos que casi tocan el piso.
+   - crawling_ghoul: Entidad deforme en 4 patas con columna rota hacia atrás y ojos carmesí al ras del suelo.
+   - window_face: Rostro cadavérico con manos huesudas estampadas contra el vidrio exterior de la ventana.
+   - shadow_glitch: Silueta espasmódica con convulsiones de rotación a 25Hz y ojos cian titilantes.
+3. Atmósfera de Incomodidad y Escape Espeluznante: Micro-parpadeo de luces al acechar, detección de mirada con dot product, huida en reversa a 8.5m/s o caída al vacío, audio de tensión y estática, y pensamientos de sobresalto en el HUD.
+4. Atajo Rápido y Paridad i18n Total: Tecla P para invocar y alternar las 4 criaturas al instante; 612 claves traducidas en Español y 612 en Inglés con paridad perfecta.
+
+
+🚫 DESCARTADO / POSPUESTO
+
+(vacío — ninguna tarea descartada hasta el momento)
+
+
+[LUCA + MATEO] FASE 70: Restauración de Montañas Majestuosas, Fix de Ventana Abierta de Noche, Iluminación de Cinemática y Modelos Hiper-Realistas (Septiembre 2026)
+1. Restauración de Montañas Grandes y Cero Oclusión Negra:
+   - Cordillera norte y sur restablecida con alturas originales (h: 40 a 52m) imponentes y majestuosas.
+   - Materiales MeshBasicMaterial con fog: false y tonalidades azul noche (0x1c2b42 y 0x273b5a) que erradican completamente el colapso a negro en la noche ("cuando abro la ventana se ve negro de noche, de día no").
+   - Cristal ultra-traslúcido con opacidad 0.02 y niebla de tormenta a 0.016 para que la apertura de la ventana conserve la misma iluminación natural cristalina del cielo y las montañas.
+2. Iluminación Cinematográfica Espectacular:
+   - Incorporación de cinematicHemiLight (1.85) y cinematicMoonLight (1.50) con farolas intensificadas para erradicar la oscuridad excesiva en la cinemática de apertura.
+3. Modelos Hiper-Realistas de Terror (The Mortuary Assistant):
+   - Generador en canvas de textura cadavérica con venas y descomposición.
+   - 4 variantes con anatomía 3D realista: costillas protuberantes, apófisis espinosas, garras cadavéricas, articulaciones dislocadas y ojos macabros.
+4. Spawn Procedural Autónomo:
+   - Remoción de tecla manual 'P'; generación 100% aleatoria y orgánica en el Modo Libre durante la noche.
+
+[LUCA + MATEO] FASE 72: Arquitectura Completa de Casa de 3 Pisos, Sótano, Apagones por Tormenta, Linterna 3D y Corrección de Capítulos (Septiembre 2026)
+1. Corrección de SilkSale en Modo Libre (Capítulo 2 y 4):
+   - Compra de `kit_pgp.key` completa inmediatamente el objetivo `c2_silk`.
+   - Compra de `exploit_pack.pkg` completa el objetivo `c4_exploit`.
+2. Pantalla de Fin de Capítulo Cinematográfica:
+   - Debriefing cibernético profesional con checklist animado, resumen de expediente y confirmación de pago BTC.
+3. Iluminación Adaptativa para Posters y Espejo:
+   - Posters y espejo convertidos a MeshLambertMaterial, respondiendo de forma fotorrealista a ciclos de día/noche, lámpara y linterna sin brillo artificial nocturno.
+4. Casa Completa Multi-Planta con Sótano (3 Pisos Navegables):
+   - Planta Alta: Dormitorio, pasillo con cuadros familiares, baño superior completo y hueco de escalera.
+   - Escalera de madera 2->1 de 14 escalones con barandas hacia Planta Baja.
+   - Planta Baja: Living Room con sillón de 3 cuerpos, alfombra floral, TV CRT y ventanal con lluvia; Cocina-Comedor con linóleo, mesada en L, heladera noventera con imanes y mesa redonda; Baño y Foyer de entrada.
+   - Sótano: Muros de hormigón, vigas de madera con cañerías, caldera industrial, estanterías con cajas/herramientas, bombilla colgante y Caja de Disyuntores Eléctricos Principal (Breaker Box) interactiva.
+   - Motor de física y altura 3D con interpolación fluida de escaleras y colisiones multi-sector.
+5. Linterna 3D e Inventario de Mano:
+   - Linterna de mano vintage en el escritorio de la PC para recoger con [E], equipable en primera persona con luz SpotLight direccional y tecla rápida [F].
+   - HUD de inventario (`#ps1-inventory-bar`) reactivo.
+6. Apagones por Tormenta y Reparación en el Sótano:
+   - Rayos y relámpagos pueden disparar el disyuntor en tormentas, cortando la luz de toda la casa y apagando la PC.
+   - El jugador debe usar su linterna, descender al sótano y rearmar la palanca para restablecer la energía.
+7. Paridad Bilingüe Total:
+   - Claves añadidas en Español e Inglés en `js/i18n.js`.
+
+[LUCA + MATEO] FASE 73: Corrección Estructural de Casa 3D, Sótano sin Fugas Exteriores, Reubicación de Linterna y Aislamiento de Modo Libre (Septiembre 2026)
+1. Corrección de Muros y Habitaciones en Planta Baja:
+   - Añadidas paredes frontales/norte completas en living room y cocina en z = 1.0, solucionando la visibilidad abierta hacia la calle desde adentro.
+   - Barandillas de protección perimetral añadidas en el hueco de la escalera hacia el sótano, erradicando huecos negros entre living y cocina.
+2. Encerramiento y Reconstrucción del Baño Superior:
+   - Construcción de las 4 paredes perimetrales del baño en planta alta con zócalos de madera y marco de entrada al pasillo, eliminando el baño flotante sobre el vacío.
+   - Eliminación de tabiques ciegos antiguos que bloqueaban el pasillo superior y la escalera.
+3. Corrección de Cinemática y Sótano Exterior:
+   - Toda la vivienda interior agrupada en `fullHouseGroup`. Durante tomas exteriores (`p < 0.65`) de la cinemática, el interior permanece oculto (`visible = false`) y solo se ve la fachada exterior. Al entrar a la casa o explorar libremente, se enciende la vivienda interior y se apaga la fachada exterior.
+   - Restricción estricta de coordenadas del sótano a x: [-4.0, 4.0], z: [-2.8, 1.0], eliminando la protuberancia de 1.7m en el césped del patio delantero.
+4. Reubicación Ergonómica de la Linterna 3D:
+   - Linterna vintage trasladada desde detrás del gabinete de la PC hacia la superficie derecha e iluminada del escritorio (dx + 0.60, dz + 0.15) junto al mouse y teclado.
+   - Detección precisa de click/[E] para recogerla y equiparla inmediatamente con foco direccional e inventario HUD.
+5. Aislamiento Estricto de Modo Libre:
+   - Ajustes arquitectónicos y cinemáticos confinados al Modo Libre / Sandbox sin afectar la jugabilidad ni estabilidad del Modo Historia.
+6. Paridad Bilingüe Total:
+   - Claves y notificaciones de linterna sincronizadas en Español e Inglés en `js/i18n.js`.
+
+[LUCA + MATEO] FASE 74: Corrección de Navegación Vertical al Sótano, Erradicación de Árboles Invasivos, Control Estacional Estricto y Enlace Escénico de Linterna (Septiembre 2026)
+1. Descenso al Sótano Fluido sin Rebotes Verticales:
+   - Integrado `currentFeetY` en `getFloorHeight` para detectar el piso real del jugador. Se erradicó el falso positivo del dormitorio superior al cruzar z <= 1.0. El descenso por la escalera y permanencia en el sótano a Y = -5.6 es 100% estable.
+   - En `resolveCollisions`, habilitado el vano de escalera hacia el sótano (z: [1.0, 4.5], x: [-0.85, 0.85]) y los límites del sótano. Lerp suave a dt * 14.0.
+2. Erradicación de Árboles y Cercas Dentro de la Casa:
+   - Cerca perimetral de patio omite el sector de la vivienda del jugador (x: [-7.5, 7.5]), eliminando tablones que cruzaban Living y Cocina.
+   - Árboles posteriores desplazados a distancia segura (z >= 14.5, x <= -9.5 o x >= 9.5) para que troncos y follaje no toquen la estructura ni la base.
+3. Control Estricto de Ítems Estacionales:
+   - `buildSeasonalDecorations` no instancia objetos fuera de temporada.
+   - `isEffectivelyVisible` en el raycaster evita seleccionar objetos ocultos o invisibles (se eliminaron los prompts fantasmas de chocolate caliente y caramelos fuera de fecha).
+4. Operatividad Total y Enlace Escénico de Linterna 3D:
+   - `scene.add(camera)` formalizado, habilitando el renderizado en primera persona del modelo sostenido y su SpotLight direccional.
+   - Posicionamiento claro en escritorio a (-0.65, 0.768, -1.50) con bisel y cabezal interactuables.
+5. Paridad Bilingüe Total:
+   - Nuevas claves `prompt_breaker_restore` y `prompt_breaker_trip` en Español e Inglés en `js/i18n.js`.
+
+[LUCA + MATEO] FASE 75: Encerramiento Arquitectónico Total de Planta Alta, Erradicación de Artefactos Gouraud en Dormitorio y Culling Dinámico de Luces WebGL (Septiembre 2026)
+1. Erradicación del Agujero Negro Dithered en la Pared del Dormitorio:
+   - Teselado de muros mediante `segX` y `segY` en `createSeamlessWallMesh` eliminando la distorsión del sombreado por vértices (Gouraud / MeshLambertMaterial).
+   - Reubicación de mesa de noche y lámpara a distancia segura de la pared frontal (`z = 2.45`, luz en `z = 2.51`), logrando difusión lumínica suave y uniforme.
+2. Encerramiento Total de la Planta Alta y Pasillo:
+   - Pared Sur Trasera Superior en `z = 11.2` con pintura al óleo enmarcada, impidiendo que el cielo o los pinos exteriores se vean al abrir la puerta del dormitorio.
+   - Muro Oeste continuo en `x = -0.85` (de `z = 2.9` a `11.2`) con puertas paneladas y cuadros familiares.
+   - Muro Este en `x = 1.2` y cerramientos del baño con normales orientadas hacia el pasillo.
+   - Techo continuo a `y = ROOM_H` cubriendo todo el segundo piso de `z = 2.9` a `11.2`.
+3. Tabiquería y Cerramiento de Planta Baja:
+   - Tabiques divisorios en `x = -0.85` (cocina) y `x = 0.85` (living) con amplias arcadas transitables en `z: [5.1, 7.3]`, eliminando los huecos laterales de la escalera.
+   - Soffito cerrado debajo de los escalones y foyer en `z = 11.2` con puerta principal y luminaria.
+4. Culling Dinámico de Luces de la Casa (`updateHouseLighting`):
+   - Apagado de luces exteriores al estar bajo techo en Modo Libre, y activación selectiva de luces interiores por nivel de piso (Planta Alta, Planta Baja o Sótano).
+   - Máximo de 3 a 4 PointLights activas simultáneas, impidiendo que Three.js exceda el límite de la GPU y vuelva negros los muebles o habitaciones.
+
+[LUCA + MATEO] FASE 76: Corrección de Bugs Visuales en la Casa y Erradicación de Pasto Elevado en Sótano (Septiembre 2026)
+1. Corrección de Parches Blancos y Z-Fighting en Dormitorio:
+   - Elevación microscópica del piso del dormitorio (`y = 0.002`) y alfombra (`y = 0.008`) con `FrontSide`.
+   - Reorientación de `upBathWallN` hacia el baño (`z = 2.93`) eliminando el z-fighting con la pared frontal `wRight`.
+   - Descenso de techos de planta baja a `y = -0.01` con material `FrontSide`, eliminando parches blancos bajo la cama y TV.
+2. Encerramiento de Pasillo Superior y Puerta de Baño:
+   - Muros norte agregados en `z = 2.91` con molduras y zócalos de nogal cálido, clausurando vacíos negros en vano de puerta.
+   - Hoja de puerta de baño en `x = 1.7, z = 4.3` con picaporte metálico e interacción de puerta cerrada con traba.
+3. Cierre del Hueco en Escalera hacia el Living:
+   - Ampliación de escalones a 1.7m y alineación de `upWallEastStairs` a `x = 0.85`, eliminando la hendidura de 40cm al living.
+4. Eliminación de Baranda Redundante en Planta Baja:
+   - Remoción de barandas empotradas dentro del tabique de yeso en `x = -0.85` y `x = 0.85`.
+5. Erradicación del Pasto Elevado en Sótano y Cerramientos de Cimiento:
+   - Reemplazo del plano continuo único de césped por 4 cuadrantes perimetrales que excluyen la huella residencial (`x: [-7.0, 7.0]`, `z: [-3.5, 12.0]`).
+   - Exclusión de mechones de hierba 3D sobre la vivienda y cerramiento de laterales, descanso inferior y soffito de hormigón en la escalera de descenso al sótano.
+6. Paridad Bilingüe Total:
+   - Clave `prompt_door_bathroom_closed` implementada en Español e Inglés en `js/i18n.js`.
+
+[LUCA + MATEO] FASE 77: Erradicación de Teletransportación al Sótano, Apertura de Living/Cocina, Puerta de Baño y Sellado Hermético (Septiembre 2026)
+1. Erradicación de Teletransportación hacia el Dormitorio al Bajar al Sótano:
+   - Eliminado falso retorno de 0.0 en `getFloorHeight` para `z < 6.2` dentro del bloque `fy < -1.2`.
+   - Detección precisa de los 3 niveles: Sótano (`Y = -5.6`), Planta Baja (`Y = -2.8`) y Planta Alta (`Y = 0.0`), con rampa matemáticamente continua en la escalera al sótano (`z: [1.0, 4.5]`).
+   - El descenso y regreso por la escalera del sótano es fluido y bidireccional sin saltos ni bloqueos.
+2. Arcadas de Paso Libre hacia Living Room y Cocina:
+   - Reubicación de los vanos abiertos al pie de la escalera en `z: [6.7, 9.4]` (`pEast1`, `pEast2`, `archEastTop`, `pWest1`, `pWest2`, `archWestTop`).
+   - Libre tránsito en `resolveCollisions` a través de `x = 0.85` (living room con sofá y ventanal) y `x = -0.85` (cocina comedor con mesa y mesada en L).
+3. Sellado Hermético del Techo y Muros de Planta Alta (Imágenes 2, 3 y 5):
+   - Muro conector en `z = 6.0` de `x = 0.85` a `x = 1.7` (`upWallConnector`), clausurando la vista al cielo nocturno exterior y árboles desde el pasillo.
+   - Cielorraso dividido en 2 sectores continuos (`upCeilNorth` de ancho 2.55m para `z: [2.9, 6.0]` y `upCeilSouth` de ancho 1.7m para `z: [6.0, 11.2]`), eliminando la franja abierta al cielo frente al baño.
+   - Dintel superior empapelado `wallWTop` a juego con las paredes del pasillo.
+4. Puerta Interactiva y Funcional del Baño Superior (Imágenes 3 y 4):
+   - `bathDoorPivot` con bisagra en `x = 1.7, z = 3.82` y picaporte dorado.
+   - Apertura/cierre de 90° con sonido retro analógico de puerta al pulsar `[ CLICK / E ]`.
+   - Colisión dinámica que permite entrar y recorrer el baño con sus sanitarios, lavamanos retro y espejo.
+5. Paridad Bilingüe Total:
+   - Claves `prompt_door_bathroom_open`, `prompt_door_bathroom_closed_action`, `room_notif_bath_door_open` y `room_notif_bath_door_closed` agregadas en Español e Inglés en `js/i18n.js`.
+
+[LUCA + MATEO] FASE 96: Expansión Integral de Decoraciones Estacionales (Navidad y Halloween) por Toda la Casa en Modo Libre (Octubre 2026)
+1. Expansión Exclusiva de Toda la Casa en Modo Libre:
+   - Separación estricta de modos: En Modo Normal (Historia), la ambientación festiva se limita exclusivamente al dormitorio del jugador (`halloweenBedroomGroup` / `christmasBedroomGroup`).
+   - En Modo Libre (Sandbox), la decoración de Halloween y Navidad se expande profusamente por absolutamente todos los rincones de la casa (`halloweenHouseGroup` / `christmasHouseGroup`), activándose dinámicamente al entrar a Sandbox o levantarse de la silla (`standUpFromPC()`).
+2. Halloween Expandido por Toda la Casa:
+   - Pasillo Planta Alta: Coronas siniestras de espinas en las puertas (`buildHalloweenWreath`), frasco de poción alquímica fluorescente en la consola (`buildHalloweenPotion`), telarañas y calabazas talladas.
+   - Baño Planta Alta: Espejo con telaraña, frasco de poción en el lavamanos, calabaza tallada en la bañera, calavera con vela en el inodoro.
+   - Escalera: Gran telaraña colgante en los balaustres de la baranda, calabaza al pie de la escalera.
+   - Entrada: Corona de Halloween en la puerta principal interior, calabaza centinela y telarañas.
+   - Living Room: Gran chimenea con calabazas y poción mágica, calavera y tazón de dulces en la mesa de café, calabaza en la biblioteca y telaraña en el gran ventanal sur.
+   - Cocina y Comedor: Centro de mesa con calabaza y calavera, frascos de pócimas y dulces en la mesada, telaraña en alacenas y heladera.
+   - Puerta y Escalera del Sótano: Corona siniestra en la puerta del sótano, telaraña gigante en el dintel, calavera en el primer escalón.
+   - Sótano: Círculo ritual oscuro en el suelo con calavera y velas, calabaza siniestra junto a la caldera, poción en estantería y múltiples telarañas entre tuberías.
+3. Navidad Expandida por Toda la Casa:
+   - Pasillo Planta Alta: Coronas navideñas tradicionales con lazo rojo y bayas (`buildChristmasWreath`) en todas las puertas, guirnalda de luces multicolores parpadeantes en el techo y medias festivas.
+   - Baño Planta Alta: Mini corona navideña en el espejo del botiquín, taza de chocolate caliente humeante con bastón de menta en el lavamanos.
+   - Escalera: Guirnalda de luces festivas titilantes enroscada a lo largo del pasamanos, medias en el poste de arranque.
+   - Entrada: Gran corona navideña en la puerta principal, regalos festivos envueltos en el vestíbulo.
+   - Living Room: Gran Árbol de Navidad iluminado con estrella dorada, medias en la chimenea, luces en el techo, deliciosa bandeja de galletas de jengibre navideñas (`buildChristmasCookies`) en la mesa de café, gorro de Papá Noel en el sofá.
+   - Cocina y Comedor: Mini árbol festivo en la mesada, chocolate caliente y bandeja de galletas de jengibre en la mesa del comedor, regalos bajo la mesa y guirnalda de luces en el techo.
+   - Sótano: Cajas de cartón retro con adornos y regalos vintage de 1994, mini arbolito nostálgico polvoriento en estantería, gorro de Santa y luces festivas.
+4. Interactuables Nuevos y Paridad Bilingüe Total:
+   - Galletas de Jengibre (`xmas_cookies`): Click/E para probar una galleta navideña crujiente casera.
+   - Corona Navideña (`xmas_wreath`): Click/E para admirar la corona de abeto y lazo aterciopelado.
+   - Poción de Bruja (`halloween_potion`): Click/E para examinar el frasco de alquimia con líquido verde burbujeante (Web Audio API).
+   - Corona de Espinas (`halloween_wreath`): Click/E para inspeccionar la corona de ramas negras con calaveras y telarañas.
+   - Textos de prompts y notificaciones registrados en Español e Inglés en `js/i18n.js`.
+
+📊 RESUMEN DEL PROYECTO
+
+Estado general: Avanzado (v0.88)
+Archivos JS: 20 módulos
+Archivos CSS: 10 hojas de estilo
+Líneas de código: ~27100+ (estimado total)
+Bugs resueltos: 84 fases de corrección documentadas
+Funcionalidades: 190+ features implementadas
+Tecnologías: HTML5, CSS3, JS ES6+, Three.js (WebGL), Web Audio API, MediaDevices API, Canvas API, SpeechSynthesis API
+
+
+
+
+
+
+
+
+
+
+
+
+

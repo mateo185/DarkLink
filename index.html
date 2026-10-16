@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkLink</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/desktop.css">
+    <link rel="stylesheet" href="css/windows.css">
+    <link rel="stylesheet" href="css/browser.css">
+    <link rel="stylesheet" href="css/minigames.css">
+    <link rel="stylesheet" href="css/winhello.css">
+    <link rel="stylesheet" href="css/netsniffer.css">
+    <link rel="stylesheet" href="css/theme-classic.css">
+    <link rel="stylesheet" href="css/theme-retro95.css">
+    <link rel="stylesheet" href="css/ps1_intro.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="crt-overlay"></div>
+    <div class="crt-vignette"></div>
+
+    <!-- Modal Emergente de Selección de Idioma al Entrar -->
+    <div id="modal-language-select">
+        <div class="lang-modal-box">
+            <div class="lang-modal-header" data-i18n="lang_title">SELECT LANGUAGE // SELECCIONAR IDIOMA</div>
+            <div class="lang-modal-sub" data-i18n="lang_subtitle">Choose your language to continue / Elige tu idioma para continuar</div>
+            <div class="lang-btn-grid">
+                <button id="btn-lang-en" class="lang-select-btn">
+                    <span class="flag">🌐 EN</span>
+                    <span>ENGLISH</span>
+                </button>
+                <button id="btn-lang-es" class="lang-select-btn">
+                    <span class="flag">🌐 ES</span>
+                    <span>ESPAÑOL</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla de Intro 3D PS1 (Modo Libre) -->
+    <section id="screen-ps1-intro" class="hidden">
+        <!-- Filtro SVG de Aberración Cromática Real (RGB Split Canal Rojo/Azul) -->
+        <svg style="position: absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
+            <defs>
+                <filter id="ps1-chromatic-aberration" x="-10%" y="-10%" width="120%" height="120%">
+                    <!-- Extraer y desplazar canal Rojo a la izquierda -->
+                    <feColorMatrix in="SourceGraphic" type="matrix"
+                        values="1 0 0 0 0
+                                0 0 0 0 0
+                                0 0 0 0 0
+                                0 0 0 1 0" result="red" />
+                    <feOffset in="red" dx="-2.5" dy="0" result="red-offset" />
+                    <!-- Extraer canal Verde (centro) -->
+                    <feColorMatrix in="SourceGraphic" type="matrix"
+                        values="0 0 0 0 0
+                                0 1 0 0 0
+                                0 0 0 0 0
+                                0 0 0 1 0" result="green" />
+                    <!-- Extraer y desplazar canal Azul a la derecha -->
+                    <feColorMatrix in="SourceGraphic" type="matrix"
+                        values="0 0 0 0 0
+                                0 0 0 0 0
+                                0 0 1 0 0
+                                0 0 0 1 0" result="blue" />
+                    <feOffset in="blue" dx="2.5" dy="0" result="blue-offset" />
+                    <!-- Combinar canales R + G + B con blend screen -->
+                    <feBlend mode="screen" in="red-offset" in2="green" result="rg" />
+                    <feBlend mode="screen" in="rg" in2="blue-offset" result="rgb" />
+                </filter>
+            </defs>
+        </svg>
+        <canvas id="ps1-canvas"></canvas>
+        <div id="ps1-scanlines"></div>
+        <div id="ps1-vignette"></div>
+        <div id="ps1-static"></div>
+        <div id="ps1-crosshair"></div>
+        <div id="ps1-hud" data-i18n-html="ps1_hud_controls">WASD — MOVERTE &nbsp;&nbsp;|&nbsp;&nbsp; MOUSE — MIRAR &nbsp;&nbsp;|&nbsp;&nbsp; CLICK EN LA PC — CONECTAR</div>
+        <!-- Hub de Notificaciones Superiores 3D (Anti-Superposición) -->
+        <div id="ps1-top-notification-hub">
+            <div id="ps1-alert-banner" class="hidden"></div>
+            <div id="ps1-notif-toast" class="hidden"></div>
+        </div>
+        <div id="ps1-interact-prompt"></div>
+        <div id="ps1-lock-prompt" data-i18n-html="ps1_lock_prompt">CLICK PARA ENTRAR<span class="sub">Usá WASD para moverte y el mouse para mirar</span></div>
+        <div id="ps1-eyelids">
+            <div class="eyelid eyelid-top"></div>
+            <div class="eyelid eyelid-bottom"></div>
+        </div>
+
+        <!-- Overlay Minijuego Arcade Consola 90s -->
+        <div id="modal-ps1-console" class="hidden">
+            <div class="ps1-console-header">
+                <span data-i18n="ps1_arcade_header">🎮 SONY PLAYSTATION 1995 // CYBER INVADERS 90s</span>
+                <button id="btn-close-ps1-console" class="terminal-btn" data-i18n="ps1_arcade_close" style="padding: 2px 10px; color: #ff4444; border-color: #ff4444;">X CERRAR</button>
+            </div>
+            <div class="ps1-console-body">
+                <canvas id="canvas-ps1-arcade" width="480" height="360"></canvas>
+                <div class="ps1-console-controls">
+                    <span data-i18n="ps1_arcade_controls_move">⬅️ ➡️ TECLAS DE DIRECCIÓN / A-D: MOVER</span>
+                    <span data-i18n="ps1_arcade_controls_shoot">SPACE / ESPACIO: DISPARAR</span>
+                    <span id="ps1-arcade-score" data-i18n="ps1_arcade_score" style="color: #00ffaa;">SCORE: 0000 | VIDAS: 3</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <!-- Screamer / Jumpscare Fullscreen Overlay -->
+    <div id="entity-screamer" class="hidden">
+        <div class="screamer-face-container">
+            <svg class="screamer-face-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                <!-- Cabeza y silueta deformada -->
+                <path d="M 200,30 C 100,30 60,110 70,220 C 75,280 120,380 200,380 C 280,380 325,280 330,220 C 340,110 300,30 200,30 Z" fill="#040204" stroke="#ff0022" stroke-width="4"/>
+                
+                <!-- Cuencas de ojos gigantes y oscuras -->
+                <ellipse cx="140" cy="145" rx="35" ry="42" fill="#000" stroke="#660000" stroke-width="3"/>
+                <ellipse cx="260" cy="145" rx="35" ry="42" fill="#000" stroke="#660000" stroke-width="3"/>
+                
+                <!-- Ojos rojos incandescentes penetrantes -->
+                <circle cx="140" cy="145" r="16" fill="#ff0000"/>
+                <circle cx="140" cy="145" r="8" fill="#ffffff"/>
+                <circle cx="260" cy="145" r="16" fill="#ff0000"/>
+                <circle cx="260" cy="145" r="8" fill="#ffffff"/>
+                
+                <!-- Grietas faciales y venas rojas -->
+                <path d="M 140,110 Q 120,70 90,60 M 260,110 Q 280,70 310,60 M 200,100 L 200,170 M 110,180 Q 90,220 80,260 M 290,180 Q 310,220 320,260" stroke="#ff0022" stroke-width="3" fill="none"/>
+                
+                <!-- Enorme boca abierta y deformada -->
+                <path d="M 120,230 Q 200,210 280,230 Q 290,340 200,360 Q 110,340 120,230 Z" fill="#000000" stroke="#ff0000" stroke-width="5"/>
+                
+                <!-- Dientes puntiagudos irregulares (Fila superior) -->
+                <polygon points="135,230 145,265 155,232" fill="#eeeeee"/>
+                <polygon points="160,232 170,272 180,233" fill="#eeeeee"/>
+                <polygon points="185,233 195,278 205,233" fill="#ffffff"/>
+                <polygon points="210,233 220,274 230,232" fill="#eeeeee"/>
+                <polygon points="235,232 245,268 255,230" fill="#eeeeee"/>
+                <polygon points="260,230 268,258 275,230" fill="#dddddd"/>
+                
+                <!-- Dientes puntiagudos irregulares (Fila inferior) -->
+                <polygon points="140,325 150,290 160,328" fill="#dddddd"/>
+                <polygon points="165,332 175,285 185,335" fill="#eeeeee"/>
+                <polygon points="190,338 200,280 210,338" fill="#ffffff"/>
+                <polygon points="215,335 225,285 235,332" fill="#eeeeee"/>
+                <polygon points="240,328 250,292 260,325" fill="#dddddd"/>
+                
+                <!-- Fondo de garganta rojo abismal -->
+                <ellipse cx="200" cy="290" rx="30" ry="18" fill="#550000"/>
+            </svg>
+        </div>
+        <div class="screamer-glitch-text">¡ E N T R Ó !</div>
+    </div>
+
+    <!-- Pantalla negra fuera del container para superar cualquier z-index interno -->
+    <div id="screen-black" class="hidden" style="z-index: 999999 !important;">
+        <p class="hidden-message" data-i18n="threat_screen_off_hint">PANTALLA APAGADA... Mantente en silencio.</p>
+    </div>
+
+    <!-- UI de Supervivencia fuera del container para estar siempre sobre screen-black -->
+    <div id="survival-ui" class="hidden">
+        <div id="audio-caption" class="caption hidden">[ Sonido de respiración pesada cerca... ]</div>
+        <button id="btn-power" class="power-btn" data-i18n="threat_pc_off_btn">APAGAR PANTALLA</button>
+    </div>
+
+    <div id="main-container" class="container">
+        
+        <!-- Pantalla de Inicio -->
+        <section id="screen-menu" class="screen active">
+            <!-- Canvas de Rejilla Vectorial 3D de Fondo (Años 90) -->
+            <canvas id="menu-cyber-canvas"></canvas>
+            
+            <div class="menu-layout">
+                <!-- Columna Izquierda: Terminal Log Ambiental (MS-DOS Box) -->
+                <div class="menu-terminal-logs dos-panel">
+                    <div class="dos-header">[-] LOGS_DE_SISTEMA</div>
+                    <div class="terminal-body" id="menu-terminal-lines">
+                        <p>> INTERCEPTING TRAFFIC...</p>
+                        <p>> ANONYMOUS ANN NETWORK ACTIVE</p>
+                        <p>> WARNING: UNPROTECTED CONNECTIONS</p>
+                        <p>> HOST IP: 192.168.1.105</p>
+                        <p>> INTRUSION DETECTION: READY</p>
+                    </div>
+                </div>
+                
+                <!-- Columna Derecha: Contenido Principal (BIOS/DOS Window) -->
+                <div class="menu-main-panel dos-panel">
+                    <div class="dos-header">[*] MAIN_PANEL - v1.95</div>
+                    
+                    <!-- Arte ASCII del Título -->
+                    <pre class="ascii-title">
+  ____    _    ____  _  ___     ___ _   _ _  __
+ |  _ \  / \  |  _ \| |/ / |   |_ _| \ | | |/ /
+ | | | |/ _ \ | |_) | ' /| |    | ||  \| | ' / 
+ | |_| / ___ \|  _ &lt;| . \| |___ | || |\  | . \ 
+ |____/_/   \_\_| \_\_|\_\_____|___|_| \_|_|\_\</pre>
+
+                    <p class="subtitle" data-i18n="menu_tagline">>_ MONITOREO DE SISTEMAS Y SIMULACION [BIOS ROOT]</p>
+                    
+                    <div class="menu-buttons-container dos-menu">
+                        <button id="btn-start" class="terminal-btn dos-btn" data-i18n="menu_play_story">[ F1 ] _INICIAR_SISTEMA</button>
+                        <button id="btn-free-mode" class="terminal-btn dos-btn dos-btn-blue" data-i18n="menu_free_mode">[ F2 ] _MODO_SANDBOX_</button>
+                    </div>
+
+                    <div style="margin-top: 10px; text-align: center;">
+                        <button id="btn-toggle-lang-menu" class="terminal-btn lang-quick-toggle" data-i18n="menu_switch_lang">🌐 IDIOMA: ESPAÑOL</button>
+                    </div>
+                    
+                    <div class="immersion-box dos-panel" style="margin-top: 10px;">
+                        <input type="checkbox" id="chk-webcam" style="cursor: pointer; accent-color: #0f0;">
+                        <label for="chk-webcam" data-i18n="chk_webcam_label" style="cursor: pointer; opacity: 0.9;">[X] Habilitar Dispositivo de Captura (Webcam Immersion)</label>
+                    </div>
+
+                    <!-- Credenciales de los Creadores (DOS File Directory) -->
+                    <div class="menu-credits dos-panel">
+                        <div class="credits-title">
+                            <span class="dos-led">[ONLINE]</span>
+                            SYSTEM DIRECTORY: L-BONAMAISON MARCONI & M-GANDINI
+                        </div>
+                        <div class="credits-names dos-files">
+                            <div class="creator-badge dos-badge" data-creator="luca" title="Execute LUCA.EXE">
+                                <span class="creator-name">> LUCA.EXE</span>
+                                <span class="creator-status">RUN SEGMENT</span>
+                            </div>
+                            <span class="creator-divider">|</span>
+                            <div class="creator-badge dos-badge" data-creator="mateo" title="Execute MATEO.EXE">
+                                <span class="creator-name">> MATEO.EXE</span>
+                                <span class="creator-status">RUN SEGMENT</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Petición de Nombre -->
+        <section id="screen-name" class="screen hidden">
+            <h2 style="margin-bottom: 20px;" data-i18n="name_screen_title">Identificación Requerida</h2>
+            <p data-i18n="name_screen_subtitle">Ingresa tu nombre para configurar tu sesión local.</p>
+            <div class="input-line">
+                <span class="prompt" data-i18n="name_user_label">Usuario:</span>
+                <input type="text" id="player-name-input" maxlength="15" autocomplete="off" placeholder="Ingresa tu nombre..." data-i18n-placeholder="name_input_placeholder">
+            </div>
+            <button id="btn-confirm-name" class="terminal-btn" data-i18n="name_confirm_btn">_CREAR_PERFIL</button>
+        </section>
+
+        <!-- Pantalla de Boot (Inicio) -->
+        <section id="screen-booting" class="screen hidden" style="justify-content: flex-start; align-items: flex-start; text-align: left; background: #000; color: #fff; padding: 40px; font-size: 1.1rem;">
+            <div id="boot-text" style="text-shadow: none; line-height: 1.5; font-family: monospace;"></div>
+        </section>
+
+        <!-- Pantalla de Configuración DeepWeb (Cinemática) -->
+        <section id="screen-setup-deepweb" class="screen hidden" style="justify-content: center; align-items: center; background: #001100; color: #0f0; width: 100%; height: 100%;">
+            <h2 style="margin-bottom: 20px;" class="glitch" data-i18n="setup_tools_title" data-text="Instalando Herramientas...">Instalando Herramientas...</h2>
+            <div style="width: 80%; background: #000; border: 2px solid var(--border-color); padding: 2px; margin-top: 20px; box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);">
+                <div id="progress-bar" style="width: 0%; height: 25px; background: var(--text-color); transition: width 0.3s; box-shadow: var(--text-glow);"></div>
+            </div>
+            <p id="setup-status" style="margin-top: 20px; font-family: monospace; font-size: 1.2rem; min-height: 1.5em;">Iniciando...</p>
+        </section>
+
+        <!-- OS Desktop -->
+        <section id="screen-desktop" class="screen desktop hidden">
+            <!-- Banner de Alerta Crítica dentro de la PC (Golpes en Puerta / Amenaza Física) -->
+            <div id="pc-threat-banner" class="pc-threat-banner hidden">
+                <div class="pc-threat-content">
+                    <span class="pc-threat-icon">⚠</span>
+                    <span class="pc-threat-text" id="pc-threat-text" data-i18n="threat_door_alert">¡ALERTA! ALGUIEN ESTÁ GOLPEANDO LA PUERTA</span>
+                    <button id="btn-pc-quick-lock" class="pc-quick-lock-btn" data-i18n="threat_door_btn">🔒 TRABAR PESTILLO [L]</button>
+                </div>
+            </div>
+
+            <div class="desktop-icons">
+                <div class="icon" id="icon-browser">
+                    <span class="icon-img">🌐</span>
+                    <span class="icon-label" data-i18n="icon_browser">NightLink</span>
+                </div>
+                <div class="icon" id="icon-netmanager">
+                    <span class="icon-img">🛡️</span>
+                    <span class="icon-label" data-i18n="icon_netmanager">NetManager</span>
+                </div>
+                <div class="icon hidden" id="icon-antivirus">
+                    <span class="icon-img">🛡️</span>
+                    <span class="icon-label" data-i18n="icon_antivirus">Antivirus</span>
+                </div>
+                <div class="icon" id="icon-terminal">
+                    <span class="icon-img">🖥️</span>
+                    <span class="icon-label" data-i18n="icon_terminal">Terminal</span>
+                </div>
+                <div class="icon hidden" id="icon-wiki">
+                    <span class="icon-img">📄</span>
+                    <span class="icon-label" data-i18n="icon_wiki">Wiki.txt</span>
+                </div>
+                <div class="icon hidden" id="icon-chat">
+                    <span class="icon-img">💬</span>
+                    <span class="icon-label" data-i18n="icon_chat">DarkChat</span>
+                </div>
+                <div class="icon hidden" id="icon-paint">
+                    <span class="icon-img">🎨</span>
+                    <span class="icon-label" data-i18n="icon_paint">DarkPaint</span>
+                </div>
+                <div class="icon hidden" id="icon-camera">
+                    <span class="icon-img">📷</span>
+                    <span class="icon-label" data-i18n="icon_camera">Cámara</span>
+                </div>
+                <div class="icon" id="icon-trash">
+                    <span class="icon-img">🗑️</span>
+                    <span class="icon-label" data-i18n="icon_trash">Papelera</span>
+                </div>
+                <div class="icon hidden" id="icon-wallpaper-gen">
+                    <span class="icon-img">🖼️</span>
+                    <span class="icon-label" data-i18n="icon_wallpaper">Fondos Pro</span>
+                </div>
+                <div class="icon hidden" id="icon-nodemap">
+                    <span class="icon-img">🌐</span>
+                    <span class="icon-label" data-i18n="icon_nodemap">Mapa de Red</span>
+                </div>
+                <div class="icon hidden" id="icon-miner">
+                    <span class="icon-img">⛏️</span>
+                    <span class="icon-label" data-i18n="icon_miner">Minador BTC</span>
+                </div>
+                <div class="icon hidden" id="icon-netsniffer">
+                    <span class="icon-img">📡</span>
+                    <span class="icon-label" data-i18n="icon_netsniffer">NetSniffer</span>
+                </div>
+                <div class="icon hidden" id="icon-expediente">
+                    <span class="icon-img">📂</span>
+                    <span class="icon-label" data-i18n="icon_expediente">Expediente 98</span>
+                </div>
+            </div>
+
+            <!-- Widget HUD de Misión Activa en Escritorio -->
+            <div id="story-mission-widget" class="story-mission-widget hidden">
+                <div class="story-widget-header">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span class="story-widget-badge" data-i18n="story_widget_badge">HISTORIA</span>
+                        <span id="story-widget-title" style="font-weight:bold; font-size:0.85rem; color:#00e5ff;">Capítulo 1</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:4px;">
+                        <button id="btn-toggle-story-widget" class="story-widget-min-btn" title="Minimizar / Expandir">_</button>
+                        <button id="btn-close-story-widget" class="story-widget-min-btn" style="color:#ff4466;" title="Ocultar Widget">×</button>
+                    </div>
+                </div>
+                <div class="story-widget-body" id="story-widget-body">
+                    <ul id="story-widget-objectives" class="story-widget-list">
+                        <!-- Generado dinámicamente -->
+                    </ul>
+                    <div class="story-widget-footer">
+                        <span data-i18n-html="story_widget_footer_text">Abre <b>Expediente 98</b> para más pistas.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Window Expediente 98 -->
+            <div id="window-expediente" class="os-window hidden" style="width:720px; height:520px; min-width:480px; min-height:380px;">
+                <div class="browser-window expediente-window" style="background:#090f14; border:1px solid #00e5ff; display:flex; flex-direction:column; height:100%; box-shadow:0 0 20px rgba(0,229,255,0.25);">
+                    <div class="browser-header" style="background:#04090d; border-bottom:1px solid #00e5ff; flex-shrink:0; display:flex; justify-content:space-between; align-items:center; padding:4px 8px;">
+                        <span style="color:#00e5ff; font-family:'VT323',monospace; font-size:1.1rem; letter-spacing:1px;" data-i18n="expediente_window_title">📂 EXPEDIENTE_98 — CASO PROYECTO DARK_LINK</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-expediente" style="cursor:pointer; padding:0 5px; margin-right:5px; color:#00e5ff;">_</span>
+                            <span class="close-btn" id="btn-close-expediente" style="cursor:pointer; color:#ff3366; font-weight:bold;">X</span>
+                        </div>
+                    </div>
+                    <div class="expediente-body" style="padding:15px; overflow-y:auto; flex:1; font-family:monospace; color:#d0f0ff; background:radial-gradient(ellipse at top, #0d1a24 0%, #060a0f 100%);">
+                        <div class="expediente-header-box" style="border-bottom:1px solid #1a3a4a; padding-bottom:10px; margin-bottom:12px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <h3 id="expediente-chapter-title" style="color:#00e5ff; margin:0; font-size:1.2rem; font-family:'VT323',monospace; letter-spacing:1px;">Capítulo 1: El Contacto Fantasma</h3>
+                                <span id="expediente-chapter-code" style="color:#ffcc00; font-size:0.75rem; background:#201800; border:1px solid #ffcc00; padding:2px 6px; border-radius:3px;">CÓDIGO: DOC-001/WHISPER</span>
+                            </div>
+                            <p id="expediente-chapter-desc" style="color:#a0c0d0; font-size:0.85rem; margin-top:8px; line-height:1.4;"></p>
+                        </div>
+                        <div style="margin-bottom:15px;">
+                            <h4 style="color:#00ff66; margin:0 0 8px 0; font-size:0.95rem; font-family:'VT323',monospace; letter-spacing:1px;" data-i18n="expediente_obj_heading">📋 OBJETIVOS DE LA INVESTIGACIÓN:</h4>
+                            <div id="expediente-objectives-list" class="expediente-obj-container" style="display:flex; flex-direction:column; gap:8px;">
+                                <!-- Generado por story_mode.js -->
+                            </div>
+                        </div>
+                        <div class="expediente-clue-box" style="background:rgba(0,229,255,0.06); border:1px dashed #00e5ff; padding:10px; border-radius:4px;">
+                            <p id="expediente-clue-text" style="margin:0; font-size:0.85rem; color:#88e0ff;"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DarkPaint Window -->
+            <div id="window-paint" class="os-window hidden" style="width:780px; height:540px; min-width:520px; min-height:400px;">
+                <div class="browser-window" style="background:#111; border-color:#00ff66; display:flex; flex-direction:column; height:100%;">
+                    <!-- Header -->
+                    <div class="browser-header" style="background:#0a0a0a; border-bottom:1px solid #00ff66; flex-shrink:0;">
+                        <span style="color:#00ff66; font-family:'VT323',monospace; font-size:1.1rem;" data-i18n="paint_header_title">🎨 DarkPaint v1.0 — [sin título]</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-paint" style="cursor:pointer; padding:0 5px; margin-right:5px;">_</span>
+                            <span class="close-btn" id="btn-close-paint">X</span>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar -->
+                    <div style="display:flex; align-items:center; gap:6px; padding:5px 8px; background:#0d0d0d; border-bottom:1px solid #1a1a1a; flex-shrink:0; flex-wrap:wrap;">
+
+                        <!-- Tools -->
+                        <div style="display:flex; gap:3px; border:1px solid #222; padding:3px; border-radius:3px;">
+                            <button class="paint-tool-btn paint-tool-active" data-tool="pencil"  title="Lápiz (P)" data-i18n-title="paint_tool_pencil"     style="font-size:1.2rem; background:#1a1a1a; border:1px solid #333; color:#0f0; padding:3px 6px; cursor:pointer; border-radius:2px;">✏️</button>
+                            <button class="paint-tool-btn"                   data-tool="eraser"  title="Goma (E)" data-i18n-title="paint_tool_eraser"      style="font-size:1.2rem; background:#1a1a1a; border:1px solid #333; color:#0f0; padding:3px 6px; cursor:pointer; border-radius:2px;">🧹</button>
+                            <button class="paint-tool-btn"                   data-tool="fill"    title="Relleno (F)" data-i18n-title="paint_tool_fill"   style="font-size:1.2rem; background:#1a1a1a; border:1px solid #333; color:#0f0; padding:3px 6px; cursor:pointer; border-radius:2px;">🪣</button>
+                            <button class="paint-tool-btn"                   data-tool="line"    title="Línea (L)" data-i18n-title="paint_tool_line"     style="font-size:1.2rem; background:#1a1a1a; border:1px solid #333; color:#0f0; padding:3px 6px; cursor:pointer; border-radius:2px;">╱</button>
+                            <button class="paint-tool-btn"                   data-tool="rect"    title="Rectángulo (R)" data-i18n-title="paint_tool_rect" style="font-size:1.2rem; background:#1a1a1a; border:1px solid #333; color:#0f0; padding:3px 6px; cursor:pointer; border-radius:2px;">▭</button>
+                            <button class="paint-tool-btn"                   data-tool="ellipse" title="Elipse (O)" data-i18n-title="paint_tool_ellipse"    style="font-size:1.2rem; background:#1a1a1a; border:1px solid #333; color:#0f0; padding:3px 6px; cursor:pointer; border-radius:2px;">⬭</button>
+                            <button class="paint-tool-btn"                   data-tool="eyedropper" title="Cuentagotas (I)" data-i18n-title="paint_tool_eyedropper" style="font-size:1.2rem; background:#1a1a1a; border:1px solid #333; color:#0f0; padding:3px 6px; cursor:pointer; border-radius:2px;">💉</button>
+                        </div>
+
+                        <!-- Separator -->
+                        <div style="width:1px; height:30px; background:#333;"></div>
+
+                        <!-- Brush size -->
+                        <div style="display:flex; align-items:center; gap:5px;">
+                            <span style="color:#888; font-size:0.75rem;" data-i18n="paint_size_label">Tam:</span>
+                            <input type="range" id="paint-size" min="1" max="50" value="4"
+                                   style="width:80px; accent-color:#00ff66; cursor:pointer;">
+                            <span id="paint-size-label" style="color:#00ff66; font-size:0.75rem; min-width:28px;">4px</span>
+                        </div>
+
+                        <!-- Separator -->
+                        <div style="width:1px; height:30px; background:#333;"></div>
+
+                        <!-- Color selectors -->
+                        <div style="display:flex; align-items:center; gap:5px;">
+                            <span style="color:#888; font-size:0.75rem;" data-i18n="paint_color_label">Color:</span>
+                            <div style="position:relative; width:30px; height:30px;">
+                                <!-- Secondary (behind) -->
+                                <div style="position:absolute; bottom:0; right:0; width:20px; height:20px; border:2px solid #555; border-radius:2px; overflow:hidden;">
+                                    <input type="color" id="paint-color-secondary" value="#000000"
+                                           style="width:30px; height:30px; border:none; padding:0; cursor:pointer; transform:translate(-5px,-5px); background:#000;">
+                                </div>
+                                <!-- Primary (front) -->
+                                <div style="position:absolute; top:0; left:0; width:20px; height:20px; border:2px solid #00ff66; border-radius:2px; overflow:hidden;">
+                                    <input type="color" id="paint-color-primary" value="#00ff66"
+                                           style="width:30px; height:30px; border:none; padding:0; cursor:pointer; transform:translate(-5px,-5px);">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Separator -->
+                        <div style="width:1px; height:30px; background:#333;"></div>
+
+                        <!-- Action buttons -->
+                        <button id="paint-btn-clear" title="Limpiar lienzo" data-i18n-title="paint_btn_clear_title" data-i18n="paint_btn_clear"
+                                style="background:#1a0000; border:1px solid #440000; color:#ff4444; padding:4px 10px; font-size:0.8rem; cursor:pointer; border-radius:2px; font-family:monospace;">🗑 Limpiar</button>
+                        <button id="paint-btn-save"  title="Guardar como PNG" data-i18n-title="paint_btn_save_title" data-i18n="paint_btn_save"
+                                style="background:#001a00; border:1px solid #004400; color:#00ff66; padding:4px 10px; font-size:0.8rem; cursor:pointer; border-radius:2px; font-family:monospace;">💾 Guardar PNG</button>
+                        <button id="paint-btn-wallpaper" title="Establecer como fondo de pantalla" data-i18n-title="paint_btn_wallpaper_title" data-i18n="paint_btn_wallpaper"
+                                style="background:#001a33; border:1px solid #004488; color:#00aaff; padding:4px 10px; font-size:0.8rem; cursor:pointer; border-radius:2px; font-family:monospace;">🖼️ Usar de Fondo</button>
+                    </div>
+
+                    <!-- Palette row -->
+                    <div id="paint-palette"
+                         style="display:flex; flex-wrap:wrap; gap:2px; padding:4px 8px; background:#0a0a0a; border-bottom:1px solid #1a1a1a; flex-shrink:0;">
+                        <!-- Swatches injected by paint.js -->
+                    </div>
+
+                    <!-- Canvas area -->
+                    <div style="flex-grow:1; overflow:auto; background:#1a1a1a; display:flex; justify-content:center; align-items:flex-start; padding:10px;">
+                        <canvas id="paint-canvas" width="720" height="440"
+                                style="background:#000; display:block; border:1px solid #333; image-rendering:pixelated;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ventana de Cámara (Modo Libre) -->
+            <div id="window-camera" class="os-window hidden" style="width:720px; height:500px; min-width:500px; min-height:400px; z-index: 40;">
+                <div class="browser-window" style="background:#111; border-color:#00ff66; display:flex; flex-direction:column; height:100%;">
+                    <!-- Header -->
+                    <div class="browser-header" style="background:#0a0a0a; border-bottom:1px solid #00ff66; flex-shrink:0; display:flex; justify-content:space-between; align-items:center; padding:5px 10px; box-sizing:border-box;">
+                        <span style="color:#00ff66; font-family:'Share Tech Mono', monospace; font-weight:bold; font-size:0.9rem;" data-i18n="camera_header_title">📷 Cámara de Sistema</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-camera" style="cursor:pointer; padding:0 5px; margin-right:5px;">_</span>
+                            <span class="close-btn" id="btn-close-camera" style="cursor:pointer;">X</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Content Area -->
+                    <div style="flex-grow:1; display:flex; min-height:0; background:#000; box-sizing:border-box;">
+                        <!-- Left Panel: Video Feed & Controls -->
+                        <div style="flex:1.5; display:flex; flex-direction:column; border-right:1px solid #00ff6633; padding:10px; box-sizing:border-box; justify-content:space-between; min-width:0;">
+                            <div style="flex-grow:1; display:flex; justify-content:center; align-items:center; background:#050505; border:1px solid #222; position:relative; overflow:hidden; border-radius:4px; min-height:0;">
+                                <video id="camera-app-feed" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover; display:block;"></video>
+                                <div id="camera-recording-indicator" style="position:absolute; top:10px; left:10px; display:none; align-items:center; gap:5px; background:rgba(0,0,0,0.7); padding:4px 8px; border-radius:4px; border:1px solid red; font-family:monospace; color:red; font-weight:bold; font-size:0.8rem; animation:blink 1s infinite;">
+                                    <div style="width:8px; height:8px; background:red; border-radius:50%;"></div> REC
+                                </div>
+                            </div>
+                            
+                            <div style="display:flex; gap:10px; margin-top:10px; justify-content:center; flex-shrink:0;">
+                                <button id="btn-camera-photo" class="terminal-btn" style="border-color:#00ff66; color:#00ff66; padding:8px 15px; font-size:0.9rem; font-family:'Share Tech Mono', monospace; cursor:pointer;" data-i18n="camera_btn_photo">📸 FOTO</button>
+                                <button id="btn-camera-record" class="terminal-btn" style="border-color:#ff9900; color:#ff9900; padding:8px 15px; font-size:0.9rem; font-family:'Share Tech Mono', monospace; cursor:pointer;" data-i18n="camera_btn_record">🎥 GRABAR</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Panel: Captured Files/Gallery -->
+                        <div style="flex:1; display:flex; flex-direction:column; padding:10px; box-sizing:border-box; min-height:0; min-width:0;">
+                            <h3 style="color:#00ff66; margin:0 0 10px 0; font-family:'Share Tech Mono', monospace; font-size:0.9rem; border-bottom:1px solid #00ff6633; padding-bottom:5px; flex-shrink:0;" data-i18n="camera_gallery_title">📁 GALERÍA</h3>
+                            <div id="camera-gallery" style="flex-grow:1; overflow-y:auto; display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; align-content:start; padding-right:5px;">
+                                <p style="color: #666; font-size: 0.85rem; font-family: monospace; grid-column: span 2; text-align: center; margin-top: 20px;" data-i18n="camera_gallery_empty">Galería vacía</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Browser Window -->
+            <div id="window-browser" class="os-window hidden">
+                <div class="browser-window">
+                    <div class="browser-header ann-ready">
+                        <span id="browser-title-text">NightLink Browser v2.4</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-browser" style="cursor:pointer; padding: 0 5px; margin-right: 5px;">_</span>
+                            <span class="close-btn" id="btn-close-browser">X</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Pestaña superior del navegador (Visible solo en Modo Libre) -->
+                    <div class="browser-tab-bar" id="browser-tabs">
+                        <!-- Tabs are rendered dynamically by renderBrowserTabs() -->
+                    </div>
+
+                    <div class="browser-address ann-ready-addr" style="display:flex; gap:5px; align-items:center; position: relative;">
+                        <!-- Botón atrás clásico (Modo Historia) -->
+                        <button id="btn-back-browser" class="old-back" style="cursor:pointer; background:#333; color:white; border:1px solid #555; padding:2px 8px;" data-i18n="browser_back_btn">&lt; Atrás</button>
+                        
+                        <!-- Controles modernos de navegación (Modo Libre) -->
+                        <button id="btn-ann-back" class="ann-nav-btn" title="Retroceder">◀</button>
+                        <button id="btn-ann-home" class="ann-nav-btn" title="Ir a Torch">🏠</button>
+                        <button id="btn-ann-reload" class="ann-nav-btn" title="Recargar Página">🔄</button>
+                        
+                        <!-- Indicador de seguridad Tor (Modo Libre) -->
+                        <div id="btn-tor-circuit" class="tor-security-badge" title="Ver circuito de red Onion">
+                            <span class="sec-dot"></span>
+                            <span class="sec-lock">🔒</span>
+                            <span class="sec-text">SECURE</span>
+                        </div>
+
+                        <input type="text" id="browser-url-input" value="http://darknetxc3q...night/index" readonly style="flex-grow:1;">
+                        
+                        <!-- Panel interactivo de circuito Tor (Desplegable) -->
+                        <div id="tor-circuit-dropdown" class="tor-circuit-card hidden">
+                            <div class="tor-circuit-header">
+                                <span class="tor-circuit-title" data-i18n="tor_dropdown_title">CIRCUITO ONION PHANTOM</span>
+                                <span class="tor-circuit-close" id="btn-close-circuit">&times;</span>
+                            </div>
+                            <div class="tor-circuit-nodes">
+                                <div class="tor-node-item client">
+                                    <div class="node-icon">💻</div>
+                                    <div class="node-details">
+                                        <span class="node-name" data-i18n="tor_device_local">Este Equipo (Local)</span>
+                                        <span class="node-ip">127.0.0.1</span>
+                                    </div>
+                                </div>
+                                <div class="tor-node-arrow">│</div>
+                                <div class="tor-node-item relay">
+                                    <div class="node-icon">🇩🇪</div>
+                                    <div class="node-details">
+                                        <span class="node-name">Guard Relay (Munich)</span>
+                                        <span class="node-ip">84.120.43.19</span>
+                                        <span class="node-ping">22ms</span>
+                                    </div>
+                                </div>
+                                <div class="tor-node-arrow">│</div>
+                                <div class="tor-node-item relay">
+                                    <div class="node-icon">🇮🇸</div>
+                                    <div class="node-details">
+                                        <span class="node-name">Middle Relay (Reykjavík)</span>
+                                        <span class="node-ip">185.92.220.10</span>
+                                        <span class="node-ping">45ms</span>
+                                    </div>
+                                </div>
+                                <div class="tor-node-arrow">│</div>
+                                <div class="tor-node-item relay">
+                                    <div class="node-icon">🇷🇺</div>
+                                    <div class="node-details">
+                                        <span class="node-name">Exit Relay (St. Petersburg)</span>
+                                        <span class="node-ip">95.216.14.88</span>
+                                        <span class="node-ping">79ms</span>
+                                    </div>
+                                </div>
+                                <div class="tor-node-arrow">│</div>
+                                <div class="tor-node-item destination">
+                                    <div class="node-icon">🧅</div>
+                                    <div class="node-details">
+                                        <span class="node-name" data-i18n="tor_hidden_service">Servicio Oculto (.ann)</span>
+                                        <span class="node-ip" id="tor-dest-url">cargando...</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tor-circuit-footer">
+                                <span><span data-i18n="tor_rotated_prefix">Circuito rotado hace</span> <b id="tor-circuit-age">15s</b></span>
+                                <button class="circuit-rebuild-btn" id="btn-rebuild-circuit" data-i18n="tor_rotate_btn">Rotar Nodos</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="browser-content" id="browser-pages">
+                        <!-- Wiki (Modo Historia) -->
+                        <div id="page-wiki" class="page active">
+                            <h2 style="color:white; margin-bottom:10px;" data-i18n="wiki_title">The Hidden Wiki</h2>
+                            <p style="color:#aaa;" data-i18n="wiki_subtitle">Directorio principal de sitios de la Deep Web.</p>
+                            <br>
+                            <ul>
+                                <li><a class="fake-link" id="link-tracker" data-i18n="wiki_link_tracker">DarkNet Protocol Tracker (Rootkit Tool)</a></li>
+                                <li><a class="fake-link" id="link-pastedumps" data-i18n="wiki_link_pastedumps">PasteDumps - Filtraciones Criptográficas</a></li>
+                                <li><a class="fake-link" id="link-market" data-i18n="wiki_link_market">Mercado Negro "SilkSale"</a></li>
+                            </ul>
+                        </div>
+                        <!-- Torch Search Engine (Dynamic) -->
+                        <div id="page-torch" class="page hidden" style="background:#111; color:#fff; font-family: monospace; height: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 50px;">
+                            <h1 style="font-size: 4rem; color: #ff6600; text-shadow: 0 0 20px #ff6600, 0 0 5px #fff; margin-bottom: 20px;">T O R C H</h1>
+                            <p style="color: #aaa; margin-bottom: 30px;" data-i18n-html="torch_subtitle">El Buscador de la Deep Web - Más de <span id="torch-index-count">142</span> páginas indexadas.</p>
+                            <div style="width: 100%; display: flex; justify-content: center; gap: 10px;">
+                                <div style="position: relative; width: 60%; max-width: 600px; display: flex; flex-direction: column;">
+                                    <input type="text" id="torch-search-input" placeholder="Busca en el abismo..." data-i18n-placeholder="torch_input_placeholder" style="width: 100%; padding: 10px 15px; font-size: 1.2rem; background: #000; border: 2px solid #ff6600; color: #fff; outline: none; text-align: left;" autocomplete="off">
+                                    <div id="torch-recommendations" class="hidden" style="position: absolute; top: 100%; left: 0; width: 100%; background: #000; border: 2px solid #ff6600; border-top: none; z-index: 10000; max-height: 250px; overflow-y: auto; box-shadow: 0 5px 15px rgba(255, 102, 0, 0.5); box-sizing: border-box;"></div>
+                                </div>
+                                <button id="torch-search-btn" class="terminal-btn" style="border-color: #ff6600; color: #ff6600; padding: 10px 25px; font-weight: bold; height: 100%;" data-i18n="torch_search_btn">_BUSCAR</button>
+                            </div>
+                            <div id="torch-results" style="width: 80%; max-width: 800px; margin-top: 30px; text-align: left; overflow-y: auto; flex-grow: 1;">
+                                <!-- Resultados inyectados por JS -->
+                            </div>
+                        </div>
+
+                        <!-- Contenedor de Páginas Dinámicas -->
+                        <div id="page-dynamic" class="page hidden" style="height: 100%; overflow-y: auto;">
+                            <!-- HTML inyectado proceduralmente -->
+                        </div>
+
+                        <!-- Overlay de Carga Modular -->
+                        <div id="browser-loading" class="hidden" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+                            <!-- 1. Cargador Clásico (Modo Historia) -->
+                            <div id="loader-classic" style="display: flex; flex-direction: column; align-items: center;">
+                                <div style="width: 50px; height: 50px; border: 5px solid #333; border-top-color: #0f0; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                                <p style="color: #0f0; font-family: monospace; margin-top: 20px; text-shadow: 0 0 5px #0f0;" data-i18n="browser_loading_secure">Estableciendo conexión segura...</p>
+                                <p id="loading-node-text" style="color: #555; font-size: 0.8rem; font-family: monospace; margin-top: 5px;" data-i18n="browser_loading_node">Enrutando a través del Nodo 1...</p>
+                            </div>
+                            
+                            <!-- 2. Cargador Terminal Hacker (Modo Libre) -->
+                            <div id="loader-ann" class="hidden" style="width: 90%; max-width: 520px; background: #03060a; border: 2px solid #00ff66; box-shadow: 0 0 25px rgba(0, 255, 100, 0.25); font-family: 'Share Tech Mono', monospace; padding: 20px; text-align: left; box-sizing: border-box;">
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #00ff6644; padding-bottom: 8px; margin-bottom: 12px;">
+                                    <span style="color: #00ff66; font-size: 0.85rem; font-weight: bold; letter-spacing: 1px;" data-i18n="loader_ann_title">⚙️ CONEXIÓN ONION [PHANTOM v2.8]</span>
+                                    <span style="color: #ff3838; font-size: 0.85rem; font-weight: bold; animation: blink 1s steps(2, start) infinite;" data-i18n="loader_ann_status">● ENRUTANDO</span>
+                                </div>
+                                <div id="ann-loader-log" style="height: 140px; overflow-y: auto; color: #39ffa0; font-size: 0.8rem; font-family: monospace; line-height: 1.5; margin-bottom: 12px; white-space: pre-wrap; border: 1px solid #112211; background: #010204; padding: 10px;">
+                                    <!-- Inyectado secuencialmente por js/browser.js -->
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <div style="flex-grow: 1; height: 8px; background: #07150c; border: 1px solid #00ff66; border-radius: 0px; overflow: hidden; position: relative;">
+                                        <div id="ann-loader-bar" style="width: 0%; height: 100%; background: #00ff66; box-shadow: 0 0 10px #00ff66; transition: width 0.08s linear;"></div>
+                                    </div>
+                                    <span id="ann-loader-percent" style="color: #00ff66; font-size: 0.9rem; font-weight: bold; width: 45px; text-align: right;">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <!-- Market -->
+                        <div id="page-market" class="page hidden">
+                            <h2 style="color:var(--danger-color); margin-bottom:10px;" data-i18n="market_title">SilkSale Market</h2>
+                            <p style="color:#aaa;" data-i18n="market_subtitle">Bienvenido al mercado. Compra bajo tu propio riesgo.</p>
+                            <br>
+                            <div class="market-items">
+                                <div class="market-item">
+                                    <p data-i18n="market_item_streaming">🔑 Cuentas Premium Streaming (Pack 100)</p>
+                                    <button id="btn-details-credentials" class="fake-link" style="border:1px solid #3399ff; padding:5px;" data-i18n="market_btn_details">Ver detalles</button>
+                                </div>
+                                <div class="market-item suspect">
+                                    <p data-i18n="market_item_archive">📦 [ARCHIVO_CONFIDENCIAL_VIP].exe</p>
+                                    <button id="btn-malicious-link" class="terminal-btn" style="border-color:red; color:red; padding:8px; font-size:1rem;" data-i18n="market_btn_download">_DESCARGAR_GRATIS</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Tracker (Mision 1) -->
+                        <div id="page-tracker" class="page hidden">
+                            <h2 style="color:#0f0; margin-bottom:10px;" data-i18n="tracker_title">IP Protocol Tracker v1.1</h2>
+                            <p style="color:#aaa;" data-i18n="tracker_subtitle">Analizando paquetes TCP cifrados... Encuentra las 3 secuencias de IP rebotando y haz clic rápido en ellas.</p>
+                            <div style="margin: 15px 0;"><span data-i18n="tracker_progress_label">Fragmentos obtenidos: </span><span id="tracker-progress" style="font-weight:bold; color: yellow;">0/3</span></div>
+                            
+                            <div id="tracker-matrix" style="width: 100%; height: 250px; background: black; border: 1px solid #0f0; overflow: hidden; position: relative; font-family: monospace; font-size: 0.8rem; word-break: break-all; opacity: 0.8;">
+                                <!-- Se llena vía JS -->
+                            </div>
+                            <div id="tracker-result" style="color:red; font-size:1.5rem; margin-top:20px; text-shadow:0 0 5px red; font-weight:bold;" class="hidden" data-i18n="tracker_attacker_ip">IP DEL ATACANTE: 184.22.9.101</div>
+                        </div>
+                        <!-- PasteDumps (Mision 3) -->
+                        <div id="page-pastedumps" class="page hidden">
+                            <h2 style="color:white; background: #333; padding: 5px; margin-bottom:10px;">PasteDumps.onion</h2>
+                            <p style="color:#aaa;" data-i18n="pastedumps_subtitle">Datos corruptos y filtraciones interceptadas.</p>
+                            <p style="color:yellow; margin-bottom: 10px; font-size:0.9rem;" data-i18n="pastedumps_warning">>> ADVERTENCIA: La clave de desencriptación está oculta entre toneladas de basura binaria. Búscala.</p>
+                            <div id="pastedumps-content" style="width: 100%; height: 300px; background: #111; color: #444; overflow-y: scroll; padding: 10px; font-family: monospace; font-size: 0.9rem; line-height: 1.2;">
+                                <!-- Se llena vía JS -->
+                            </div>
+                        </div>
+
+                        <!-- MÁS PÁGINAS PARA MODO LIBRE -->
+                        <div id="page-tools" class="page hidden" style="background:#fff; color:#000; font-family: 'Courier New', Courier, monospace; padding:10px;">
+                            <h1 style="border-bottom:1px solid #000; padding-bottom:5px;">Index of /root_repo/binaries</h1>
+                            <table style="width:100%; border-spacing: 0; text-align:left; margin-top:10px;">
+                                <tr style="background:#ddd;"><th>Name</th><th>Last modified</th><th>Size</th><th>Action</th></tr>
+                                <tr><td><img src="data:image/gif;base64,R0lGODlhEAAQAIAAAP///wAAACH5BAEAAAAALAAAAAAQABAAAAIOhI+py+0Po5y02ouzPgUAOw==" alt="[DIR]"> <a href="#" class="fake-link free-link" data-target="free-portal">Parent Directory</a></td><td>-</td><td>-</td><td>-</td></tr>
+                                <tr><td><img src="data:image/gif;base64,R0lGODlhEAAQAIAAAP///wAAACH5BAEAAAAALAAAAAAQABAAAAIOhI+py+0Po5y02ouzPgUAOw==" alt="[   ]"> bypass_firewall.py</td><td>2011-08-14 12:45</td><td>14K</td><td><a href="#" class="fake-link free-link" style="color:red; font-weight:bold;" data-target="free-portal" data-virus="true">[Download]</a></td></tr>
+                                <tr><td><img src="data:image/gif;base64,R0lGODlhEAAQAIAAAP///wAAACH5BAEAAAAALAAAAAAQABAAAAIOhI+py+0Po5y02ouzPgUAOw==" alt="[   ]"> keylogger_v3.exe</td><td>2015-11-02 03:22</td><td>2.1M</td><td><a href="#" class="fake-link free-link" style="color:red; font-weight:bold;" data-target="free-portal" data-virus="true">[Download]</a></td></tr>
+                            </table>
+                            <hr>
+                            <address>Apache/2.4.41 (Ubuntu) Server at 10.4.52.19 Port 80</address>
+                        </div>
+                        
+                        <div id="page-darkmarket" class="page hidden" style="background:#1a1a1a; color:#ccc; font-family: Arial, sans-serif; padding:15px; border:2px solid #333;">
+                            <div style="background:#0a4a0a; color:#fff; padding:10px; text-align:center; font-family: 'Times New Roman', Times, serif; border-bottom: 3px solid #00ff00;">
+                                <h1>SilkSale Underground</h1>
+                                <em>"Anonymous Trade. Zero Logs."</em>
+                            </div>
+                            <div style="margin-top:20px; display:flex; gap:15px;">
+                                <div style="flex:1; background:#000; border:1px solid #333; padding:10px; text-align:center;">
+                                    <h3 style="color:#0f0;">Physical Anonymity Kit</h3>
+                                    <p style="font-size:0.8rem; color:#888;">Fake passport, burner phones.</p>
+                                    <div style="margin:15px 0; font-size:1.2rem; color:#ff9900;">฿ 0.045 BTC</div>
+                                    <button class="fake-link free-link" data-target="free-portal" style="background:#0f0; color:#000; border:none; padding:5px 15px; font-weight:bold; cursor:pointer;">BUY NOW</button>
+                                </div>
+                                <div style="flex:1; background:#000; border:1px solid #333; padding:10px; text-align:center;">
+                                    <h3 style="color:#0f0;">GhostPhone OS</h3>
+                                    <p style="font-size:0.8rem; color:#888;">Hardware encrypted mobile device.</p>
+                                    <div style="margin:15px 0; font-size:1.2rem; color:#ff9900;">฿ 0.12 BTC</div>
+                                    <button class="fake-link free-link" data-target="free-portal" style="background:#0f0; color:#000; border:none; padding:5px 15px; font-weight:bold; cursor:pointer;">BUY NOW</button>
+                                </div>
+                            </div>
+                            <div style="margin-top:20px; border:1px dashed red; padding:10px; background:#200;">
+                                <h3 style="color:red;">WARNING: HIGH RISK ITEM</h3>
+                                <p style="color:#ffaaaa;">[ARCHIVE_VIP_LEAK].zip - <i>Uploaded by Admin</i></p>
+                                <button class="fake-link free-link terminal-btn" data-target="free-portal" data-virus="true" style="border-color:red; color:red; margin-top:10px;">_DOWNLOAD_ARCHIVE_</button>
+                            </div>
+                        </div>
+
+                        <div id="page-hitman" class="page hidden" style="background:#000; color:red; font-family: monospace; padding:20px; text-align:center;">
+                            <h2 style="border: 1px solid red; display:inline-block; padding:10px; background:#100;">RESTRICTED - OPERATIVE PANEL</h2>
+                            <p style="margin-top:20px;">ACCESSING THIS SECURE NODE FLAGS YOUR IP.</p>
+                            <p style="color:#600;">If you are not an authorized handler, disconnect immediately.</p>
+                            
+                            <div style="border:1px solid #600; padding:20px; margin-top:30px; text-align:left; background:#050000; display:inline-block;">
+                                <h3>Select Operative Region:</h3>
+                                <ul style="list-style: square; margin-top:15px; margin-left:20px;">
+                                    <li style="margin-bottom:10px;"><a class="fake-link free-link" data-virus="true" data-target="free-portal" style="color:#f55;">> Contract Setup: North America (Requires Auth)</a></li>
+                                    <li style="margin-bottom:10px;"><a class="fake-link free-link" data-virus="true" data-target="free-portal" style="color:#f55;">> Contract Setup: Europe (Requires Auth)</a></li>
+                                    <li style="margin-bottom:10px;"><a class="fake-link free-link" data-virus="true" data-target="free-portal" style="color:#f55;">> Contract Setup: Asia (Requires Auth)</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="page-ghostbin" class="page hidden" style="background:#E0E4CC; color:#333; font-family: 'Verdana', sans-serif; padding:20px; border: 4px ridge #A3A88D;">
+                            <div style="background:#69D2E7; padding:10px; border-bottom: 2px solid #555;">
+                                <h2 style="color:#000; font-family: 'Arial Black', sans-serif; margin:0;">GhostBin Paste #8842</h2>
+                            </div>
+                            <div style="background:#FA6900; color:#fff; font-size:0.8rem; padding:5px; margin-bottom:15px;">
+                                <strong>Author:</strong> Anonymous | <strong>Date:</strong> 2 min ago | <strong>Views:</strong> 12
+                            </div>
+                            
+                            <textarea readonly style="width:100%; height:250px; background:#fff; border: 2px inset #ccc; font-family: 'Courier New', monospace; font-size: 0.9rem; padding:10px; resize:none;">
+>>> LOG_TRANSACCION_C23
+User: admin | Pass: **********
+Destino: 192.168.1.44
+Estado: Interceptado.
+
+No confíes en nadie. Te están observando por la cámara.
+Ellos saben que estás aquí. Debes apagar el monitor si escuchas algo.
+
+_Fin del archivo_
+                            </textarea>
+                            
+                            <div style="margin-top:15px;">
+                                <a class="fake-link free-link" data-target="free-portal" style="background:#A7DBD8; padding:5px 10px; border: 1px outset #fff; cursor:pointer; text-decoration:none; color:#000; font-weight:bold;">Return Home</a>
+                            </div>
+                        </div>
+
+                        <div id="page-nightcam" class="page hidden" style="background:#000; padding:10px;">
+                            <h2 style="color:#0f0; font-family: 'Courier New', monospace; border-bottom:1px solid #0f0; padding-bottom:5px;">SECURE CAM FEED [NODE-7]</h2>
+                            <div style="width:100%; height:300px; background:#000; position:relative; overflow:hidden; border:2px solid #0f0; margin-top:20px;">
+                                <div style="position:absolute; top:10px; left:10px; color:#0f0; font-family:monospace; z-index:5; background:rgba(0,0,0,0.5); padding:2px;">REC ● LIVE 03:14:02</div>
+                                <div style="width:100%; height:100%; background: radial-gradient(circle, #001100 0%, #000 100%); opacity:0.3; animation: flicker 0.1s infinite;"></div>
+                                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); color:#0f0; font-size:2rem; font-family:monospace; opacity:0.3; text-align:center;">NO VIDEO SIGNAL<br><span style="font-size:1rem;">(Encrypted Stream)</span></div>
+                            </div>
+                            <div style="margin-top:15px; display:flex; gap:10px;">
+                                <button class="fake-link free-link" data-target="free-portal" style="background:#333; color:#fff; border:1px solid #555; padding:5px; cursor:pointer;">Close Viewer</button>
+                                <button class="fake-link free-link" data-target="free-portal" data-virus="true" style="background:#000; color:red; border:1px solid red; padding:5px; cursor:pointer;">[!] OVERRIDE CAM PROTOCOL</button>
+                            </div>
+                        </div>
+
+                        <div id="page-forum" class="page hidden" style="background:#eaf0f7; font-family: Verdana, sans-serif; padding:10px; color:#000;">
+                            <div style="background:#0f5c8e; padding:15px; border-radius:5px 5px 0 0; color:white;">
+                                <h1 style="margin:0; font-size:1.5rem;">Crimson Shadow Forum</h1>
+                                <span style="font-size:0.8rem;">Security through obscurity.</span>
+                            </div>
+                            <div style="background:#c0d5e8; padding:5px; border:1px solid #0f5c8e; font-size:0.85rem; font-weight:bold; display:flex; gap:15px;">
+                                <a class="fake-link free-link" data-target="free-portal" style="color:#0f5c8e;">Index</a>
+                                <a class="fake-link free-link" data-target="free-portal" style="color:#0f5c8e;">Search</a>
+                                <a class="fake-link free-link" data-target="free-portal" style="color:#0f5c8e;">Members</a>
+                            </div>
+                            
+                            <table style="width:100%; margin-top:20px; background:#fff; border:1px solid #a3bcdc; border-spacing:0;">
+                                <tr style="background:#e1ebf2; font-size:0.9rem;">
+                                    <td style="padding:10px; border-bottom:1px solid #a3bcdc; width:20%;"><strong>Author</strong></td>
+                                    <td style="padding:10px; border-bottom:1px solid #a3bcdc; width:80%;"><strong>Message</strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px; border-bottom:1px solid #e1ebf2; background:#f4f8fb; vertical-align:top;">
+                                        <strong>Admin_Zero</strong><br>
+                                        <span style="font-size:0.7rem; color:#555;">Posts: 9,211</span><br>
+                                        <span style="color:red; font-weight:bold;">Site Admin</span>
+                                    </td>
+                                    <td style="padding:10px; border-bottom:1px solid #e1ebf2; vertical-align:top; font-size:0.9rem;">
+                                        Just dropped a new exploit on the repo. Treat it carefully.<br><br>
+                                        <a class="fake-link free-link" data-target="tools" style="color:#0000ee;">[ Link to Repository ]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px; border-bottom:1px solid #e1ebf2; background:#f4f8fb; vertical-align:top;">
+                                        <strong>Ghost_X</strong><br>
+                                        <span style="font-size:0.7rem; color:#555;">Posts: 42</span>
+                                    </td>
+                                    <td style="padding:10px; border-bottom:1px solid #e1ebf2; vertical-align:top; font-size:0.9rem;">
+                                        Does anyone have the LIVE link for tonight's broadcast? <br>
+                                        I heard they are setting up the RedRoom early.<br><br>
+                                        <a class="fake-link free-link" data-target="redroom" style="color:#0000ee;">[ Enter Void Stream ]</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div id="page-leaks" class="page hidden" style="background:#fff; font-family:'Times New Roman', Times, serif; color:#000; padding:20px;">
+                            <h1 style="text-align:center; font-size:2rem; border-bottom: 2px solid #000; padding-bottom:10px;">CENTRAL DATA LEAKS</h1>
+                            <p style="text-align:center; font-style:italic; margin-bottom:30px;">Information wants to be free.</p>
+                            
+                            <fieldset style="border: 1px solid #000; padding:15px; margin-bottom:20px;">
+                                <legend style="font-weight:bold;">Category: Government [RESTRICTED]</legend>
+                                <ul style="list-style: square;">
+                                    <li><strong>AURORA_PROJECT_DOCS.pdf</strong> (1.4 MB) - <a class="fake-link free-link" data-target="free-portal" style="color:blue;">View Plaintext</a></li>
+                                    <li><strong>global_surveillance_archive.zip</strong> (4.2 GB) - <a class="fake-link free-link" data-target="free-portal" data-virus="true" style="color:red; font-weight:bold;">[ DOWNLOAD ARCHIVE ]</a></li>
+                                </ul>
+                            </fieldset>
+                            
+                            <fieldset style="border: 1px solid #000; padding:15px;">
+                                <legend style="font-weight:bold;">Category: Corporate [PUBLIC]</legend>
+                                <ul style="list-style: square;">
+                                    <li><strong>Enron_Internal_Memos.txt</strong> (45 KB) - <a class="fake-link free-link" data-target="free-portal" style="color:blue;">View Plaintext</a></li>
+                                    <li><strong>db_users_dump_2026.sql</strong> (800 MB) - <a class="fake-link free-link" data-target="free-portal" data-virus="true" style="color:red; font-weight:bold;">[ DOWNLOAD DUMP ]</a></li>
+                                </ul>
+                            </fieldset>
+                        </div>
+                        
+                        <div id="page-redroom" class="page hidden" style="background:#1a0000; color:#ff3333; font-family: 'Courier New', Courier, monospace; padding:30px; text-align:center;">
+                            <h1 style="font-size:3rem; text-shadow: 0 0 10px red;">V O I D   S T R E A M</h1>
+                            <p style="margin-top:20px; font-size:1.2rem;">Establishing P2P connection to live event...</p>
+                            
+                            <div style="border: 2px solid red; background:#000; padding:40px; margin-top:30px; display:inline-block; box-shadow: 0 0 20px #300;">
+                                <div style="font-size:2rem; animation: blink 0.5s infinite;">CONNECTING...</div>
+                            </div>
+                            
+                            <p style="margin-top:30px;">Payment required to unlock audio/video stream.</p>
+                            <button class="fake-link free-link" data-virus="true" data-target="free-portal" style="margin-top:20px; background:red; color:#fff; border:1px solid #fff; padding:15px 30px; font-size:1.5rem; font-weight:bold; cursor:pointer;">PAY 1.5 BTC & WATCH</button>
+                        </div>
+
+                        <!-- ==================== GOOGLE PAGES REPLICAS ==================== -->
+                        
+                        <!-- GOOGLE SEARCH (HOME & RESULTS) -->
+                        <div id="page-google" class="page hidden" style="background:#121212; color:#e8eaed; font-family:'Outfit', 'Arial', sans-serif; height:100%; display:flex; flex-direction:column; padding:0; box-sizing:border-box; font-size:14px;">
+                            <!-- Google Search: Home View -->
+                            <div id="google-search-home" style="display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:15px; box-sizing:border-box;">
+                                <!-- Header Links -->
+                                <div style="display:flex; justify-content:flex-end; gap:15px; align-items:center; height:48px;">
+                                    <span class="fake-link google-nav-link" data-target="google-gmail" style="color:#e8eaed; text-decoration:none; font-size:0.9rem; cursor:pointer; opacity:0.85; font-family:sans-serif;">Gmail</span>
+                                    <span class="fake-link google-nav-link" data-target="google-drive" style="color:#e8eaed; text-decoration:none; font-size:0.9rem; cursor:pointer; opacity:0.85; font-family:sans-serif;">Drive</span>
+                                    <span class="fake-link google-nav-link" data-target="google-maps" style="color:#e8eaed; text-decoration:none; font-size:0.9rem; cursor:pointer; opacity:0.85; font-family:sans-serif;">Maps</span>
+                                    <span class="fake-link google-nav-link" data-target="google-translate" style="color:#e8eaed; text-decoration:none; font-size:0.9rem; cursor:pointer; opacity:0.85; font-family:sans-serif;">Traductor</span>
+                                    <div style="width:32px; height:32px; display:grid; grid-template-columns: repeat(3, 1fr); gap:3px; cursor:pointer; padding:6px; box-sizing:border-box; opacity:0.75;" title="Aplicaciones de Gogle">
+                                        <div style="background:#fff; border-radius:50%;"></div><div style="background:#fff; border-radius:50%;"></div><div style="background:#fff; border-radius:50%;"></div>
+                                        <div style="background:#fff; border-radius:50%;"></div><div style="background:#fff; border-radius:50%;"></div><div style="background:#fff; border-radius:50%;"></div>
+                                        <div style="background:#fff; border-radius:50%;"></div><div style="background:#fff; border-radius:50%;"></div><div style="background:#fff; border-radius:50%;"></div>
+                                    </div>
+                                    <button class="google-blue-btn" style="background:#8ab4f8; color:#202124; border:none; padding:8px 16px; border-radius:4px; font-weight:bold; cursor:pointer; font-family:sans-serif; font-size:0.85rem;">Iniciar Sesión</button>
+                                </div>
+
+                                <!-- Center Search Container -->
+                                <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:10%;">
+                                    <!-- Google Logo -->
+                                    <div style="font-size:5rem; font-weight:bold; letter-spacing:-2px; margin-bottom:25px; user-select:none; font-family:'Outfit', sans-serif;">
+                                        <span style="color:#4285F4;">G</span><span style="color:#EA4335;">o</span><span style="color:#FBBC05;">g</span><span style="color:#34A853;">l</span><span style="color:#EA4335;">e</span>
+                                    </div>
+
+                                    <!-- Search Input -->
+                                    <div class="google-search-bar-container" style="width:100%; max-width:580px; position:relative; margin-bottom:25px;">
+                                        <span style="position:absolute; left:16px; top:50%; transform:translateY(-50%); font-size:1.2rem; opacity:0.5;">🔍</span>
+                                        <input type="text" id="google-search-input" placeholder="Buscar en Gogle o escribir una URL" style="width:100%; background:#202124; border:1px solid #5f6368; border-radius:24px; color:#e8eaed; padding:12px 12px 12px 48px; font-size:1rem; outline:none; box-sizing:border-box; transition: box-shadow 0.2s, border-color 0.2s;">
+                                        <span style="position:absolute; right:48px; top:50%; transform:translateY(-50%); font-size:1.1rem; cursor:pointer; opacity:0.5;" title="Búsqueda por voz">🎙️</span>
+                                        <span style="position:absolute; right:16px; top:50%; transform:translateY(-50%); font-size:1.1rem; cursor:pointer; opacity:0.5;" title="Búsqueda por imagen">📷</span>
+                                    </div>
+
+                                    <!-- Search Buttons -->
+                                    <div style="display:flex; gap:12px;">
+                                        <button id="google-search-btn" class="google-gray-btn" style="background:#303134; color:#e8eaed; border:1px solid transparent; border-radius:4px; padding:10px 18px; font-size:0.9rem; cursor:pointer; font-family:sans-serif; transition: border-color 0.15s;">Buscar con Gogle</button>
+                                        <button id="google-lucky-btn" class="google-gray-btn" style="background:#303134; color:#e8eaed; border:1px solid transparent; border-radius:4px; padding:10px 18px; font-size:0.9rem; cursor:pointer; font-family:sans-serif; transition: border-color 0.15s;">Me siento con suerte</button>
+                                    </div>
+                                    <p style="margin-top:25px; font-size:0.85rem; color:#9aa0a6;">Ofrecido por Gogle en: <span style="color:#8ab4f8; cursor:pointer;">Español (Latinoamérica)</span></p>
+                                </div>
+
+                                <!-- Footer -->
+                                <div style="background:#171717; margin:0 -15px -15px; border-top:1px solid #212124; font-size:0.85rem; color:#9aa0a6;">
+                                    <div style="padding:12px 20px; border-bottom:1px solid #212124;">Argentina</div>
+                                    <div style="padding:12px 20px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:15px;">
+                                        <div style="display:flex; gap:25px;">
+                                            <span style="cursor:pointer;">Sobre Gogle</span>
+                                            <span style="cursor:pointer;">Publicidad</span>
+                                            <span style="cursor:pointer;">Negocios</span>
+                                            <span style="cursor:pointer;">Cómo funciona la Búsqueda</span>
+                                        </div>
+                                        <div style="display:flex; gap:25px;">
+                                            <span style="cursor:pointer;">Privacidad</span>
+                                            <span style="cursor:pointer;">Condiciones</span>
+                                            <span style="cursor:pointer;">Preferencia</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Google Search: Results View -->
+                            <div id="google-search-results" class="hidden" style="display:flex; flex-direction:column; height:100%; box-sizing:border-box;">
+                                <!-- Top Bar -->
+                                <div style="display:flex; align-items:center; padding:15px 30px; border-bottom:1px solid #202124; gap:25px; flex-shrink:0;">
+                                    <!-- Google Logo -->
+                                    <div id="google-results-logo" style="font-size:2rem; font-weight:bold; letter-spacing:-1px; cursor:pointer; user-select:none; font-family:'Outfit', sans-serif;">
+                                        <span style="color:#4285F4;">G</span><span style="color:#EA4335;">o</span><span style="color:#FBBC05;">g</span><span style="color:#34A853;">l</span><span style="color:#EA4335;">e</span>
+                                    </div>
+                                    <!-- Search Input -->
+                                    <div style="flex-grow:1; max-width:690px; position:relative; display:flex; align-items:center;">
+                                        <input type="text" id="google-results-input" style="width:100%; background:#303134; border:1px solid #5f6368; border-radius:24px; color:#e8eaed; padding:10px 10px 10px 20px; font-size:0.95rem; outline:none; box-sizing:border-box;">
+                                        <button id="google-results-search-btn" style="position:absolute; right:15px; background:transparent; border:none; color:#8ab4f8; font-size:1.1rem; cursor:pointer;">🔍</button>
+                                    </div>
+                                </div>
+
+                                <!-- Filter Tabs -->
+                                <div style="display:flex; padding:0 150px; border-bottom:1px solid #202124; gap:25px; font-size:0.9rem; color:#9aa0a6; height:40px; align-items:center; flex-shrink:0;">
+                                    <div class="google-tab active" style="color:#8ab4f8; border-bottom:3px solid #8ab4f8; padding-bottom:10px; cursor:pointer; font-weight:bold;">Todo</div>
+                                    <div class="google-tab google-nav-link" data-target="google-images" style="padding-bottom:10px; cursor:pointer;">Imágenes</div>
+                                    <div class="google-tab google-nav-link" data-target="google-maps" style="padding-bottom:10px; cursor:pointer;">Maps</div>
+                                    <div class="google-tab google-nav-link" data-target="google-gmail" style="padding-bottom:10px; cursor:pointer;">Gmail</div>
+                                    <div class="google-tab google-nav-link" data-target="google-drive" style="padding-bottom:10px; cursor:pointer;">Drive</div>
+                                </div>
+
+                                <!-- Results list -->
+                                <div style="flex-grow:1; overflow-y:auto; padding:20px 100px; box-sizing:border-box;">
+                                    <p style="color:#9aa0a6; font-size:0.85rem; margin-bottom:20px;">Cerca de <span id="google-results-count">4</span> resultados (0.18 segundos)</p>
+                                    <div style="display:flex; gap:40px; align-items:flex-start;">
+                                        <div id="google-results-list" style="display:flex; flex-direction:column; gap:25px; flex-grow:1; max-width:650px;">
+                                            <!-- Injected by JS -->
+                                        </div>
+                                        <div id="google-knowledge-panel" class="hidden" style="width:300px; border:1px solid #3c4043; border-radius:8px; padding:15px; background:#1e1e1e; color:#e8eaed; flex-shrink:0; box-sizing:border-box;">
+                                            <!-- Injected by JS -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GMAIL -->
+                        <div id="page-google-gmail" class="page hidden" style="background:#111; color:#f1f3f4; font-family:'Roboto', 'Arial', sans-serif; height:100%; display:flex; padding:0; box-sizing:border-box; font-size:13px;">
+                            <!-- Sidebar -->
+                            <div style="width:220px; background:#181818; border-right:1px solid #282828; display:flex; flex-direction:column; padding:15px 10px; box-sizing:border-box; flex-shrink:0;">
+                                <button style="background:#303134; color:#8ab4f8; border:1px solid #5f6368; padding:12px 24px; border-radius:24px; font-weight:bold; cursor:pointer; font-size:0.95rem; margin-bottom:20px; outline:none; display:flex; align-items:center; gap:8px;" onclick="document.getElementById('gmail-compose-modal').classList.remove('hidden')">
+                                    <span style="font-size:1.2rem;">✏️</span> Redactar
+                                </button>
+                                <div style="display:flex; flex-direction:column; gap:2px;">
+                                    <div style="background:#303134; color:#8ab4f8; font-weight:bold; padding:8px 12px; border-radius:0 16px 16px 0; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+                                        <span>📥 Recibidos</span>
+                                        <span style="font-size:0.75rem; background:#8ab4f8; color:#000; padding:1px 6px; border-radius:10px;" id="gmail-unread-badge">4</span>
+                                    </div>
+                                    <div style="padding:8px 12px; border-radius:0 16px 16px 0; color:#aaa; cursor:pointer;">⭐ Destacados</div>
+                                    <div style="padding:8px 12px; border-radius:0 16px 16px 0; color:#aaa; cursor:pointer;">🕐 Pospuestos</div>
+                                    <div style="padding:8px 12px; border-radius:0 16px 16px 0; color:#aaa; cursor:pointer;">📤 Enviados</div>
+                                    <div style="padding:8px 12px; border-radius:0 16px 16px 0; color:#aaa; cursor:pointer;">📄 Borradores</div>
+                                </div>
+                            </div>
+
+                            <!-- Mailbox List / Reader Area -->
+                            <div style="flex-grow:1; display:flex; flex-direction:column; overflow:hidden;">
+                                <!-- Top Bar toolbar -->
+                                <div style="height:48px; border-bottom:1px solid #282828; display:flex; align-items:center; padding:0 20px; gap:20px; flex-shrink:0;">
+                                    <span style="font-size:1.15rem; font-weight:bold; color:#8ab4f8; display:flex; align-items:center; gap:8px;">
+                                        <span style="color:#EA4335; font-size:1.4rem;">✉️</span> Gmail Dark
+                                    </span>
+                                    <div style="flex-grow:1; position:relative; max-width:400px; display:flex; align-items:center;">
+                                        <input type="text" placeholder="Buscar en el correo" style="width:100%; background:#202124; border:1px solid #5f6368; border-radius:8px; color:#fff; padding:6px 12px; font-size:0.85rem; outline:none;">
+                                    </div>
+                                </div>
+
+                                <!-- Main email container -->
+                                <div style="flex-grow:1; display:flex; overflow:hidden; position:relative;">
+                                    <!-- Email List -->
+                                    <div id="gmail-list-pane" style="width:100%; height:100%; overflow-y:auto; display:flex; flex-direction:column; box-sizing:border-box;">
+                                        <!-- Email Items (will trigger email reader) -->
+                                        <div class="gmail-row" data-id="email-1" style="display:flex; align-items:center; padding:12px 20px; border-bottom:1px solid #282828; cursor:pointer; background:#1b1d22; font-weight:bold; transition: background 0.15s;">
+                                            <div style="width:180px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; color:#e8eaed;">Gogle Workspace</div>
+                                            <div style="flex-grow:1; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; color:#aaa; margin-right:15px;">
+                                                <span style="color:#fff;">[Alerta de Seguridad] Inicio de sesión inusual detectado</span> - Hemos verificado acceso reciente...
+                                            </div>
+                                            <div style="width:80px; text-align:right; font-size:0.8rem; color:#888;">Hoy</div>
+                                        </div>
+
+                                        <div class="gmail-row" data-id="email-2" style="display:flex; align-items:center; padding:12px 20px; border-bottom:1px solid #282828; cursor:pointer; background:#1b1d22; font-weight:bold; transition: background 0.15s;">
+                                            <div style="width:180px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; color:#e8eaed;">Luca B.</div>
+                                            <div style="flex-grow:1; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; color:#aaa; margin-right:15px;">
+                                                <span style="color:#fff;">Avance en el código del juego y WinHello</span> - Hola Mateo, te pasé los códigos de la fase 24...
+                                            </div>
+                                            <div style="width:80px; text-align:right; font-size:0.8rem; color:#888;">Ayer</div>
+                                        </div>
+
+                                        <div class="gmail-row" data-id="email-3" style="display:flex; align-items:center; padding:12px 20px; border-bottom:1px solid #282828; cursor:pointer; background:#1b1d22; font-weight:bold; transition: background 0.15s;">
+                                            <div style="width:180px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; color:#e8eaed;">Mateo G.</div>
+                                            <div style="flex-grow:1; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; color:#aaa; margin-right:15px;">
+                                                <span style="color:#fff;">Minijuegos integrados y testeo de sandbox</span> - Qué tal Luca, ya quedaron los minijuegos listos...
+                                            </div>
+                                            <div style="width:80px; text-align:right; font-size:0.8rem; color:#888;">Ayer</div>
+                                        </div>
+
+                                        <div class="gmail-row" data-id="email-4" style="display:flex; align-items:center; padding:12px 20px; border-bottom:1px solid #282828; cursor:pointer; background:#1b1d22; font-weight:bold; transition: background 0.15s;">
+                                            <div style="width:180px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; color:#e8eaed;">Desconocido</div>
+                                            <div style="flex-grow:1; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; color:#aaa; margin-right:15px;">
+                                                <span style="color:#fff;">[URGENTE] CLAVE DE ACCESO AL DEPOSITO</span> - No digas nada, guarda este token para después...
+                                            </div>
+                                            <div style="width:80px; text-align:right; font-size:0.8rem; color:#888;">Hace 3 días</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Email Reader Pane (overlay) -->
+                                    <div id="gmail-reader-pane" class="hidden" style="position:absolute; top:0; left:0; width:100%; height:100%; background:#121212; display:flex; flex-direction:column; box-sizing:border-box; border-left:1px solid #282828; z-index:15;">
+                                        <!-- toolbar -->
+                                        <div style="height:40px; background:#181818; display:flex; align-items:center; padding:0 20px; border-bottom:1px solid #282828;">
+                                            <button id="gmail-reader-back-btn" style="background:transparent; border:none; color:#8ab4f8; font-weight:bold; cursor:pointer; font-size:0.95rem;">← Volver a Recibidos</button>
+                                        </div>
+                                        <!-- content -->
+                                        <div style="padding:25px; overflow-y:auto; flex-grow:1; box-sizing:border-box;">
+                                            <h2 id="gmail-reader-subject" style="color:#fff; font-size:1.4rem; margin-bottom:20px; border-bottom:1px solid #282828; padding-bottom:10px;">Asunto del correo</h2>
+                                            <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-size:0.9rem;">
+                                                <div>
+                                                    De: <strong id="gmail-reader-sender" style="color:#8ab4f8;">Luca B.</strong> <span id="gmail-reader-email" style="color:#888; font-size:0.8rem;">(luca.dev@gmail.com)</span>
+                                                </div>
+                                                <div id="gmail-reader-date" style="color:#888;">Ayer, 18:32</div>
+                                            </div>
+                                            <div id="gmail-reader-body" style="line-height:1.6; color:#e8eaed; white-space:pre-wrap; border-top:1px dashed #282828; padding-top:15px;">
+                                                Contenido del correo...
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Compose Modal -->
+                            <div id="gmail-compose-modal" class="hidden" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background:#202124; border:1px solid #3c4043; border-radius:8px; width:450px; z-index:25; display:flex; flex-direction:column; box-shadow:0 8px 24px rgba(0,0,0,0.5); font-family:sans-serif;">
+                                <div style="background:#181818; padding:10px 15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #3c4043; font-weight:bold;">
+                                    <span style="color:#fff; font-size:0.9rem;">Mensaje nuevo</span>
+                                    <span style="color:#aaa; cursor:pointer; font-size:1.2rem;" onclick="document.getElementById('gmail-compose-modal').classList.add('hidden')">×</span>
+                                </div>
+                                <div style="display:flex; flex-direction:column; padding:15px; gap:10px;">
+                                    <input type="email" id="gmail-compose-to" placeholder="Para" style="background:#202124; border:none; border-bottom:1px solid #3c4043; color:#fff; padding:6px; font-size:0.85rem; outline:none;" value="luca.dev@gmail.com">
+                                    <input type="text" id="gmail-compose-subject" placeholder="Asunto" style="background:#202124; border:none; border-bottom:1px solid #3c4043; color:#fff; padding:6px; font-size:0.85rem; outline:none;">
+                                    <textarea id="gmail-compose-body" placeholder="Escribe el cuerpo del mensaje aquí..." style="background:#202124; border:none; color:#fff; padding:6px; font-size:0.85rem; outline:none; height:180px; resize:none; font-family:sans-serif;"></textarea>
+                                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px; border-top:1px solid #3c4043; padding-top:10px;">
+                                        <button class="google-gray-btn" style="background:#303134; color:#aaa; border:none; padding:6px 15px; border-radius:4px; cursor:pointer;" onclick="document.getElementById('gmail-compose-modal').classList.add('hidden')">Descartar</button>
+                                        <button id="gmail-compose-send-btn" class="google-blue-btn" style="background:#8ab4f8; color:#000; border:none; padding:6px 20px; border-radius:4px; font-weight:bold; cursor:pointer;">Enviar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GOOGLE DRIVE -->
+                        <div id="page-google-drive" class="page hidden" style="background:#111; color:#e8eaed; font-family:'Roboto', 'Arial', sans-serif; height:100%; display:flex; padding:0; box-sizing:border-box; font-size:13px;">
+                            <!-- Sidebar -->
+                            <div style="width:200px; background:#181818; border-right:1px solid #282828; display:flex; flex-direction:column; padding:15px 10px; box-sizing:border-box; flex-shrink:0;">
+                                <button style="background:#303134; color:#fff; border:1px solid #5f6368; padding:10px 15px; border-radius:24px; font-weight:bold; cursor:pointer; margin-bottom:20px; outline:none; display:flex; align-items:center; gap:8px;" onclick="document.getElementById('drive-upload-modal').classList.remove('hidden')">
+                                    <span style="font-weight:bold; font-size:1.1rem;">+</span> Nuevo
+                                </button>
+                                <div style="display:flex; flex-direction:column; gap:2px;">
+                                    <div style="background:#303134; color:#8ab4f8; font-weight:bold; padding:8px 12px; border-radius:0 16px 16px 0; cursor:pointer;">📁 Mi unidad</div>
+                                    <div style="padding:8px 12px; color:#aaa; cursor:pointer;">🖥️ Computadoras</div>
+                                    <div style="padding:8px 12px; color:#aaa; cursor:pointer;">👥 Compartido conmigo</div>
+                                    <div style="padding:8px 12px; color:#aaa; cursor:pointer;">🕐 Reciente</div>
+                                    <div style="padding:8px 12px; color:#aaa; cursor:pointer;">⭐ Destacados</div>
+                                    <div style="padding:8px 12px; color:#aaa; cursor:pointer;">🗑️ Papelera</div>
+                                </div>
+                            </div>
+
+                            <!-- Content Grid -->
+                            <div style="flex-grow:1; display:flex; flex-direction:column; overflow:hidden; position:relative;">
+                                <!-- Top Search Bar -->
+                                <div style="height:48px; border-bottom:1px solid #282828; display:flex; align-items:center; padding:0 20px; gap:20px; flex-shrink:0; justify-content:space-between;">
+                                    <span style="font-size:1.15rem; font-weight:bold; color:#8ab4f8; display:flex; align-items:center; gap:8px;">
+                                        <span style="color:#FBBC05; font-size:1.4rem;">▲</span> Gogle Drive
+                                    </span>
+                                    <input type="text" placeholder="Buscar en Drive" style="width:300px; background:#202124; border:1px solid #5f6368; border-radius:8px; color:#fff; padding:6px 12px; font-size:0.85rem; outline:none;">
+                                </div>
+
+                                <!-- File Grid Panel -->
+                                <div style="flex-grow:1; padding:25px; overflow-y:auto; box-sizing:border-box;">
+                                    <h3 style="color:#fff; margin-bottom:20px; border-bottom:1px solid #282828; padding-bottom:8px;">Archivos en la Nube</h3>
+                                    
+                                    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap:20px;">
+                                        <!-- Folder -->
+                                        <div class="drive-item" data-type="folder" data-name="fotos_lucas" style="background:#202124; border:1px solid #3c4043; border-radius:8px; padding:15px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; text-align:center; transition: border-color 0.2s;">
+                                            <span style="font-size:3rem; margin-bottom:8px; color:#ff9900;">📁</span>
+                                            <span style="font-size:0.85rem; color:#fff; font-weight:bold; word-break:break-all;">fotos_lucas</span>
+                                        </div>
+                                        <!-- PDF File -->
+                                        <div class="drive-item" data-type="pdf" data-name="Manual_OPSEC.pdf" style="background:#202124; border:1px solid #3c4043; border-radius:8px; padding:15px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; text-align:center; transition: border-color 0.2s;">
+                                            <span style="font-size:3rem; margin-bottom:8px; color:#EA4335;">📄</span>
+                                            <span style="font-size:0.85rem; color:#fff; font-weight:bold; word-break:break-all;">Manual_OPSEC.pdf</span>
+                                        </div>
+                                        <!-- Text file -->
+                                        <div class="drive-item" data-type="txt" data-name="contraseña_wifi.txt" style="background:#202124; border:1px solid #3c4043; border-radius:8px; padding:15px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; text-align:center; transition: border-color 0.2s;">
+                                            <span style="font-size:3rem; margin-bottom:8px; color:#4285F4;">📝</span>
+                                            <span style="font-size:0.85rem; color:#fff; font-weight:bold; word-break:break-all;">contraseña_wifi.txt</span>
+                                        </div>
+                                        <!-- Zip download -->
+                                        <div class="drive-item" data-type="zip" data-name="proyecto_final.zip" style="background:#202124; border:1px solid #3c4043; border-radius:8px; padding:15px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; text-align:center; transition: border-color 0.2s;">
+                                            <span style="font-size:3rem; margin-bottom:8px; color:#f59e0b;">📦</span>
+                                            <span style="font-size:0.85rem; color:#fff; font-weight:bold; word-break:break-all;">proyecto_final.zip</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- File Preview Overlay Modal -->
+                                <div id="drive-preview-pane" class="hidden" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:20; display:flex; justify-content:center; align-items:center; padding:40px; box-sizing:border-box;">
+                                    <div style="background:#202124; border:1px solid #3c4043; border-radius:8px; width:100%; max-width:650px; height:85%; display:flex; flex-direction:column; overflow:hidden;">
+                                        <!-- Header -->
+                                        <div style="background:#181818; padding:12px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #3c4043;">
+                                            <span id="drive-preview-title" style="font-weight:bold; color:#fff;">Documento.pdf</span>
+                                            <div style="display:flex; gap:12px;">
+                                                <button id="drive-preview-download-btn" style="background:#303134; color:#8ab4f8; border:1px solid #5f6368; padding:5px 12px; border-radius:4px; cursor:pointer; font-weight:bold;">📥 Descargar en PC</button>
+                                                <button id="drive-preview-close-btn" style="background:transparent; border:none; color:#ff4d7a; font-weight:bold; font-size:1.2rem; cursor:pointer;">×</button>
+                                            </div>
+                                        </div>
+                                        <!-- Preview Body -->
+                                        <div id="drive-preview-body" style="padding:20px; overflow-y:auto; flex-grow:1; color:#ccc; line-height:1.6; font-family:monospace; background:#000; font-size:0.9rem; white-space:pre-wrap;">
+                                            Cargando vista previa...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Upload Modal -->
+                            <div id="drive-upload-modal" class="hidden" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background:#202124; border:1px solid #3c4043; border-radius:8px; width:400px; z-index:25; display:flex; flex-direction:column; box-shadow:0 8px 24px rgba(0,0,0,0.5); font-family:sans-serif;">
+                                <div style="background:#181818; padding:10px 15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #3c4043; font-weight:bold;">
+                                    <span style="color:#fff; font-size:0.9rem;">Cargar Archivo Nuevo</span>
+                                    <span style="color:#aaa; cursor:pointer; font-size:1.2rem;" onclick="document.getElementById('drive-upload-modal').classList.add('hidden')">×</span>
+                                </div>
+                                <div style="display:flex; flex-direction:column; padding:15px; gap:12px;">
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <label style="color:#aaa; font-size:0.75rem;">Nombre del Archivo (ej. notas.txt):</label>
+                                        <input type="text" id="drive-upload-name" placeholder="nombre_archivo.txt" style="background:#303134; border:1px solid #5f6368; border-radius:4px; color:#fff; padding:6px; font-size:0.85rem; outline:none;">
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <label style="color:#aaa; font-size:0.75rem;">Tipo de Archivo:</label>
+                                        <select id="drive-upload-type" style="background:#303134; border:1px solid #5f6368; border-radius:4px; color:#fff; padding:6px; font-size:0.85rem; outline:none; cursor:pointer;">
+                                            <option value="txt">📄 Documento de Texto (.txt)</option>
+                                            <option value="pdf">📕 Manual PDF (.pdf)</option>
+                                            <option value="zip">📦 Archivo Comprimido (.zip)</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <label style="color:#aaa; font-size:0.75rem;">Contenido del Archivo:</label>
+                                        <textarea id="drive-upload-content" placeholder="Escribe el contenido aquí..." style="background:#303134; border:1px solid #5f6368; border-radius:4px; color:#fff; padding:6px; font-size:0.85rem; outline:none; height:100px; resize:none; font-family:monospace;"></textarea>
+                                    </div>
+                                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px; border-top:1px solid #3c4043; padding-top:10px;">
+                                        <button class="google-gray-btn" style="background:#303134; color:#aaa; border:none; padding:6px 15px; border-radius:4px; cursor:pointer;" onclick="document.getElementById('drive-upload-modal').classList.add('hidden')">Cancelar</button>
+                                        <button id="drive-upload-btn" class="google-blue-btn" style="background:#8ab4f8; color:#000; border:none; padding:6px 20px; border-radius:4px; font-weight:bold; cursor:pointer;">Cargar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GOOGLE MAPS -->
+                        <div id="page-google-maps" class="page hidden" style="background:#111; color:#e8eaed; font-family:'Roboto', 'Arial', sans-serif; height:100%; display:flex; padding:0; box-sizing:border-box; font-size:13px; overflow:hidden;">
+                            <!-- Search & Coordinates Panel -->
+                            <div style="width:280px; background:#181818; border-right:1px solid #282828; display:flex; flex-direction:column; padding:15px; box-sizing:border-box; flex-shrink:0;">
+                                <div style="display:flex; align-items:center; gap:5px; margin-bottom:15px; border-bottom:1px solid #282828; padding-bottom:10px;">
+                                    <span style="color:#34A853; font-size:1.4rem; font-weight:bold;">📍</span>
+                                    <span style="font-size:1.1rem; font-weight:bold; color:#fff;">Gogle Maps</span>
+                                </div>
+                                <div style="position:relative; display:flex; align-items:center; margin-bottom:20px;">
+                                    <input type="text" id="gmaps-search-input" placeholder="Buscar dirección o dirección IP..." style="width:100%; background:#202124; border:1px solid #5f6368; border-radius:4px; color:#fff; padding:8px 10px; font-size:0.85rem; outline:none; box-sizing:border-box;">
+                                    <button id="gmaps-search-btn" style="position:absolute; right:8px; background:transparent; border:none; color:#8ab4f8; font-size:1rem; cursor:pointer;">🔍</button>
+                                </div>
+                                
+                                <div style="flex-grow:1; background:#0a0a0a; border:1px solid #282828; border-radius:4px; padding:12px; overflow-y:auto; box-sizing:border-box; font-family:monospace; font-size:0.8rem;">
+                                    <h4 style="color:#8ab4f8; margin:0 0 10px 0; border-bottom:1px solid #222; padding-bottom:5px;">INFORMACIÓN DEL SECTOR</h4>
+                                    <div id="gmaps-info-content" style="color:#aaa; line-height:1.4;">
+                                        <p style="color:#0f0; font-weight:bold;">[GPS Conectado]</p>
+                                        <p>Servicio de rastreo satelital activo en el sandbox.</p>
+                                        <p style="margin-top:10px;">Escribe una IP objetivo en el cuadro de búsqueda para geolocalizar el enrutamiento.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Map Area (Cyber Grid Representation) -->
+                            <div style="flex-grow:1; position:relative; background:#05070a; overflow:hidden;">
+                                <!-- Cyber Grid Background -->
+                                <div class="gmaps-grid-bg" style="position:absolute; top:0; left:0; width:200%; height:200%; background-image: linear-gradient(rgba(0,255,100,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,100,0.06) 1px, transparent 1px); background-size:30px 30px; transform:translate(-25%, -25%); transition: transform 0.5s ease-out;"></div>
+                                
+                                <!-- Map Elements -->
+                                <div id="gmaps-elements-container" style="position:absolute; top:0; left:0; width:100%; height:100%; transition: transform 0.5s ease-out; transform-origin: center;">
+                                    <!-- Player node marker -->
+                                    <div style="position:absolute; top:55%; left:45%; transform:translate(-50%,-50%); text-align:center; z-index:10;">
+                                        <div style="width:14px; height:14px; background:#00ff66; border:2px solid #fff; border-radius:50%; box-shadow:0 0 10px #00ff66; display:inline-block; animation: pulse-green 1.5s infinite;"></div>
+                                        <div style="color:#00ff66; font-size:0.75rem; font-weight:bold; font-family:monospace; background:rgba(0,0,0,0.85); padding:2px 5px; border-radius:3px; border:1px solid #00ff66; margin-top:4px; white-space:nowrap;">Tu IP (Localizador Sandbox)</div>
+                                    </div>
+                                    
+                                    <!-- Russian Node -->
+                                    <div style="position:absolute; top:25%; left:30%; transform:translate(-50%,-50%); text-align:center; z-index:8;">
+                                        <div style="width:10px; height:10px; background:#3399ff; border-radius:50%; display:inline-block; opacity:0.7;"></div>
+                                        <div style="color:#3399ff; font-size:0.7rem; font-family:monospace; background:rgba(0,0,0,0.7); padding:1px 4px; border-radius:3px; margin-top:3px; white-space:nowrap;">Proxy Rusia</div>
+                                    </div>
+
+                                    <!-- Attacker node marker (Hidden by default, shown when searching) -->
+                                    <div id="gmaps-attacker-marker" class="hidden" style="position:absolute; top:35%; left:65%; transform:translate(-50%,-50%); text-align:center; z-index:12;">
+                                        <div style="width:16px; height:16px; background:#ff3333; border:2px solid #fff; border-radius:50%; box-shadow:0 0 15px #ff3333; display:inline-block; animation: pulse-red 1s infinite;"></div>
+                                        <div style="color:#ff3333; font-size:0.75rem; font-weight:bold; font-family:monospace; background:rgba(0,0,0,0.85); padding:2px 5px; border-radius:3px; border:1px solid #ff3333; margin-top:4px; white-space:nowrap;">OBJETIVO: 184.22.9.101</div>
+                                    </div>
+                                </div>
+
+                                <!-- UI controls on map -->
+                                <div style="position:absolute; bottom:15px; right:15px; display:flex; flex-direction:column; gap:5px; z-index:20;">
+                                    <button id="gmaps-zoom-in" style="background:#202124; color:#fff; border:1px solid #3c4043; width:36px; height:36px; font-size:1.4rem; font-weight:bold; cursor:pointer; border-radius:4px; outline:none; display:flex; align-items:center; justify-content:center;">+</button>
+                                    <button id="gmaps-zoom-out" style="background:#202124; color:#fff; border:1px solid #3c4043; width:36px; height:36px; font-size:1.4rem; font-weight:bold; cursor:pointer; border-radius:4px; outline:none; display:flex; align-items:center; justify-content:center;">-</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GOOGLE TRANSLATE -->
+                        <div id="page-google-translate" class="page hidden" style="background:#111; color:#e8eaed; font-family:'Roboto', 'Arial', sans-serif; height:100%; display:flex; flex-direction:column; padding:0; box-sizing:border-box; font-size:13px;">
+                            <!-- Header -->
+                            <div style="height:48px; border-bottom:1px solid #282828; display:flex; align-items:center; padding:0 20px; gap:20px; flex-shrink:0;">
+                                <span style="font-size:1.15rem; font-weight:bold; color:#8ab4f8; display:flex; align-items:center; gap:8px;">
+                                    <span style="color:#4285F4; font-size:1.4rem; font-weight:bold;">🌐</span> Gogle Traductor
+                                </span>
+                            </div>
+
+                            <!-- Translation Boxes Container -->
+                            <div style="flex-grow:1; display:flex; flex-direction:column; padding:25px; gap:20px; box-sizing:border-box;">
+                                <div style="display:flex; border:1px solid #3c4043; border-radius:8px; overflow:hidden; background:#181818; min-height:220px; flex-grow:1;">
+                                    <!-- Source language area (Left) -->
+                                    <div style="flex:1; display:flex; flex-direction:column; border-right:1px solid #3c4043;">
+                                        <!-- Tabs -->
+                                        <div style="display:flex; background:#202124; border-bottom:1px solid #3c4043; height:40px; align-items:center; padding:0 15px; gap:15px; font-weight:bold;">
+                                            <span style="color:#8ab4f8; border-bottom:2px solid #8ab4f8; padding-bottom:10px; font-size:0.85rem; cursor:pointer;">Español</span>
+                                            <span style="color:#aaa; font-size:0.85rem; cursor:pointer;">Detectar Idioma</span>
+                                        </div>
+                                        <!-- Text Area Input -->
+                                        <div style="flex-grow:1; position:relative; display:flex;">
+                                            <textarea id="gtranslate-input" placeholder="Escribe aquí el texto a traducir..." style="width:100%; height:100%; background:transparent; border:none; resize:none; padding:15px; color:#fff; font-size:1rem; outline:none; font-family:sans-serif; box-sizing:border-box;"></textarea>
+                                            <button id="gtranslate-btn-clear" style="position:absolute; bottom:10px; right:10px; background:#303134; color:#ccc; border:1px solid #5f6368; border-radius:4px; padding:3px 8px; cursor:pointer; font-size:0.75rem;">Limpiar</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Target language area (Right) -->
+                                    <div style="flex:1; display:flex; flex-direction:column; background:#1b1d22;">
+                                        <!-- Selector de Idioma Destino -->
+                                        <div style="display:flex; background:#202124; border-bottom:1px solid #3c4043; height:40px; align-items:center; padding:0 15px; gap:10px; font-weight:bold;">
+                                            <span style="color:#aaa; font-size:0.8rem;">Traducir a:</span>
+                                            <select id="gtranslate-lang-select" style="background:#303134; border:1px solid #5f6368; color:#8ab4f8; font-size:0.85rem; padding:3px 8px; border-radius:4px; outline:none; cursor:pointer; font-weight:bold;">
+                                                <option value="leet">Hacker Slang (l33t)</option>
+                                                <option value="binary">Código Binario</option>
+                                                <option value="base64">Codificación Base64</option>
+                                                <option value="morse">Código Morse</option>
+                                            </select>
+                                        </div>
+                                        <!-- Translation Output -->
+                                        <div style="flex-grow:1; position:relative; padding:15px; box-sizing:border-box;">
+                                            <!-- Output text div -->
+                                            <div id="gtranslate-output" style="color:#00ff66; font-size:1rem; font-family:monospace; line-height:1.5; white-space:pre-wrap;"></div>
+                                            <!-- Spinner loader -->
+                                            <div id="gtranslate-spinner" class="hidden" style="position:absolute; top:20px; left:20px; display:flex; align-items:center; gap:10px; color:#8ab4f8; font-family:sans-serif; font-size:0.85rem;">
+                                                <div style="width:16px; height:16px; border:2px solid #555; border-top-color:#8ab4f8; border-radius:50%; animation: spin 0.8s linear infinite;"></div>
+                                                Traduciendo en la nube...
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="display:flex; justify-content:flex-end;">
+                                    <button id="gtranslate-translate-btn" style="background:#8ab4f8; color:#000; font-weight:bold; border:none; padding:10px 25px; border-radius:4px; cursor:pointer; font-size:0.95rem;">TRADUCIR</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUPER DARK LIGHTER 2D GAME -->
+                        <div id="page-dark-game" class="page hidden" style="background:#0a0a0a; color:#00ff66; font-family: monospace; height:100%; display:flex; flex-direction:column; padding:14px 20px; box-sizing:border-box; overflow:hidden; align-items:center;">
+                            <!-- Title bar -->
+                            <div style="width:100%; max-width:900px; text-align:center; margin-bottom:8px; flex-shrink:0;">
+                                <h1 style="color:#00ff66; margin:0; font-family:'VT323', monospace; font-size:2.2rem; text-shadow:0 0 10px rgba(0,255,102,0.5);">🕹️ SUPER DARK LIGHTER</h1>
+                                <p style="color:#888; font-size:0.78rem; margin:4px 0 0 0;">[Estación de Minado Recreativa de Bitcoins via Emulación A.N.N]</p>
+                            </div>
+
+                            <!-- Game Area — fills remaining height -->
+                            <div style="flex:1; width:100%; max-width:900px; position:relative; background:#000; border:2px solid #00ff66; border-radius:4px; box-shadow:0 0 20px rgba(0,255,102,0.2); overflow:hidden; min-height:0;">
+                                <canvas id="sdlighter-canvas" width="900" height="600" style="display:block; width:100%; height:100%; background:#050505; object-fit:contain;"></canvas>
+                            </div>
+
+                            <!-- Controls — compact, fixed at bottom -->
+                            <div style="flex-shrink:0; margin-top:10px; color:#aaa; font-size:0.78rem; text-align:center; max-width:900px; line-height:1.4;">
+                                <p><strong>Controles:</strong> Flechas <b>↑ ↓ ← →</b> o <b>W A S D</b> para mover. <b>Barra Espaciadora</b> para iniciar/reiniciar.</p>
+                                <p style="margin-top:4px; color:#ffcc00;">★ Capturar satoshis dorados incrementa directamente tus fondos BTC.</p>
+                            </div>
+                        </div>
+
+                        <!-- =============================================================== -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- NetManager Window -->
+            <div id="window-netmanager" class="os-window hidden">
+                <div class="browser-window" style="background:#003366; border-color:#aaa;">
+                    <div class="browser-header" style="background:#001133;">
+                        <span data-i18n="netmanager_header_title">NetManager Security Applet</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-netmanager" style="cursor:pointer; padding: 0 5px; margin-right: 5px;">_</span>
+                            <span class="close-btn" id="btn-close-netmanager">X</span>
+                        </div>
+                    </div>
+                    <div class="browser-content" style="text-align:center; padding-top:40px;">
+                        <h2 style="color:white; margin-bottom:20px;" data-i18n="netmanager_app_title">Anular Bloqueo de Firewall</h2>
+                        <p style="color:#ccc; margin-bottom: 30px;" data-i18n="netmanager_app_sub">Alinea todos los nodos de seguridad (ROJO -> VERDE) para restaurar el acceso root.</p>
+                        <div id="net-nodes" style="display:flex; justify-content:center; gap:15px; margin-bottom: 30px;">
+                            <button class="node-btn" data-index="0" style="width:50px; height:50px; border-radius:50%; background:red; border:2px solid white; cursor:pointer; font-weight:bold;"></button>
+                            <button class="node-btn" data-index="1" style="width:50px; height:50px; border-radius:50%; background:red; border:2px solid white; cursor:pointer; font-weight:bold;"></button>
+                            <button class="node-btn" data-index="2" style="width:50px; height:50px; border-radius:50%; background:red; border:2px solid white; cursor:pointer; font-weight:bold;"></button>
+                            <button class="node-btn" data-index="3" style="width:50px; height:50px; border-radius:50%; background:red; border:2px solid white; cursor:pointer; font-weight:bold;"></button>
+                            <button class="node-btn" data-index="4" style="width:50px; height:50px; border-radius:50%; background:red; border:2px solid white; cursor:pointer; font-weight:bold;"></button>
+                        </div>
+                        <p id="net-result" style="color:lime; font-weight:bold; font-size:1.2rem;" class="hidden" data-i18n="netmanager_app_result">ACCESO RESTAURADO.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal Window -->
+            <div id="window-terminal" class="os-window hidden">
+                <div class="browser-window" style="background:#000; border-color:#555;">
+                    <div class="browser-header" style="background:#222;">
+                        <span data-i18n="terminal_header_title">Terminal (Root)</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-terminal" style="cursor:pointer; padding: 0 5px; margin-right: 5px;">_</span>
+                            <span class="close-btn" id="btn-close-terminal">X</span>
+                        </div>
+                    </div>
+                    <div class="browser-content" style="padding:10px; font-family:monospace; color:#ccc; display: flex; flex-direction: column;" id="terminal-content">
+                        <p data-i18n="terminal_welcome_1">DarkOS Command Line v4.1 (Privilegios de Administrador)</p>
+                        <p data-i18n="terminal_welcome_2">Escribe comandos y presiona Enter.</p>
+                        <div id="terminal-history" style="flex-grow:1; display:flex; flex-direction:column; justify-content:flex-end;"></div>
+                        <div style="display:flex; margin-top:10px; padding-top: 5px; border-top: 1px dotted #333;">
+                            <span style="color:#0f0; margin-right:10px;">root@local:~#</span>
+                            <input type="text" id="terminal-input" style="flex-grow:1; background:transparent; border:none; color:white; outline:none; font-family:monospace; font-size:1rem;" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recycle Bin (Trash) Window -->
+            <div id="window-trash" class="os-window hidden" style="width: 500px; height: 350px;">
+                <div class="browser-window" style="background:#151515; border-color:#444;">
+                    <div class="browser-header" style="background:#252525;">
+                        <span data-i18n="trash_window_title">Papelera de Reciclaje</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-trash" style="cursor:pointer; padding: 0 5px; margin-right: 5px;">_</span>
+                            <span class="close-btn" id="btn-close-trash">X</span>
+                        </div>
+                    </div>
+                    <div class="browser-content" style="padding:0; display: flex; flex-direction: row; height: calc(100% - 54px); background:#111; color:#eee;">
+                        <!-- Sidebar listing files -->
+                        <div style="width: 40%; border-right: 1px solid #333; overflow-y: auto; padding: 10px;" id="trash-file-list">
+                            <!-- Files list will be populated dynamically -->
+                        </div>
+                        <!-- View pane -->
+                        <div style="width: 60%; display: flex; flex-direction: column; height: 100%;">
+                            <div id="trash-preview-header" style="padding: 10px; border-bottom: 1px solid #333; background: #1a1a1a; display: flex; justify-content: space-between; align-items: center;">
+                                <span id="trash-file-title" style="font-weight: bold; color: var(--accent-color); font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" data-i18n="trash_no_selected">Ningún archivo seleccionado</span>
+                                <button id="btn-trash-delete" class="terminal-btn" style="padding: 2px 8px; font-size: 0.75rem; border-color: red; color: red;" data-i18n="trash_btn_delete" disabled>Eliminar</button>
+                            </div>
+                            <div id="trash-file-view" style="flex-grow: 1; padding: 10px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; color: #bbb; background: #0a0a0a; white-space: pre-wrap; word-break: break-word;" data-i18n="trash_view_hint">
+Selecciona un archivo de la lista para ver su contenido.
+                            </div>
+                            <div id="trash-preview-footer" style="padding: 10px; border-top: 1px solid #333; background: #151515; text-align: right;">
+                                <button id="btn-empty-trash" class="terminal-btn" style="border-color: #ff9900; color: #ff9900; font-size: 0.8rem; padding: 4px 10px;" data-i18n="trash_btn_empty">VACIAR PAPELERA</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="trash-status-bar" style="background:#222; border-top:1px solid #333; padding:4px 10px; font-size:0.75rem; color:#888; display:flex; justify-content:space-between; align-items:center; height: 24px; box-sizing: border-box; font-family: monospace;">
+                        <span id="trash-status-text">0 archivo(s) listado(s)</span>
+                        <span id="trash-capacity-text">Uso: 0.0 KB / 50.0 KB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Antivirus Window -->
+            <div id="window-antivirus" class="os-window hidden" style="width: 450px; height: 410px;">
+                <div class="browser-window" style="background:#0a150d; border-color:#2a5c36;">
+                    <div class="browser-header" style="background:#102e18; color: #5eff82;">
+                        <span data-i18n="antivirus_header_title">Shield Antivirus v2.0</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-antivirus" style="cursor:pointer; padding: 0 5px; margin-right: 5px;">_</span>
+                            <span class="close-btn" id="btn-close-antivirus">X</span>
+                        </div>
+                    </div>
+                    <div class="browser-content" style="padding: 15px; display: flex; flex-direction: column; gap: 15px; background: #030804; color: #5eff82; font-family: monospace; height: calc(100% - 30px); overflow-y: auto;">
+                        <!-- Top status card -->
+                        <div style="border: 1px solid #2a5c36; background: #061208; padding: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 5px;">
+                                    <span data-i18n="antivirus_status_label">ESTADO:</span>
+                                    <span id="antivirus-status" class="shield-inactive" style="color: #ff3333;" data-i18n="antivirus_status_vulnerable">VULNERABLE</span>
+                                </div>
+                                <div style="font-size: 0.8rem; color: #8cbfa0; margin-top: 5px;" data-i18n="antivirus_sigs_updated">Firmas de malware: Actualizadas</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span id="antivirus-shield-label" class="shield-inactive" style="font-size: 0.75rem; color: #ff3333;" data-i18n="antivirus_prot_inactive">Protección Inactiva</span>
+                                <div style="margin-top: 5px;">
+                                    <button id="btn-antivirus-shield" class="terminal-btn shield-inactive" style="border-color: #ff3333; color: #ff3333; padding: 4px 10px; font-size: 0.8rem;" data-i18n="antivirus_btn_inactive">INACTIVO</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scan action area -->
+                        <div style="border: 1px solid #2a5c36; background: #061208; padding: 15px; border-radius: 4px; display: flex; flex-direction: column; gap: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.85rem;" data-i18n="antivirus_scan_label">Escanear Malware</span>
+                                <button id="btn-antivirus-scan" class="terminal-btn" style="border-color: #5eff82; color: #5eff82; font-size: 0.8rem; padding: 4px 10px;" data-i18n="antivirus_btn_scan">ESCANEAR</button>
+                            </div>
+                            <!-- Progress area (hidden by default) -->
+                            <div id="antivirus-scan-area" class="hidden" style="display: flex; flex-direction: column; gap: 5px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                                    <span id="antivirus-scan-file" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70%;">Iniciando...</span>
+                                    <span id="antivirus-scan-percent">0%</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background: #112b18; border: 1px solid #2a5c36; border-radius: 4px; overflow: hidden;">
+                                    <div id="antivirus-scan-bar" style="width: 0%; height: 100%; background: #5eff82; transition: width 0.1s linear;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active upgrades (added dynamically) -->
+                        <div id="antivirus-upgrades" style="border: 1px dashed #2a5c36; background: #061208; padding: 10px; border-radius: 4px; display: flex; flex-direction: column; gap: 5px;">
+                            <span style="font-size: 0.85rem; font-weight: bold; border-bottom: 1px dotted #2a5c36; padding-bottom: 5px; color: #5eff82;" data-i18n="antivirus_upgrades_title">MEJORAS DE HARDWARE ADQUIRIDAS:</span>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.75rem; color: #8cbfa0;" id="antivirus-upgrades-list">
+                                <span class="antivirus-warning" style="color: #ff3333; animation: blink 1.5s infinite;" data-i18n="antivirus_no_upgrades">Ninguna mejora detectada. Busca un mercado en Torch para comprar actualizaciones de OPSEC.</span>
+                            </div>
+                        </div>
+
+                        <!-- Scan logs / console -->
+                        <div id="antivirus-logs" style="flex-grow: 1; border: 1px solid #2a5c36; background: #020503; padding: 10px; border-radius: 4px; font-size: 0.8rem; height: 100px; overflow-y: auto; color: #8cbfa0;" data-i18n-html="antivirus_initial_logs">
+                            > Shield Antivirus inicializado.<br>
+                            > Monitoreo de puertos activo.<br>
+                            > Esperando orden de escaneo...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wiki Text Window -->
+            <div id="window-wiki" class="os-window hidden" style="width: 60%; height: 70%; max-width: 600px; z-index: 25;">
+                <div class="browser-window" style="background:#fff; border-color:#000; border-radius:3px;">
+                    <div class="browser-header" style="background:#ddd; color:#000; border-bottom:1px solid #aaa;">
+                        <span data-i18n="wiki_txt_title">Wiki.txt - Bloc de Notas</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-wiki" style="cursor:pointer; padding: 0 5px; margin-right: 5px; border:1px solid #aaa; background:#fff;">_</span>
+                            <span class="close-btn" id="btn-close-wiki" style="border:1px solid #aaa; background:#fff; color:#000;">X</span>
+                        </div>
+                    </div>
+                    <div class="browser-content" style="padding:10px; font-family: 'Courier New', monospace; color:#000; background:#fff; overflow-y:auto; word-break: break-word;" id="wiki-content">
+                        <p>=== THE HIDDEN WIKI ===</p>
+                        <p data-i18n="wiki_txt_hint">Haz clic en estas URLs para acceder a ellas desde NightLink.</p>
+                        <br>
+                        <div id="wiki-links"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DarkChat Window -->
+            <div id="window-chat" class="os-window hidden" style="width: 50%; height: 60%; max-width: 500px; z-index: 26;">
+                <div class="browser-window" style="background:#111; border-color:#333; border-radius:5px;">
+                    <div class="browser-header" style="background:#222; color:#0f0; border-bottom:1px solid #444;">
+                        <span data-i18n="chat_title">💬 DarkChat v1.0 (Encrypted)</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-chat" style="cursor:pointer; padding: 0 5px; margin-right: 5px; color:#0f0;">_</span>
+                            <span class="close-btn" id="btn-close-chat" style="color:#ff003c;">X</span>
+                        </div>
+                    </div>
+                    <div class="browser-content" style="padding:10px; font-family: monospace; color:#0f0; display:flex; flex-direction:column; overflow:hidden;" id="chat-container">
+                        <div id="chat-history" style="flex-grow:1; overflow-y:auto; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:10px;">
+                            <p style="color:#888; font-size:0.9rem;" data-i18n="chat_sys_waiting">[Sistema] Conexión P2P segura establecida. Esperando clientes...</p>
+                        </div>
+                        <div style="display:flex; gap:5px;">
+                            <input type="text" id="chat-input" placeholder="Pega una URL aquí..." data-i18n-placeholder="chat_input_placeholder" style="flex-grow:1; background:#000; border:1px solid #0f0; color:#0f0; padding:5px; outline:none;">
+                            <button id="btn-send-chat" class="terminal-btn" style="padding: 5px 15px; font-size:1rem;" data-i18n="chat_send_btn">ENVIAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wallpaper Creator Pro Window -->
+            <div id="window-wallpaper-gen" class="os-window hidden" style="width: 580px; height: 460px; z-index: 30;">
+                <div class="browser-window" style="background:#111; border-color:#00ff66; border-radius:5px; height:100%; display:flex; flex-direction:column;">
+                    <div class="browser-header" style="background:#222; color:#0f0; border-bottom:1px solid #444; flex-shrink:0;">
+                        <span data-i18n="wallpaper_header_title">🖼️ Creador de Fondos Pro</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-wallpaper-gen" style="cursor:pointer; padding: 0 5px; margin-right: 5px; color:#0f0;">_</span>
+                            <span class="close-btn" id="btn-close-wallpaper-gen" style="color:#ff003c;">X</span>
+                        </div>
+                    </div>
+                    <div class="browser-content" style="padding:15px; font-family: monospace; color:#0f0; display:flex; gap:15px; height:calc(100% - 30px); overflow:hidden; box-sizing:border-box; background:#0a0a0a;">
+                        <!-- Left Panel: Controls -->
+                        <div style="width:45%; display:flex; flex-direction:column; gap:12px; justify-content:space-between; border-right:1px solid #333; padding-right:15px;">
+                            <div>
+                                <label style="font-weight:bold; display:block; margin-bottom:5px; color:#aaa; font-size:0.8rem;" data-i18n="wallpaper_label_bg">COLOR DE FONDO:</label>
+                                <select id="wallpaper-bg-select" style="background:#111; border:1px solid #00ff66; color:#00ff66; width:100%; padding:5px; outline:none; font-family:monospace;">
+                                    <option value="#008080" data-i18n="wallpaper_bg_teal">Verde Retro Teal (#008080)</option>
+                                    <option value="#4a0000" data-i18n="wallpaper_bg_red">Cyberpunk Red (#4a0000)</option>
+                                    <option value="#050505" data-i18n="wallpaper_bg_black">Darknet Black (#050505)</option>
+                                    <option value="#001a00" data-i18n="wallpaper_bg_green">Hacker Green (#001a00)</option>
+                                    <option value="#1b0022" data-i18n="wallpaper_bg_purple">Matrix Purple (#1b0022)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-weight:bold; display:block; margin-bottom:5px; color:#aaa; font-size:0.8rem;" data-i18n="wallpaper_label_pattern">PATRÓN DE REJILLA:</label>
+                                <select id="wallpaper-pattern-select" style="background:#111; border:1px solid #00ff66; color:#00ff66; width:100%; padding:5px; outline:none; font-family:monospace;">
+                                    <option value="none" data-i18n="wallpaper_pattern_none">Sólido (Sin patrón)</option>
+                                    <option value="grid" data-i18n="wallpaper_pattern_grid">Rejilla Cibernética</option>
+                                    <option value="scanlines" data-i18n="wallpaper_pattern_scanlines">Líneas de Escaneo CRT</option>
+                                    <option value="matrix" data-i18n="wallpaper_pattern_matrix">Cascada Digital (Matrix)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-weight:bold; display:block; margin-bottom:5px; color:#aaa; font-size:0.8rem;" data-i18n="wallpaper_label_text">TEXTO SUPERPUESTO:</label>
+                                <input type="text" id="wallpaper-text-input" placeholder="Ej: SYSTEM ROOT" data-i18n-placeholder="wallpaper_text_placeholder" style="background:#111; border:1px solid #00ff66; color:#00ff66; width:100%; padding:5px; outline:none; font-family:monospace; box-sizing:border-box;" value="DARKOS v1.0">
+                            </div>
+                            <div style="display:flex; gap:10px;">
+                                <div style="flex:1;">
+                                    <label style="font-weight:bold; display:block; margin-bottom:5px; color:#aaa; font-size:0.75rem;" data-i18n="wallpaper_label_text_color">COLOR TEXTO:</label>
+                                    <select id="wallpaper-color-select" style="background:#111; border:1px solid #00ff66; color:#00ff66; width:100%; padding:4px; outline:none; font-family:monospace; font-size:0.75rem;">
+                                        <option value="#00ff66" data-i18n="wallpaper_color_green">Verde</option>
+                                        <option value="#ff3333" data-i18n="wallpaper_color_red">Rojo</option>
+                                        <option value="#3399ff" data-i18n="wallpaper_color_blue">Azul</option>
+                                        <option value="#ffcc00" data-i18n="wallpaper_color_yellow">Amarillo</option>
+                                        <option value="#ffffff" data-i18n="wallpaper_color_white">Blanco</option>
+                                    </select>
+                                </div>
+                                <div style="flex:1;">
+                                    <label style="font-weight:bold; display:block; margin-bottom:5px; color:#aaa; font-size:0.75rem;" data-i18n="wallpaper_label_text_size">TAMAÑO TEXTO:</label>
+                                    <select id="wallpaper-size-select" style="background:#111; border:1px solid #00ff66; color:#00ff66; width:100%; padding:4px; outline:none; font-family:monospace; font-size:0.75rem;">
+                                        <option value="12px" data-i18n="wallpaper_size_small">Chico</option>
+                                        <option value="16px" data-i18n="wallpaper_size_normal" selected>Normal</option>
+                                        <option value="22px" data-i18n="wallpaper_size_large">Grande</option>
+                                        <option value="32px" data-i18n="wallpaper_size_huge">Gigante</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+                                <button id="btn-wallpaper-preview" class="terminal-btn" style="width:100%; padding:6px; font-size:0.8rem;" data-i18n="wallpaper_btn_preview">PREVISUALIZAR</button>
+                                <button id="btn-wallpaper-apply" class="terminal-btn" style="width:100%; padding:8px; border-color:yellow; color:yellow; font-size:0.85rem; font-weight:bold;" data-i18n="wallpaper_btn_apply">APLICAR COMO FONDO</button>
+                            </div>
+                        </div>
+                        <!-- Right Panel: Live Canvas Preview -->
+                        <div style="width:55%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
+                            <span style="font-size:0.8rem; color:#aaa;" data-i18n="wallpaper_preview_label">VISTA PREVIA DEL TAPIZ:</span>
+                            <canvas id="wallpaper-canvas" width="260" height="200" style="background:#000; border:1px solid #333; box-shadow:0 0 10px rgba(0,255,102,0.15);"></canvas>
+                            <span style="font-size:0.7rem; color:#555; text-align:center;" data-i18n="wallpaper_preview_hint">El canvas renderizará una miniatura del diseño antes de ser inyectado como fondo de pantalla.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Network Map Window -->
+            <div id="window-nodemap" class="os-window hidden" style="width: 500px; height: 400px; z-index: 31;">
+                <div class="browser-window" style="background:#111; border-color:#00ff66; border-radius:5px; height:100%; display:flex; flex-direction:column;">
+                    <div class="browser-header" style="background:#222; color:#0f0; border-bottom:1px solid #444; flex-shrink:0;">
+                        <span data-i18n="nodemap_header_title">🌐 Mapa de Red ANN</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-nodemap" style="cursor:pointer; padding: 0 5px; margin-right: 5px; color:#0f0;">_</span>
+                            <span class="close-btn" id="btn-close-nodemap" style="color:#ff003c;">X</span>
+                        </div>
+                    </div>
+                    <div class="browser-content" style="padding:10px; font-family: monospace; color:#0f0; display:flex; flex-direction:column; height:calc(100% - 30px); background:#0a0a0a; overflow:hidden; box-sizing:border-box; gap:10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:#111; border:1px solid #333; padding:6px 10px; font-size:0.75rem; flex-shrink:0; border-radius:3px;">
+                            <span><span data-i18n="nodemap_status_label">ESTADO:</span> <span id="nodemap-status-text" style="color:#00ff66; font-weight:bold;" data-i18n="nodemap_status_stable">ESTABLE</span></span>
+                            <span><span data-i18n="nodemap_connections_label">CONEXIONES:</span> <span id="nodemap-connections-count" style="color:#fff;">0/0</span></span>
+                        </div>
+                        
+                        <!-- Map Canvas Container -->
+                        <div style="flex-grow:1; background:#000; border:1px solid #333; position:relative; overflow:hidden; border-radius:3px;">
+                            <canvas id="nodemap-canvas" width="480" height="260" style="display:block; background:#050505; width:100%; height:100%;"></canvas>
+                            
+                            <!-- Hacking Sequence Mini-game overlay -->
+                            <div id="nodemap-hack-overlay" class="hidden" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0, 10, 5, 0.95); display:none; flex-direction:column; align-items:center; justify-content:center; padding:15px; box-sizing:border-box; color:#0f0; font-family:monospace; z-index: 5;">
+                                <div style="font-size:0.9rem; font-weight:bold; color:#ff3366; text-transform:uppercase; margin-bottom:8px; text-shadow: 0 0 5px rgba(255,51,102,0.5);" id="nodemap-hack-title">INTRUSIÓN EN NODO: 184.22.9.101</div>
+                                <div style="font-size:0.72rem; color:#888; text-align:center; margin-bottom:12px;" id="nodemap-hack-instruction" data-i18n="nodemap_hack_instruction">Repita la secuencia binaria de Matrix para comprometer el cortafuegos.</div>
+                                
+                                <!-- Hacking Blocks container -->
+                                <div id="nodemap-hack-blocks" style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom:15px; width:220px;">
+                                    <div class="hack-block" data-idx="0" style="height:45px; background:rgba(0,255,102,0.1); border:2px solid #00ff66; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:bold; cursor:pointer; user-select:none; transition: all 0.2s;">00</div>
+                                    <div class="hack-block" data-idx="1" style="height:45px; background:rgba(0,255,102,0.1); border:2px solid #00ff66; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:bold; cursor:pointer; user-select:none; transition: all 0.2s;">01</div>
+                                    <div class="hack-block" data-idx="2" style="height:45px; background:rgba(0,255,102,0.1); border:2px solid #00ff66; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:bold; cursor:pointer; user-select:none; transition: all 0.2s;">10</div>
+                                    <div class="hack-block" data-idx="3" style="height:45px; background:rgba(0,255,102,0.1); border:2px solid #00ff66; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:bold; cursor:pointer; user-select:none; transition: all 0.2s;">11</div>
+                                </div>
+                                
+                                <div style="display:flex; justify-content:space-between; gap:10px; width:100%; max-width:280px;">
+                                    <button class="terminal-btn" id="nodemap-hack-btn-start" style="flex:1; border-color:#00ff66; color:#00ff66; padding:4px 0; font-size:0.75rem; font-weight:bold;" data-i18n="nodemap_hack_btn_start">REPRODUCIR</button>
+                                    <button class="terminal-btn" id="nodemap-hack-btn-cancel" style="flex:1; border-color:#ff3333; color:#ff3333; padding:4px 0; font-size:0.75rem; font-weight:bold;" data-i18n="nodemap_hack_btn_cancel">ABORTAR</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Status Bar/Terminal Panel -->
+                        <div id="nodemap-log" style="height:35px; border:1px solid #222; background:#000; padding:4px 8px; font-size:0.7rem; color:#888; overflow-y:auto; border-radius:3px; flex-shrink:0;" data-i18n="nodemap_log_initial">
+                            Consola de red lista. Pulse REESCANEAR RED para rastrear nodos activos.
+                        </div>
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#888; border-top:1px solid #222; padding-top:6px; flex-shrink:0;">
+                            <span><span data-i18n="nodemap_local_ip_label">IP LOCAL:</span> 192.168.1.44</span>
+                            <div style="display:flex; gap:6px;">
+                                <button id="btn-nodemap-hack" class="terminal-btn hidden" style="display:none; padding:4px 12px; font-size:0.75rem; border-color:#ff3366; color:#ff3366; font-weight:bold;" data-i18n="nodemap_btn_hack">HACKEAR NODO</button>
+                                <button id="btn-nodemap-scan" class="terminal-btn" style="padding:4px 12px; font-size:0.75rem; border-color:#00ff66; color:#00ff66; font-weight:bold;" data-i18n="nodemap_btn_scan">REESCANEAR RED</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BTC Miner Window -->
+            <div id="window-miner" class="os-window hidden" style="width: 460px; height: 360px; z-index: 32;">
+                <div class="browser-window" style="background:#111; border-color:#00ff66; border-radius:5px; height:100%; display:flex; flex-direction:column;">
+                    <div class="browser-header" style="background:#222; color:#0f0; border-bottom:1px solid #444; flex-shrink:0;">
+                        <span data-i18n="miner_header_title">⛏️ Minador BTC Virtual (Satoshis)</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-miner" style="cursor:pointer; padding: 0 5px; margin-right: 5px; color:#0f0;">_</span>
+                            <span class="close-btn" id="btn-close-miner" style="color:#ff003c;">X</span>
+                        </div>
+                    </div>
+                    <div class="browser-content" style="padding:12px; font-family: monospace; color:#0f0; display:flex; flex-direction:column; height:calc(100% - 30px); background:#0a0a0a; overflow:hidden; box-sizing:border-box; gap:10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:#111; padding:8px; border:1px solid #333; border-radius:3px;">
+                            <div>
+                                <span style="color:#aaa; font-size:0.75rem;" data-i18n="miner_intensity_label">INTENSIDAD DE MINADO:</span>
+                                <div style="display:flex; gap:10px; margin-top:4px;">
+                                    <label style="font-size:0.75rem; cursor:pointer;"><input type="radio" name="miner-intensity" value="0.1" checked style="accent-color:#00ff66;"> <span data-i18n="miner_intensity_low">Baja (10%)</span></label>
+                                    <label style="font-size:0.75rem; cursor:pointer;"><input type="radio" name="miner-intensity" value="0.5" style="accent-color:#ffcc00;"> <span data-i18n="miner_intensity_med">Media (50%)</span></label>
+                                    <label style="font-size:0.75rem; cursor:pointer;"><input type="radio" name="miner-intensity" value="0.9" style="accent-color:#ff3333;"> <span data-i18n="miner_intensity_high">Alta (90%)</span></label>
+                                </div>
+                            </div>
+                            <button id="btn-miner-toggle" class="terminal-btn" style="padding:5px 12px; font-size:0.8rem; border-color:#00ff66; color:#00ff66; font-weight:bold;" data-i18n="miner_btn_toggle_init">INICIAR MINADO</button>
+                        </div>
+                        <div id="miner-console" style="flex-grow:1; background:#000; border:1px solid #333; padding:10px; overflow-y:auto; font-size:0.75rem; line-height:1.4; color:#00ff66; white-space:pre-wrap; word-break:break-all;" data-i18n-html="miner_console_initial">
+[MINER] Consola de minado lista. Seleccione la intensidad y pulse INICIAR MINADO.
+[MINER] Advertencia: Intensidades altas aumentan la carga del procesador y alertan al atacante.
+                        </div>
+                        
+                        <!-- Mining Progress Bar -->
+                        <div style="display:flex; flex-direction:column; gap:4px; font-size:0.7rem; color:#888;">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span data-i18n="miner_progress_label">PROGRESO DE BLOQUE:</span>
+                                <span id="miner-percent">0%</span>
+                            </div>
+                            <div style="height:8px; background:#111; border:1px solid #333; border-radius:0px; overflow:hidden;">
+                                <div id="miner-progress-bar" style="width:0%; height:100%; background:#00ff66; box-shadow: 0 0 8px #00ff66; transition: width 0.1s linear;"></div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#888; border-top:1px solid #222; padding-top:6px;">
+                            <span><span data-i18n="miner_speed_label">Velocidad:</span> <span id="miner-hashrate" style="color:#fff; font-weight:bold;">0 H/s</span></span>
+                            <span><span data-i18n="miner_action_label">Acción actual:</span> <span id="miner-status" style="color:#aaa;" data-i18n="miner_status_idle">Inactivo</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NetSniffer Window -->
+            <div id="window-netsniffer" class="os-window hidden" style="width: 580px; height: 420px; z-index: 33;">
+                <div class="browser-window" style="background:#111; border-color:#00ff66; border-radius:5px; height:100%; display:flex; flex-direction:column;">
+                    <div class="browser-header" style="background:#222; color:#0f0; border-bottom:1px solid #444; flex-shrink:0;">
+                        <span data-i18n="netsniffer_header_title">📡 NetSniffer v1.0 (Packet Analyzer)</span>
+                        <div>
+                            <span class="min-btn" id="btn-min-netsniffer" style="cursor:pointer; padding: 0 5px; margin-right: 5px; color:#0f0;">_</span>
+                            <span class="close-btn" id="btn-close-netsniffer" style="color:#ff003c;">X</span>
+                        </div>
+                    </div>
+                    <div class="browser-content" style="height:calc(100% - 30px); background:#050505; overflow:hidden; box-sizing:border-box;">
+                        <div class="netsniffer-container">
+                            <div class="netsniffer-bar">
+                                <div class="netsniffer-status-pill active" id="netsniffer-status" data-i18n="netsniffer_status_tracking">Rastreando</div>
+                                <div style="display:flex; gap:6px;">
+                                    <button class="netsniffer-btn" id="netsniffer-btn-toggle" data-i18n="netsniffer_btn_pause">Pausar</button>
+                                    <button class="netsniffer-btn" id="netsniffer-btn-clear" data-i18n="netsniffer_btn_clear">Limpiar</button>
+                                </div>
+                            </div>
+                            <div class="netsniffer-split">
+                                <div class="netsniffer-table-container">
+                                    <table class="netsniffer-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 15%;" data-i18n="netsniffer_th_time">TIEMPO</th>
+                                                <th style="width: 25%;" data-i18n="netsniffer_th_src">ORIGEN</th>
+                                                <th style="width: 25%;" data-i18n="netsniffer_th_dest">DESTINO</th>
+                                                <th style="width: 15%;" data-i18n="netsniffer_th_proto">PROTO</th>
+                                                <th style="width: 20%;" data-i18n="netsniffer_th_info">INFO</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="netsniffer-rows">
+                                            <!-- Dynamically populated rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="netsniffer-viewer-container">
+                                    <div class="netsniffer-viewer-title">
+                                        <span data-i18n="netsniffer_viewer_title">VISOR DE PAYLOAD (TEXTO PLANO / HEX)</span>
+                                        <span id="netsniffer-packet-info" data-i18n="netsniffer_select_packet">Seleccione un paquete...</span>
+                                    </div>
+                                    <div class="netsniffer-viewer-content" id="netsniffer-payload" data-i18n="netsniffer_payload_empty">Seleccione cualquier paquete TCP/UDP de la grilla de arriba para analizar sus datos crudos.</div>
+                                </div>
+                                <div class="netsniffer-decrypt-box hidden" id="netsniffer-decrypt-box" style="display:none;">
+                                    <button id="netsniffer-btn-decrypt" class="netsniffer-btn" style="border-color:#ff3366; color:#ff3366; font-weight:bold; width:100%;" data-i18n="netsniffer_btn_decrypt">🔑 INTERCEPTAR Y EXTRAER CREDENCIALES (Satoshis)</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ventana de Purga (Climax) -->
+            <div id="window-purge" class="os-window hidden" style="z-index: 100; width: 60%; height: 50%; min-width: 500px; min-height: 400px;">
+                <div style="width: 100%; height: 100%; background: #1a0000; border: 4px solid red; box-shadow: 0 0 50px red; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; justify-content: space-between;">
+                    <div style="text-align: center;">
+                        <h2 class="glitch" data-text="PURGANDO SISTEMA" data-i18n="purge_title" style="color:red; font-size:2rem; margin: 0 0 10px 0;">PURGANDO SISTEMA</h2>
+                        <p style="color:yellow; font-weight:bold; margin: 0 0 15px 0; animation: blink 0.5s infinite;" data-i18n="purge_survive_prompt">¡SOBREVIVE HASTA EL 100%!</p>
+                    </div>
+                    
+                    <!-- Contenedor central: Logs del Antivirus y Retos Interactivos -->
+                    <div id="purge-interactive-container" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid #ff333333; background: #000; padding: 15px; margin-bottom: 15px; overflow-y: auto; font-family: monospace; box-sizing: border-box;">
+                        <div id="purge-log-box" style="width: 100%; text-align: left; color: #ff3333; font-size: 0.9rem; line-height: 1.4; overflow-y: auto; max-height: 100px; display: none; border-bottom: 1px solid #ff333333; padding-bottom: 8px; margin-bottom: 8px; box-sizing: border-box;"></div>
+                        <div id="purge-challenge-box" style="width: 100%; text-align: center; color: white;">
+                            <p style="color: #888;" data-i18n="purge_init_subsystem">Inicializando subsistemas de seguridad...</p>
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                        <div style="width: 100%; background: black; border: 2px solid red; padding: 4px; box-sizing: border-box;">
+                            <div id="purge-bar" style="width: 0%; height: 25px; background: red; transition: width 0.5s linear;"></div>
+                        </div>
+                        <p id="purge-progress" style="color:white; font-size: 1.5rem; margin-top: 10px; font-weight:bold; margin-bottom:0;">0%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ventana Hacker -->
+            <div id="window-hacker" class="os-window hidden" style="z-index: 30;">
+                <div style="width: 100%; height: 100%; background: #110000; border: 2px solid red; box-shadow: 0 0 30px rgba(255, 0, 0, 0.5); display: flex; flex-direction: column; padding: 20px;">
+                    <div class="header-info" style="width: 100%; border-bottom: 2px solid red; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <span class="status-warning" style="color: red; font-size: 1.5rem; font-weight:bold; text-shadow: 0 0 10px red; animation: blink 0.5s infinite;" data-i18n="hacker_infected_title">¡SISTEMA INFECTADO!</span>
+                        <div>
+                            <span id="btn-min-hacker" class="min-btn" style="border: 1px solid red; padding: 2px 8px; font-size: 0.8rem; cursor:pointer; margin-right: 5px;" data-i18n="btn_minimize">_MINIMIZAR</span>
+                            <span id="btn-close-hacker" class="min-btn" style="border: 1px solid red; padding: 2px 8px; font-size: 0.8rem; cursor:pointer;" data-i18n="btn_hide">X OCULTAR</span>
+                        </div>
+                    </div>
+                    <div class="terminal-box" style="flex-grow: 1; border-color: red; box-shadow: inset 0 0 15px rgba(255, 0, 0, 0.2); margin: 0; overflow-y: auto;">
+                        <p id="hacker-text" style="color: red; font-weight: bold; font-family: monospace; font-size: 1.1rem; line-height: 1.5;"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ventana Malware Genérica para Minijuegos -->
+            <div id="window-minigame" class="os-window hidden" style="z-index: 200;">
+                <div id="minigame-container" style="width: 450px; min-height: 480px; background: #000; border: 4px solid var(--danger-color); box-shadow: 0 0 50px rgba(255, 0, 0, 0.5); display: flex; flex-direction: column; padding: 20px;">
+                    <div style="display:flex; justify-content:space-between; color: var(--danger-color); border-bottom: 2px solid var(--danger-color); padding-bottom: 10px; margin-bottom:20px;">
+                        <span id="minigame-title" style="font-weight:bold; letter-spacing: 2px;">¡AMENAZA DETECTADA!</span>
+                        <span id="minigame-id" style="font-size:0.8rem; opacity:0.7;">[PID: 8842]</span>
+                    </div>
+                    
+                    <div id="minigame-content" style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; align-items:center; position:relative;">
+                        <!-- El contenido del minijuego se inyectará aquí -->
+                    </div>
+
+                    <div id="minigame-status" style="margin-top: 20px; text-align:center; font-family:monospace; color: #aaa;">
+                        <p id="minigame-instr">Analizando integridad del sistema...</p>
+                        <div style="width:100%; background:#222; height:10px; margin-top:10px; border:1px solid #444;">
+                            <div id="minigame-progress-bar" style="width:0%; height:100%; background:var(--danger-color); transition: width 0.3s;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ventana Malware (Snake Trap - Mantener por compatibilidad) -->
+            <div id="window-snake" class="os-window hidden" style="z-index: 150;">
+                <div style="width: 400px; height: 480px; background: #000; border: 4px solid #ff00ff; box-shadow: 0 0 40px rgba(255, 0, 255, 0.5); display: flex; flex-direction: column; padding: 10px;">
+                    <div style="display:flex; justify-content:space-between; color: #ff00ff; border-bottom: 2px solid #ff00ff; padding-bottom: 5px; margin-bottom:10px;">
+                        <span style="font-weight:bold;">¡MALWARE DETECTADO!</span>
+                        <span style="font-size:0.8rem;">(Sistema Bloqueado)</span>
+                    </div>
+                    <div style="text-align: center; color: white; margin-bottom: 5px; font-family: monospace;">
+                        PURGA EL VIRUS:<br>Consume <span style="color:lime; font-weight:bold;">10</span> fragmentos.
+                    </div>
+                    <canvas id="snake-canvas" width="370" height="300" style="background:#111; border: 2px solid #333; margin: 0 auto; display:block;"></canvas>
+                    <div id="snake-score" style="color:lime; text-align:center; margin-top:5px; font-weight:bold; font-size:1.2rem;">0 / 10</div>
+                    <div id="snake-msg" style="color:red; text-align:center; font-weight:bold; margin-top:10px; font-style:italic;"></div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar (Quests & Wallet) -->
+            <div id="right-sidebar" style="position: absolute; top: 15px; right: 15px; width: 280px; display: flex; flex-direction: column; gap: 15px; z-index: 10;">
+                <!-- Quest Log UI -->
+                <div id="quest-log" class="hidden" style="background: rgba(0, 20, 0, 0.85); border: 1px solid var(--text-color); padding: 15px; box-shadow: 0 0 10px rgba(0,255,0,0.2);">
+                    <h3 style="border-bottom: 1px solid var(--text-color); margin-bottom: 10px; padding-bottom: 5px; font-size: 1rem;" data-i18n="quest_active_title">>> TAREAS ACTIVAS</h3>
+                    <p id="quest-text" style="font-size: 0.95rem; line-height: 1.4; color: var(--text-color);"></p>
+                    <div id="timer-container" style="margin-top: 15px; text-align: right; border-top: 1px dashed var(--border-color); padding-top: 10px;">
+                        <span style="font-size:0.8rem; color:#aaa; margin-right: 10px;" data-i18n="time_remaining">TIEMPO RESTANTE:</span>
+                        <span id="global-timer" style="color: red; font-size: 1.3rem; font-weight: bold; animation: pulse 1s infinite alternate; text-shadow: 0 0 5px red;">05:00</span>
+                    </div>
+                </div>
+                
+                <!-- Wallet UI -->
+                <div id="wallet-ui" class="hidden" style="background: rgba(0,20,0,0.8); border: 1px solid #0f0; padding: 10px; color: #0f0; font-family: monospace; box-shadow: 0 0 10px rgba(0,255,0,0.2); text-align: center;">
+                    <p style="margin:0; font-size: 1.2rem;" data-i18n="wallet_title">💰 Billetera</p>
+                    <p style="margin:5px 0 0 0; font-size: 1.5rem; font-weight: bold;"><span id="wallet-balance">0.00</span> BTC</p>
+                </div>
+            </div>
+
+            <div class="taskbar">
+                <div style="display: flex; flex-grow: 1; align-items: center;">
+                    <div class="start-btn" data-i18n="start_btn">Start</div>
+                    <button id="btn-stand-up" class="stand-up-btn" style="display: none;" title="Levantarse de la silla y caminar por el cuarto" data-i18n="stand_up_btn" data-i18n-title="stand_up_title">🪑 LEVANTARSE DE LA PC</button>
+                    <div id="taskbar-apps" style="display: flex; gap: 5px; margin-left: 10px;">
+                        <!-- Aquí se inyectan las pestañas minimizadas -->
+                    </div>
+                </div>
+                <div class="time" id="clock" style="cursor: pointer;">03:14 AM</div>
+            </div>
+
+            <!-- Start Menu -->
+            <div id="start-menu" class="hidden" style="position: absolute; bottom: 40px; left: 0; width: 250px; background: #111; border: 2px solid var(--border-color); color: white; display: flex; flex-direction: column; z-index: 10000; box-shadow: 2px -2px 10px rgba(0, 255, 0, 0.2);">
+                <div id="start-menu-header" style="padding: 15px; background: #002222; border-bottom: 1px solid var(--border-color); font-weight: bold; font-size: 1.2rem;" data-i18n="start_menu_header">Phantom OS</div>
+                <div class="start-item" onclick="if(document.getElementById('icon-wiki')) document.getElementById('icon-wiki').click();" style="padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="start_menu_wiki">📝 Wiki.txt</div>
+                <div class="start-item" onclick="if(document.getElementById('icon-browser')) document.getElementById('icon-browser').click();" style="padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="start_menu_browser">🌐 NightLink</div>
+                <div class="start-item" onclick="if(document.getElementById('icon-terminal')) document.getElementById('icon-terminal').click();" style="padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="start_menu_terminal">💻 Terminal</div>
+                
+                <div class="start-item" onclick="if(document.getElementById('icon-chat')) document.getElementById('icon-chat').click();" style="padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="start_menu_chat">💬 DarkChat</div>
+                <div class="start-item" onclick="if(document.getElementById('icon-paint')) document.getElementById('icon-paint').click();" style="padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="start_menu_paint">🎨 DarkPaint</div>
+                <div class="start-item" onclick="if(document.getElementById('icon-camera')) document.getElementById('icon-camera').click();" style="padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="start_menu_camera">📷 Cámara</div>
+                <div class="start-item" onclick="if(document.getElementById('icon-antivirus')) document.getElementById('icon-antivirus').click();" style="padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="start_menu_antivirus">🛡️ Antivirus</div>
+                <div class="start-item" onclick="if(document.getElementById('icon-wallpaper-gen')) document.getElementById('icon-wallpaper-gen').click();" style="padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="start_menu_wallpaper">🖼️ Creador de Fondos Pro</div>
+                <div class="start-item" onclick="if(document.getElementById('icon-nodemap')) document.getElementById('icon-nodemap').click();" style="padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="start_menu_nodemap">🌐 Mapa de Red</div>
+                <div class="start-item" onclick="if(document.getElementById('icon-miner')) document.getElementById('icon-miner').click();" style="padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="start_menu_miner">⛏️ Minador BTC</div>
+                <div class="start-item" onclick="if(document.getElementById('icon-netsniffer')) document.getElementById('icon-netsniffer').click();" style="padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="start_menu_netsniffer">📡 NetSniffer</div>
+                <div id="start-menu-standup" class="start-item" style="display: none; padding: 10px 15px; cursor: pointer; border-top: 1px solid #333; color: #ffaa00; font-weight: bold;" onclick="if(typeof window.standUpFromPC==='function') window.standUpFromPC();" data-i18n="stand_up_menu_item">🪑 Levantarse de la silla</div>
+                <div id="start-menu-lang" class="start-item" style="padding: 10px 15px; cursor: pointer; border-top: 1px solid #333; color: #00ffaa; font-weight: bold;" onclick="if(typeof window.setLanguage==='function') window.setLanguage(window.getLanguage()==='es'?'en':'es');" data-i18n="start_menu_lang">🌐 Cambiar Idioma</div>
+                <div id="start-menu-shutdown" class="start-item" style="padding: 10px 15px; cursor: pointer; border-top: 2px solid var(--border-color); color: var(--danger-color); font-weight: bold;" onclick="location.reload();" data-i18n="start_menu_shutdown">🛑 Apagar Sistema</div>
+            </div>
+
+            <!-- Context Menu -->
+            <div id="context-menu" class="hidden" style="position: fixed; background: #111; border: 1px solid #555; color: white; display: flex; flex-direction: column; z-index: 10000; box-shadow: 2px 2px 5px rgba(0,0,0,0.5); width: 200px;">
+                <div class="context-item" id="ctx-change-bg" style="padding: 8px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="ctx_change_bg">🖼️ Cambiar Fondo</div>
+                <div class="context-item" id="ctx-new-note" style="padding: 8px 15px; cursor: pointer; border-bottom: 1px solid #333;" data-i18n="ctx_new_note">📄 Crear Nota</div>
+                <div class="context-item" id="ctx-open-terminal" style="padding: 8px 15px; cursor: pointer;" data-i18n="ctx_open_terminal">💻 Abrir Terminal</div>
+            </div>
+
+            <!-- Telemetry Popup -->
+            <div id="telemetry-popup" class="hidden" style="position: absolute; bottom: 45px; right: 5px; width: 220px; background: rgba(0,0,0,0.9); border: 1px solid #0f0; color: #0f0; padding: 15px; z-index: 10000; font-family: monospace; font-size: 0.9rem; box-shadow: 0 0 10px rgba(0,255,0,0.3);">
+                <div style="font-weight:bold; border-bottom:1px solid #0f0; margin-bottom:10px; padding-bottom:5px;">SISTEMA DE TELEMETRÍA</div>
+                <div id="telemetry-cpu">CPU: 12%</div>
+                <div id="telemetry-ram">RAM: 420MB / 1024MB</div>
+                <div id="telemetry-net">RED: A.N.N SEGURO</div>
+                <div id="telemetry-conn">NODOS: 3 ACTIVOS</div>
+            </div>
+
+            <!-- Notepad App -->
+            <div class="os-window hidden" id="window-notepad" style="width: 60%; height: 60%;">
+                <div class="browser-window">
+                    <div class="browser-header">
+                        <span style="display: flex; align-items: center;"><span style="margin-right: 5px;">📝</span> Bloc de Notas - <span id="notepad-title" style="margin-left: 5px;">archivo.txt</span></span>
+                        <div>
+                            <span class="min-btn" id="btn-min-notepad" style="cursor: pointer;">_</span>
+                            <span class="close-btn" id="btn-close-notepad">X</span>
+                        </div>
+                    </div>
+                    <div class="browser-content" style="padding: 0;">
+                        <textarea id="notepad-content" style="width: 100%; height: 100%; background: #000; color: #0f0; border: none; padding: 15px; font-family: monospace; font-size: 1.1rem; resize: none;" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Alert Modal -->
+            <div id="custom-alert" class="hidden" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111; border: 2px solid #3399ff; padding: 20px; z-index: 9999; box-shadow: 0 0 20px rgba(51, 153, 255, 0.5); text-align: center; min-width: 300px; font-family: monospace;">
+                <h3 id="custom-alert-title" style="color: #3399ff; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">TITULO</h3>
+                <p id="custom-alert-msg" style="color: white; margin-bottom: 20px; font-size: 1.1rem;"></p>
+                <button class="terminal-btn" style="border-color: #3399ff; color: #3399ff; padding: 5px 20px;" onclick="document.getElementById('custom-alert').classList.add('hidden'); if(typeof playClickSound === 'function') playClickSound();">ACEPTAR</button>
+            </div>
+         </section>
+
+        <!-- Game Over UI -->
+        <section id="screen-gameover" class="screen hidden" style="background: #110000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:red; width:100%; height:100%;">
+            <div style="width: 80%; border: 2px solid red; box-shadow: 0 0 30px rgba(255, 0, 0, 0.5); padding: 40px; text-align: center; background: black;">
+                <h1 style="font-size: 3rem; animation: blink 0.5s infinite; text-shadow: 0 0 15px red; margin-bottom: 20px;" data-i18n="gameover_title">SISTEMA COMPROMETIDO</h1>
+                <p id="gameover-reason" style="font-size: 1.5rem; color: #ff5555; font-family: monospace;"></p>
+                <button class="terminal-btn" style="margin-top: 40px; border-color: red; color: red;" onclick="location.reload()" data-i18n="gameover_restart_btn">_REINICIAR_SISTEMA</button>
+            </div>
+        </section>
+
+        <!-- Contenedor Webcam (Modo Libre Inmersivo) -->
+        <div id="webcam-container" class="hidden">
+            <div id="webcam-overlay-text">REC ●</div>
+            <video id="webcam-feed" autoplay playsinline muted></video>
+            <canvas id="webcam-capture-canvas" class="hidden"></canvas>
+        </div>
+
+        <!-- Windows Hello Cyber-Assistant (Ubicado fuera de secciones para flotar libremente sobre todo) -->
+        <div id="winhello-assistant" class="winhello-container hidden">
+            <!-- Bubble dialogue -->
+            <div id="winhello-bubble" class="winhello-bubble hidden">
+                <!-- Thinking indicator -->
+                <div class="winhello-thinking" id="winhello-thinking">
+                    <div class="winhello-thinking-dot"></div>
+                    <div class="winhello-thinking-dot"></div>
+                    <div class="winhello-thinking-dot"></div>
+                    <span style="margin-left: 4px;" data-i18n="winhello_processing">procesando...</span>
+                </div>
+                <div id="winhello-bubble-text" class="winhello-bubble-text"></div>
+                
+                <!-- Mini Input Interaction (Integrado dentro de la burbuja para evitar superposiciones) -->
+                <div class="winhello-input-container" id="winhello-input-container">
+                    <input type="text" class="winhello-input" id="winhello-input" placeholder="Escribe al asistente..." data-i18n-placeholder="winhello_placeholder" autocomplete="off" />
+                    <button class="winhello-input-send" id="winhello-input-send">▶</button>
+                </div>
+
+                <!-- Equalizer Visual -->
+                <div class="winhello-equalizer" id="winhello-equalizer">
+                    <div class="winhello-eq-bar"></div>
+                    <div class="winhello-eq-bar"></div>
+                    <div class="winhello-eq-bar"></div>
+                    <div class="winhello-eq-bar"></div>
+                    <div class="winhello-eq-bar"></div>
+                    <div class="winhello-eq-bar"></div>
+                    <div class="winhello-eq-bar"></div>
+                    <div class="winhello-eq-bar"></div>
+                </div>
+                <div id="winhello-mute-btn" class="winhello-mute-btn" title="Silenciar/Activar voz" data-i18n-title="winhello_mute_title">🔊</div>
+                <div id="winhello-bubble-close" class="winhello-bubble-close">×</div>
+            </div>
+            
+            <!-- Animated Face Widget -->
+            <div class="winhello-face-widget">
+                <!-- Holographic Particles Canvas -->
+                <canvas class="winhello-particles-canvas" id="winhello-particles"></canvas>
+                <!-- Force Field -->
+                <div class="winhello-forcefield"></div>
+                <!-- Holographic rotating rings -->
+                <div class="winhello-ring outer-ring"></div>
+                <div class="winhello-ring inner-ring"></div>
+                <div class="winhello-scanner-line"></div>
+                
+                <!-- Sleep Z indicators -->
+                <span class="winhello-sleep-z">Z</span>
+                <span class="winhello-sleep-z">Z</span>
+                <span class="winhello-sleep-z">Z</span>
+                
+                <!-- The Face -->
+                <div class="winhello-face">
+                    <div class="winhello-eye left-eye"></div>
+                    <div class="winhello-eye right-eye"></div>
+                    <div class="winhello-mouth"></div>
+                </div>
+                
+                <!-- Chat Toggle Button -->
+                <div class="winhello-chat-toggle" id="winhello-chat-toggle" title="Escribir al asistente" data-i18n-title="winhello_chat_title">💬</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerta de Doxxeo (Foto capturada) -->
+    <div id="window-dox" class="os-window hidden" style="z-index: 10000; width: 400px; height: auto;">
+        <div class="browser-window" style="background: #1a0000; border: 2px solid red; box-shadow: 0 0 50px rgba(255, 0, 0, 0.7);">
+            <div class="browser-header" style="background: red; color: white;">
+                <span>[!] NUEVA FILTRACIÓN DETECTADA</span>
+                <span id="btn-close-dox" class="close-btn" style="color: white;">X</span>
+            </div>
+            <div class="browser-content" style="padding: 15px; text-align: center; background: #050000;">
+                <p style="color: #ff3333; font-weight: bold; margin-bottom: 10px; text-shadow: 0 0 5px red;">OBJETIVO LOCALIZADO EN TIEMPO REAL</p>
+                <div id="dox-photo-container" style="border: 2px solid #500; background: #000; margin-bottom: 15px; overflow: hidden; line-height: 0;">
+                    <img id="dox-photo" src="" style="width: 100%; filter: sepia(1) contrast(1.5) brightness(0.8) grayscale(0.5);">
+                </div>
+                <p id="dox-text" style="color: #0f0; font-family: monospace; font-size: 0.9rem; border-top: 1px solid #300; padding-top: 10px;"></p>
+                <button class="terminal-btn" style="margin-top: 15px; border-color: red; color: red; font-size: 0.8rem;" onclick="document.getElementById('window-dox').classList.add('hidden'); if(typeof removeTaskbarTab === 'function') removeTaskbarTab('dox');">_CERRAR_POST</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sistema de Diálogos Global -->
+    <div id="dialogue-box" class="dialogue-box hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 255, 0, 0.3); margin-bottom: 10px; padding-bottom: 5px;">
+            <div id="dialogue-name" class="dialogue-name" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;"></div>
+            <button id="btn-skip-dialogue" class="terminal-btn" style="padding: 2px 8px; font-size: 0.8rem; border-color: rgba(255, 255, 255, 0.5); color: #aaa;" data-i18n="dialogue_skip">> SALTAR (ESC)</button>
+        </div>
+        <div id="dialogue-text" class="dialogue-text"></div>
+        <div class="dialogue-continue" data-i18n="dialogue_continue">>> Click corto para adelantar/continuar...</div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="deepweb_db.js?v=1"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/dialogue.js"></script>
+    <script src="js/drag-drop.js"></script>
+    <script src="js/winhello.js"></script>
+    <script src="js/minigames.js"></script>
+    <script src="js/browser.js"></script>
+    <script src="js/minigame2d.js"></script>
+    <script src="js/terminal.js"></script>
+    <script src="js/paint.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/desktop.js"></script>
+    <script src="js/netsniffer.js"></script>
+    <script src="js/opsec_hazard.js"></script>
+    <script src="js/survival.js"></script>
+    <script src="js/story_mode.js"></script>
+    <script src="js/room_interactions.js"></script>
+    <script src="js/ps1_intro.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

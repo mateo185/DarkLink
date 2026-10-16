@@ -1,0 +1,902 @@
+/* Google Fonts Import in page-google */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+/* Browser Window Frame */
+.browser-window {
+    width: 100% !important;
+    height: 100% !important;
+    background: #000000 !important;
+    border: 4px double #00ff66 !important;
+    border-radius: 0px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: 0 0 25px rgba(0, 255, 100, 0.2) !important;
+    font-family: 'VT323', monospace !important;
+}
+
+.browser-header {
+    background: #00ff66 !important;
+    color: #000000 !important;
+    padding: 6px 15px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    font-family: 'VT323', monospace !important;
+    font-weight: bold !important;
+    font-size: 1.35rem !important;
+    border-bottom: 2px solid #00ff66 !important;
+    border-radius: 0px !important;
+}
+
+.close-btn { 
+    cursor: pointer !important; 
+    color: #000000 !important; 
+    font-weight: bold !important; 
+    font-family: 'VT323', monospace !important; 
+    font-size: 1.35rem !important;
+    border: none !important;
+    background: transparent !important;
+}
+.close-btn:hover { 
+    color: #ffffff !important; 
+    background: #000000 !important; 
+}
+
+.browser-address { 
+    padding: 5px !important; 
+    background: #000000 !important; 
+    display: flex !important; 
+    border-bottom: 2px solid #00ff66 !important;
+    align-items: center !important;
+    border-radius: 0px !important;
+}
+.browser-address input {
+    flex-grow: 1 !important;
+    background: #000000 !important;
+    color: #00ff66 !important;
+    border: 2px solid #00ff66 !important;
+    padding: 3px 8px !important;
+    font-family: 'VT323', monospace !important;
+    font-size: 1.25rem !important;
+    border-radius: 0px !important;
+}
+
+.browser-content { 
+    padding: 20px !important; 
+    flex-grow: 1 !important; 
+    overflow-y: auto !important; 
+    text-align: left !important;
+    background: #000000 !important;
+    color: #00ff66 !important;
+    font-family: 'VT323', monospace !important;
+}
+
+ul { list-style-type: none; margin-left: 10px; }
+li { margin-bottom: 15px; }
+
+.page.hidden { display: none !important; }
+
+.fake-link {
+    color: #3399ff;
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    font-family: inherit;
+    margin: 5px 0;
+    display: inline-block;
+}
+.fake-link:hover { color: #88ccff; }
+
+.market-items { display: flex; flex-direction: column; gap: 15px; }
+.market-item { border: 1px dashed #555; padding: 15px; background: #1a1a1a; }
+.market-item p { margin-bottom: 10px; color: white;}
+.market-item.suspect { border-color: red; background: rgba(255, 0, 0, 0.1); }
+
+/* Deep Wiki Specific Styling */
+.deep-wiki-list {
+    border-top: 1px solid #ccc;
+    padding-top: 15px;
+    margin-top: 5px;
+}
+.deep-wiki-list ul {
+    list-style-type: disc !important;
+    margin-left: 20px !important;
+    color: #333;
+}
+.deep-wiki-list li {
+    margin-bottom: 8px !important;
+}
+
+#browser-loading.hidden {
+    display: none !important;
+}
+
+/* --- REWORKED DEEP WEB REALISTIC STYLES --- */
+.dw-container {
+    width: 100%;
+    min-height: 100%;
+    background: #0a0a0a;
+    color: #ccc;
+    font-family: 'Courier New', Courier, monospace;
+    padding-bottom: 50px;
+}
+.dw-header {
+    background: #111;
+    border-bottom: 2px solid #333;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+}
+.dw-header-img {
+    height: 80px;
+    width: 80px;
+    object-fit: cover;
+    border: 1px solid #555;
+    border-radius: 5px;
+}
+.dw-header h1 {
+    font-size: 2.5rem;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(255,255,255,0.3);
+    margin: 0;
+    text-transform: none;
+    animation: none;
+}
+.dw-content {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+}
+.dw-main {
+    flex-grow: 1;
+}
+.dw-sidebar {
+    width: 250px;
+    background: #151515;
+    border: 1px solid #333;
+    padding: 15px;
+    height: fit-content;
+}
+.dw-sidebar h3 {
+    border-bottom: 1px solid #555;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    color: #ff9900;
+}
+.dw-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.dw-sidebar li {
+    margin-bottom: 8px;
+    color: #888;
+}
+.dw-market-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+.dw-product {
+    background: #111;
+    border: 1px solid #444;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+.dw-product:hover {
+    transform: translateY(-5px);
+    border-color: #ff9900;
+}
+.dw-product img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border: 1px solid #333;
+    margin-bottom: 10px;
+}
+.dw-product-title {
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 5px;
+}
+.dw-product-price {
+    color: #ff9900;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+.dw-btn-buy {
+    background: #ff9900;
+    color: #000;
+    border: none;
+    padding: 8px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+}
+.dw-btn-buy:hover {
+    background: #ffaa33;
+}
+
+/* Forum Styles */
+.dw-forum-post {
+    display: flex;
+    background: #151515;
+    border: 1px solid #333;
+    margin-bottom: 15px;
+}
+.dw-forum-user {
+    width: 150px;
+    background: #111;
+    padding: 15px;
+    border-right: 1px solid #333;
+    text-align: center;
+}
+.dw-forum-user img {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+.dw-forum-body {
+    padding: 15px;
+    flex-grow: 1;
+}
+.dw-forum-date {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+}
+.dw-forum-signature {
+    border-top: 1px dashed #555;
+    margin-top: 20px;
+    padding-top: 10px;
+    font-size: 0.8rem;
+    color: #555;
+}
+
+/* Blog Styles */
+.dw-blog-article {
+    background: #111;
+    padding: 30px;
+    border-left: 5px solid #a00;
+    margin-bottom: 30px;
+}
+.dw-blog-article img {
+    max-width: 100%;
+    border: 1px solid #333;
+    margin: 20px 0;
+}
+.dw-blog-text {
+    line-height: 1.6;
+    color: #bbb;
+}
+
+/* --- NEW DEEP WEB CATEGORIES STYLES --- */
+
+/* Animations */
+@keyframes redroomPulse {
+    0% { opacity: 0.6; box-shadow: 0 0 5px #f22; }
+    50% { opacity: 1; box-shadow: 0 0 15px #f22; }
+    100% { opacity: 0.6; box-shadow: 0 0 5px #f22; }
+}
+.redroom-pulse-dot {
+    animation: redroomPulse 1.5s infinite;
+}
+
+/* Category Borders & Containers */
+.category-redroom {
+    border: 1px solid #500 !important;
+    box-shadow: inset 0 0 15px rgba(255, 0, 0, 0.08) !important;
+}
+.category-chat {
+    border: 1px solid #005511 !important;
+    box-shadow: inset 0 0 15px rgba(0, 255, 100, 0.05) !important;
+}
+.category-hitman {
+    border: 1px solid #500 !important;
+    box-shadow: inset 0 0 15px rgba(255, 0, 0, 0.05) !important;
+}
+.category-exchange {
+    border: 1px solid #1e222d !important;
+}
+.category-hosting {
+    border: 1px solid #1a233a !important;
+}
+.category-leaks {
+    border: 1px solid #00ffff44 !important;
+}
+
+/* Chat Scrollbar Styling */
+#chat-messages-container {
+    scrollbar-width: thin;
+    scrollbar-color: #00ff66 #050505;
+}
+#chat-messages-container::-webkit-scrollbar {
+    width: 6px;
+}
+#chat-messages-container::-webkit-scrollbar-track {
+    background: #050505;
+}
+#chat-messages-container::-webkit-scrollbar-thumb {
+    background: #00ff66;
+    border-radius: 3px;
+}
+
+/* Redroom chat scrollbar */
+.redroom-chat-messages {
+    scrollbar-width: thin;
+    scrollbar-color: #a00 #111;
+}
+.redroom-chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+.redroom-chat-messages::-webkit-scrollbar-track {
+    background: #111;
+}
+.redroom-chat-messages::-webkit-scrollbar-thumb {
+    background: #a00;
+    border-radius: 3px;
+}
+
+/* Inputs customization for Hitman & Exchange & Chat */
+.dw-hitman-container select,
+.dw-chat-container input,
+.dw-redroom-container input {
+    background: #000 !important;
+    border: 1px solid #555 !important;
+    color: #fff !important;
+    padding: 6px !important;
+    font-family: monospace !important;
+    font-size: 0.85rem !important;
+}
+.dw-chat-container input:focus,
+.dw-redroom-container input:focus {
+    border-color: #00ff66 !important;
+    outline: none;
+}
+.dw-hitman-container select:focus {
+    border-color: #ff3333 !important;
+    outline: none;
+}
+
+/* ====================================================
+   GOOGLE REPLICAS PREMIUM DARK STYLES
+   ==================================================== */
+
+/* Tabs in Google Results */
+.google-tab {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 0.9rem !important;
+    cursor: pointer !important;
+    padding-bottom: 8px !important;
+    border-bottom: 3px solid transparent !important;
+    color: #9aa0a6 !important;
+    transition: color 0.15s, border-color 0.15s !important;
+}
+.google-tab:hover {
+    color: #e8eaed !important;
+}
+.google-tab.active {
+    color: #8ab4f8 !important;
+    border-bottom-color: #8ab4f8 !important;
+}
+
+/* Google Search Inputs */
+.google-search-bar-container input:focus {
+    background: #303134 !important;
+    box-shadow: 0 1px 6px rgba(32,33,36,0.28) !important;
+    border-color: transparent !important;
+}
+
+/* Google Buttons */
+.google-blue-btn:hover {
+    background: #a8c7fa !important;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15) !important;
+}
+.google-gray-btn:hover {
+    background: #3c4043 !important;
+    border-color: #5f6368 !important;
+}
+
+/* Gmail Row Styling */
+.gmail-row {
+    font-family: 'Roboto', 'Arial', sans-serif !important;
+}
+.gmail-row:hover {
+    background: #282a30 !important;
+    box-shadow: inset 2px 0 0 #8ab4f8 !important;
+}
+
+/* Drive Item Hover */
+.drive-item {
+    font-family: 'Roboto', 'Arial', sans-serif !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.drive-item:hover {
+    border-color: #8ab4f8 !important;
+    background: #2a2b2f !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Map Animations */
+@keyframes pulse-green {
+    0% { transform: scale(0.9); opacity: 1; box-shadow: 0 0 0 0 rgba(0, 255, 102, 0.7); }
+    70% { transform: scale(1); opacity: 0.8; box-shadow: 0 0 0 10px rgba(0, 255, 102, 0); }
+    100% { transform: scale(0.9); opacity: 1; box-shadow: 0 0 0 0 rgba(0, 255, 102, 0); }
+}
+
+@keyframes pulse-red {
+    0% { transform: scale(0.9); opacity: 1; box-shadow: 0 0 0 0 rgba(255, 51, 51, 0.7); }
+    70% { transform: scale(1); opacity: 0.8; box-shadow: 0 0 0 12px rgba(255, 51, 51, 0); }
+    100% { transform: scale(0.9); opacity: 1; box-shadow: 0 0 0 0 rgba(255, 51, 51, 0); }
+}
+
+/* ====================================================
+   PHANTOM BROWSER (FREE ROAM / ANN MODE) STYLES
+   ==================================================== */
+
+/* Visibility Control between modes */
+body:not(.ann-theme) #browser-tabs,
+body:not(.ann-theme) .ann-nav-btn,
+body:not(.ann-theme) .tor-security-badge,
+body:not(.ann-theme) .tor-circuit-card,
+body:not(.ann-theme) #loader-ann {
+    display: none !important;
+}
+
+body.ann-theme .old-back,
+body.ann-theme #loader-classic {
+    display: none !important;
+}
+
+/* Redesign of browser container under ann-theme */
+body.ann-theme #window-browser .browser-window {
+    background: #0a0e14 !important;
+    border: 3px solid #00ff66 !important;
+    box-shadow: 0 0 30px rgba(0, 255, 100, 0.25) !important;
+    font-family: 'Share Tech Mono', 'Courier New', monospace !important;
+}
+
+body.ann-theme #window-browser .browser-header {
+    background: linear-gradient(90deg, #05070a, #0f141d) !important;
+    border-bottom: 1px solid #14281c !important;
+    color: #00ff66 !important;
+    font-family: 'Share Tech Mono', monospace !important;
+    padding: 6px 12px !important;
+    font-size: 0.85rem !important;
+}
+
+/* Browser Tabs (Tor Style) */
+.browser-tab-bar {
+    display: flex;
+    background: #05070a;
+    padding: 6px 8px 0 8px;
+    gap: 4px;
+    border-bottom: 1px solid #14281c;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -ms-overflow-style: thin;
+    scrollbar-width: thin;
+    scrollbar-color: #1a3a2a #05070a;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    min-height: 32px;
+    align-items: flex-end;
+}
+
+.browser-tab-bar::-webkit-scrollbar {
+    height: 4px;
+}
+
+.browser-tab-bar::-webkit-scrollbar-track {
+    background: #05070a;
+}
+
+.browser-tab-bar::-webkit-scrollbar-thumb {
+    background: #1a3a2a;
+    border-radius: 2px;
+}
+
+.browser-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #0c111a;
+    border: 1px solid #14281c;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    padding: 7px 12px;
+    color: #6a7796;
+    font-size: 0.8rem;
+    font-family: 'Share Tech Mono', monospace;
+    cursor: pointer;
+    max-width: 160px;
+    min-width: 80px;
+    flex-shrink: 1;
+    flex-grow: 0;
+    transition: all 0.15s ease;
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.browser-tab:hover {
+    background: #141b26;
+    color: #a3b2d6;
+}
+
+.browser-tab.active {
+    background: #0a0e14;
+    color: #00ff66;
+    border-color: #00ff66;
+    border-bottom: 1px solid #0a0e14;
+    font-weight: bold;
+    box-shadow: inset 0 2px 0 #00ff66;
+}
+
+.tab-secure-status {
+    font-size: 0.7rem;
+    color: #00ff66;
+    flex-shrink: 0;
+}
+
+.tab-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.tab-close-btn {
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #444;
+    transition: color 0.2s;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.tab-close-btn:hover {
+    color: #ff3333;
+}
+
+.browser-tab-plus {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: #444;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    align-self: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.browser-tab-plus:hover {
+    background: #0c111a;
+    color: #00ff66;
+}
+
+/* Modern Navigation Controls */
+.ann-nav-btn {
+    background: #0c111a !important;
+    border: 1px solid #14281c !important;
+    color: #8898b8 !important;
+    border-radius: 3px !important;
+    padding: 3px 8px !important;
+    font-size: 0.75rem !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+}
+
+.ann-nav-btn:hover {
+    background: #00ff66 !important;
+    color: #000000 !important;
+    border-color: #00ff66 !important;
+    box-shadow: 0 0 5px rgba(0, 255, 100, 0.4) !important;
+}
+
+/* Tor Security Badge */
+.tor-security-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 255, 100, 0.08);
+    border: 1px solid rgba(0, 255, 100, 0.25);
+    border-radius: 3px;
+    padding: 3px 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s ease;
+}
+
+.tor-security-badge:hover {
+    background: rgba(0, 255, 100, 0.15);
+    border-color: #00ff66;
+    box-shadow: 0 0 8px rgba(0, 255, 100, 0.2);
+}
+
+.sec-dot {
+    width: 6px;
+    height: 6px;
+    background: #00ff66;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #00ff66;
+    display: inline-block;
+}
+
+.sec-lock {
+    font-size: 0.75rem;
+}
+
+.sec-text {
+    color: #00ff66;
+    font-size: 0.7rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+/* Address Bar styling under ann-theme */
+body.ann-theme #window-browser .browser-address {
+    background: #05070a !important;
+    border-bottom: 1px solid #14281c !important;
+    padding: 6px 12px !important;
+}
+
+body.ann-theme #window-browser .browser-address input {
+    background: #020406 !important;
+    border: 1px solid #14281c !important;
+    color: #39ffa0 !important;
+    font-size: 0.85rem !important;
+    font-family: 'Share Tech Mono', monospace !important;
+    border-radius: 3px !important;
+    padding: 4px 10px !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.8) !important;
+    transition: border-color 0.2s !important;
+}
+
+body.ann-theme #window-browser .browser-address input:focus {
+    border-color: #00ff66 !important;
+    outline: none !important;
+}
+
+/* Tor Circuit Card Dropdown */
+.tor-circuit-card {
+    position: absolute;
+    top: 38px;
+    left: 12px;
+    z-index: 1000;
+    width: 290px;
+    background: #03060a;
+    border: 2px solid #00ff66;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.85), 0 0 15px rgba(0, 255, 100, 0.15);
+    font-family: 'Share Tech Mono', monospace;
+    padding: 12px 15px;
+    color: #a3ffd0;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.tor-circuit-card.hidden {
+    display: none !important;
+}
+
+.tor-circuit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #00ff6633;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+}
+
+.tor-circuit-title {
+    color: #00ff66;
+    font-weight: bold;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.tor-circuit-close {
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #8898b8;
+    line-height: 1;
+    transition: color 0.15s;
+}
+
+.tor-circuit-close:hover {
+    color: #ff3333;
+}
+
+.tor-circuit-nodes {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: #010204;
+    border: 1px solid #112211;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+}
+
+.tor-node-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 3px 4px;
+    border-radius: 2px;
+}
+
+.tor-node-item:hover {
+    background: #07120a;
+}
+
+.node-icon {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.node-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.node-name {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.node-ip {
+    font-size: 0.65rem;
+    color: #6a7796;
+}
+
+.node-ping {
+    font-size: 0.65rem;
+    color: #00ff66;
+    text-align: right;
+    align-self: flex-end;
+    margin-top: -12px;
+}
+
+.tor-node-arrow {
+    font-size: 0.75rem;
+    color: #00ff6633;
+    margin-left: 9px;
+    font-weight: bold;
+    line-height: 0.8;
+}
+
+.tor-circuit-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.65rem;
+    color: #6a7796;
+}
+
+.tor-circuit-footer b {
+    color: #00ff66;
+}
+
+.circuit-rebuild-btn {
+    background: transparent;
+    border: 1px solid #00ff66;
+    color: #00ff66;
+    padding: 2px 6px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.circuit-rebuild-btn:hover {
+    background: rgba(0, 255, 100, 0.15);
+    box-shadow: 0 0 5px rgba(0, 255, 100, 0.4);
+    color: #ffffff;
+}
+
+/* Enhancements to Deep Web Pages in Free Roam */
+.ann-theme .dw-container {
+    background: #05070a !important;
+    font-family: 'Share Tech Mono', monospace !important;
+}
+
+.ann-theme .dw-header {
+    background: #080c12 !important;
+    border-bottom: 2px solid #00ff6622 !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+}
+
+.ann-theme .dw-header h1 {
+    font-family: 'Share Tech Mono', monospace !important;
+    color: #00ff66 !important;
+    text-shadow: 0 0 10px rgba(0,255,100,0.2) !important;
+}
+
+.ann-theme .dw-sidebar {
+    background: #080c12 !important;
+    border-color: #00ff6622 !important;
+}
+
+.ann-theme .dw-sidebar h3 {
+    color: #ff9900 !important;
+}
+
+.ann-theme .dw-product {
+    background: #080c12 !important;
+    border-color: #00ff6611 !important;
+}
+
+.ann-theme .dw-product:hover {
+    border-color: #00ff66 !important;
+    box-shadow: 0 0 10px rgba(0, 255, 100, 0.1);
+}
+
+.ann-theme .dw-forum-post {
+    background: #080c12 !important;
+    border-color: #00ff6622 !important;
+}
+
+.ann-theme .dw-forum-user {
+    background: #05070a !important;
+    border-right-color: #00ff6622 !important;
+}
+
+.ann-theme .dw-forum-user img {
+    border-color: #00ff6633 !important;
+}
+
+.ann-theme .dw-forum-date {
+    border-bottom-color: #00ff6611 !important;
+    color: #445;
+}
+
+.ann-theme .dw-forum-signature {
+    border-top-color: #00ff6611 !important;
+    color: #3f4e43;
+}
+
+.ann-theme .dw-blog-article {
+    background: #080c12 !important;
+    border-left-color: #ff3333 !important;
+}
+
+/* Custom CSS Blink animations */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Drag and Drop styles for browser tabs */
+.browser-tab.dragging {
+    opacity: 0.4;
+    border: 1px dashed #00ff66 !important;
+}
+
+.browser-tab.drag-over {
+    border-left: 2px solid #00ff66 !important;
+    background: #141b26 !important;
+}
+
+
+

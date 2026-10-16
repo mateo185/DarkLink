@@ -1,0 +1,71 @@
+/* Minigame Layouts and Elements */
+.minigame-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 100%;
+}
+
+.mg-card {
+    aspect-ratio: 1/1;
+    background: #111;
+    border: 2px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.mg-card:hover { 
+    border-color: var(--text-color); 
+    background: #0a0a0a; 
+}
+.mg-card.revealed { 
+    background: #1a1a1a; 
+    border-color: var(--text-color); 
+}
+
+.mg-terminal {
+    width: 100%;
+    background: #000;
+    color: #0f0;
+    font-family: monospace;
+    padding: 10px;
+    border: 1px solid #333;
+    height: 150px;
+    overflow-y: auto;
+}
+
+.mg-packet {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: #3399ff;
+    border: 2px solid #fff;
+    cursor: pointer;
+    box-shadow: 0 0 10px #3399ff;
+}
+
+.mg-input {
+    background: #000;
+    border: 1px solid #0f0;
+    color: #0f0;
+    padding: 5px 10px;
+    font-family: monospace;
+    font-size: 1.5rem;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#minigame-content canvas {
+    background: #050505;
+    border: 1px solid #222;
+}
+
+/* Custom alignment for signal sync minigame */
+#minigame-content button.terminal-btn {
+    margin-top: 30px;
+    width: 100%;
+}

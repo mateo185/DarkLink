@@ -1,0 +1,237 @@
+/* --- NETSNIFFER CLIENT PREMIUM NEON HACKER STYLES --- */
+
+.netsniffer-container {
+    background: #030a05 !important;
+    color: #39ff14 !important;
+    font-family: 'Share Tech Mono', 'Courier New', monospace !important;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Header & Controls bar */
+.netsniffer-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #00ff66;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+}
+
+.netsniffer-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 255, 102, 0.1);
+    border: 1px solid #00ff66;
+    padding: 3px 8px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.netsniffer-status-pill.active::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #00ff66;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00ff66;
+    animation: netsniffer-blink 1s infinite;
+}
+
+.netsniffer-status-pill.paused {
+    border-color: #ffaa00;
+    color: #ffaa00;
+    background: rgba(255, 170, 0, 0.1);
+}
+
+.netsniffer-status-pill.paused::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #ffaa00;
+    border-radius: 50%;
+}
+
+.netsniffer-btn {
+    background: transparent;
+    border: 1px solid #00ff66;
+    color: #00ff66;
+    padding: 4px 12px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.netsniffer-btn:hover {
+    background: #00ff66;
+    color: #000;
+    box-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+}
+
+/* Main Layout Split */
+.netsniffer-split {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+    gap: 8px;
+}
+
+/* Packets Table area */
+.netsniffer-table-container {
+    flex: 2;
+    border: 1px solid rgba(0, 255, 102, 0.3);
+    background: rgba(0, 5, 2, 0.8);
+    overflow-y: auto;
+    min-height: 100px;
+    box-shadow: inset 0 0 10px rgba(0, 255, 102, 0.15);
+}
+
+.netsniffer-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.netsniffer-table th {
+    background: rgba(0, 255, 102, 0.15);
+    border-bottom: 1px solid #00ff66;
+    color: #00ff66;
+    font-weight: bold;
+    padding: 6px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.netsniffer-table td {
+    padding: 5px 6px;
+    border-bottom: 1px solid rgba(0, 255, 102, 0.1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Packet protocols colors and highlights */
+.netsniffer-row {
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.netsniffer-row:hover {
+    background: rgba(0, 255, 102, 0.15) !important;
+}
+
+.netsniffer-row.selected {
+    background: rgba(0, 255, 102, 0.25) !important;
+    border: 1px solid #00ff66;
+}
+
+/* Color styles based on packet protocols */
+.netsniffer-row.proto-http {
+    color: #ff3366; /* HTTP inseguro es rojo/rosa brillante */
+}
+.netsniffer-row.proto-dns {
+    color: #33ccff; /* DNS es celeste */
+}
+.netsniffer-row.proto-pgp {
+    color: #cc66ff; /* PGP es violeta/púrpura */
+}
+.netsniffer-row.proto-tor {
+    color: #ffaa00; /* TOR/ANN es amarillo/naranja */
+}
+.netsniffer-row.proto-icmp {
+    color: #888888; /* ICMP es gris */
+}
+
+/* Highlight row that has a decodable credential packet */
+.netsniffer-row.vulnerable-packet {
+    font-weight: bold;
+    animation: netsniffer-pulse-glow 1.5s infinite alternate;
+}
+
+/* Hex & Payload Viewer */
+.netsniffer-viewer-container {
+    flex: 1;
+    border: 1px solid rgba(0, 255, 102, 0.3);
+    background: #000;
+    padding: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    min-height: 80px;
+}
+
+.netsniffer-viewer-title {
+    font-size: 0.8rem;
+    color: #888;
+    border-bottom: 1px solid rgba(0, 255, 102, 0.2);
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.netsniffer-viewer-content {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    overflow-y: auto;
+    flex-grow: 1;
+    color: #00ff66;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Decrypt Overlay Button */
+.netsniffer-decrypt-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4px;
+    padding: 6px;
+    background: rgba(0, 255, 102, 0.05);
+    border: 1px dashed rgba(0, 255, 102, 0.4);
+    flex-shrink: 0;
+}
+
+/* Animations */
+@keyframes netsniffer-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+@keyframes netsniffer-pulse-glow {
+    0% { background: rgba(255, 51, 102, 0.03); }
+    100% { background: rgba(255, 51, 102, 0.15); box-shadow: inset 0 0 10px rgba(255, 51, 102, 0.2); }
+}
+
+/* Scrollbar styling for Hacker feel */
+.netsniffer-table-container::-webkit-scrollbar,
+.netsniffer-viewer-content::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.netsniffer-table-container::-webkit-scrollbar-track,
+.netsniffer-viewer-content::-webkit-scrollbar-track {
+    background: #020502;
+}
+
+.netsniffer-table-container::-webkit-scrollbar-thumb,
+.netsniffer-viewer-content::-webkit-scrollbar-thumb {
+    background: #00ff66;
+    border-radius: 2px;
+}
